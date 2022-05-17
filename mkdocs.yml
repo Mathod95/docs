@@ -3,5 +3,7 @@ nav:
     - Home: index.md
     - Kubernetes: kubernetes.md
     - Istio: istio.md
+    - Ansible: ansible.md
+    - Wireguard: wireguard.md
     - About: about.md
 theme: readthedocs

@@ -1,5 +1,7 @@
 site_name: Mathod
 nav:
     - Home: index.md
+    - Kubernetes: kubernetes.md
+    - Istio: istio.md
     - About: about.md
 theme: readthedocs

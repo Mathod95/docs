@@ -51,9 +51,101 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="./">Istio</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#commands">Commands</a>
+    <li class="toctree-l2"><a class="reference internal" href="#objectifs-du-chapitre-et-prerequis">Objectifs du chapitre et prérequis</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#project-layout">Project layout</a>
+    <li class="toctree-l2"><a class="reference internal" href="#presentation-distio">Présentation d'Istio</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#micro-services-et-mise-en-reseau-de-services">Micro-services et mise en réseau de services</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#presentation-distio_1">Présentation d’Istio</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#principe-de-fonctionnement">Principe de fonctionnement</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#installation-distio">Installation d’Istio</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#configuration-dexternal-dns">Configuration d'external-dns</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#depot-des-charts-istio">Dépôt des charts Istio</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#installation-du-chart-istio-init">Installation du chart istio-init</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#installation-du-chart-istio">Installation du chart Istio</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#activation-des-tableaux-de-bord">Activation des tableaux de bord</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#activation-du-mecanisme-sds">Activation du mécanisme SDS</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#configuration-distio">Configuration d'Istio</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#installation-distio_1">Installation d’Istio</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#configuration-du-gateway-istio">Configuration du gateway Istio</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#presentation-du-mecanisme">Présentation du mécanisme</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#configuration-du-gateway">Configuration du gateway</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#generation-du-certificat">Génération du certificat</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#utilisation-distio">Utilisation d’Istio</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#injection-de-pods-dans-le-maillage-de-services">Injection de pods dans le maillage de services</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#installation-distioctl">Installation d’istioctl</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#injection-du-sidecar-a-laide-distioctl">Injection du sidecar à l’aide d’istioctl</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#injection-du-sidecar-par-annotation">Injection du sidecar par annotation</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#desactivation-du-sidecar-par-annotation">Désactivation du sidecar par annotation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#deploiement-dune-application-de-test">Déploiement d’une application de test</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#principe-de-lexposition-dapplication-avec-istio">Principe de l’exposition d’application avec Istio</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#preparation-du-fichier-de-deploiement-mailhog">Préparation du fichier de déploiement MailHog</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#declaration-du-service-mailhog">Déclaration du service MailHog</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#creation-du-gateway">Création du gateway</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#creation-du-service-virtuel-virtualservice">Création du service virtuel (VirtualService)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#securisation-des-flux">Sécurisation des flux</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#activation-de-mutual-tls-mtls">Activation de Mutual TLS (mTLS)</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#consultation-des-polices-du-service-mailhog">Consultation des polices du service MailHog</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#forcer-lutilisation-de-mtls">Forcer l’utilisation de mTLS</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#tableaux-de-bord">Tableaux de bord</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#presentation-des-differentes-briques">Présentation des différentes briques</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#interface-kiali">Interface Kiali</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#interface-grafana">Interface Grafana</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#interface-jaeger">Interface Jaeger</a>
+    </li>
+        </ul>
     </li>
     </ul>
                 </li>
@@ -93,22 +185,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="welcome-to-mkdocs">Welcome to MkDocs</h1>
-<p>For full documentation visit <a href="https://www.mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands</h2>
-<ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs -h</code> - Print help message and exit.</li>
-</ul>
-<h2 id="project-layout">Project layout</h2>
-<pre><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
-</code></pre>
-<h1 id="maillage-de-services-avec-istio">Maillage de services avec Istio</h1>
+                <h1 id="maillage-de-services-avec-istio">Maillage de services avec Istio</h1>
 <h2 id="objectifs-du-chapitre-et-prerequis">Objectifs du chapitre et prérequis</h2>
 <h2 id="presentation-distio">Présentation d'Istio</h2>
 <h3 id="micro-services-et-mise-en-reseau-de-services">Micro-services et mise en réseau de services</h3>

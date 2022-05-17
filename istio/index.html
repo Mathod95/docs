@@ -59,6 +59,14 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ansible/">Ansible</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../wireguard/">Wireguard</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
                 </li>
               </ul>
@@ -100,12 +108,85 @@ docs/
     index.md  # The documentation homepage.
     ...       # Other markdown pages, images and other files.
 </code></pre>
+<h1 id="maillage-de-services-avec-istio">Maillage de services avec Istio</h1>
+<h2 id="objectifs-du-chapitre-et-prerequis">Objectifs du chapitre et prérequis</h2>
+<h2 id="presentation-distio">Présentation d'Istio</h2>
+<h3 id="micro-services-et-mise-en-reseau-de-services">Micro-services et mise en réseau de services</h3>
+<h3 id="presentation-distio_1">Présentation d’Istio</h3>
+<p>Istio intègre plusieurs produits open source permettant de mettre en réseau un ensemble de services. Il assure une gestion du trafic, l'application de règle et la collecte de metriques</p>
+<p>Par nature, Istio est conçu pour gérer la communication des micro-services d'une application. Il prend en charge de nombreuses opérations sans impacter les éléments existants:</p>
+<ul>
+<li>Collecte des temps de communication entre services</li>
+<li>Chiffrement de bout en bout entre services</li>
+<li>Traçabilité des appels entre services</li>
+<li>routage avancé (déploiment canari, blue/green deployment)</li>
+<li>mécanisme de gestion d'érreurs</li>
+</ul>
+<h3 id="principe-de-fonctionnement">Principe de fonctionnement</h3>
+<h2 id="installation-distio">Installation d’Istio</h2>
+<h3 id="configuration-dexternal-dns">Configuration d'external-dns</h3>
+<h3 id="depot-des-charts-istio">Dépôt des charts Istio</h3>
+<h3 id="installation-du-chart-istio-init">Installation du chart istio-init</h3>
+<h3 id="installation-du-chart-istio">Installation du chart Istio</h3>
+<h4 id="activation-des-tableaux-de-bord">Activation des tableaux de bord</h4>
+<h4 id="activation-du-mecanisme-sds">Activation du mécanisme SDS</h4>
+<h4 id="configuration-distio">Configuration d'Istio</h4>
+<h4 id="installation-distio_1">Installation d’Istio</h4>
+<h3 id="configuration-du-gateway-istio">Configuration du gateway Istio</h3>
+<h4 id="presentation-du-mecanisme">Présentation du mécanisme</h4>
+<h4 id="configuration-du-gateway">Configuration du gateway</h4>
+<h4 id="generation-du-certificat">Génération du certificat</h4>
+<h2 id="utilisation-distio">Utilisation d’Istio</h2>
+<h3 id="injection-de-pods-dans-le-maillage-de-services">Injection de pods dans le maillage de services</h3>
+<h4 id="installation-distioctl">Installation d’istioctl</h4>
+<h4 id="injection-du-sidecar-a-laide-distioctl">Injection du sidecar à l’aide d’istioctl</h4>
+<h4 id="injection-du-sidecar-par-annotation">Injection du sidecar par annotation</h4>
+<h4 id="desactivation-du-sidecar-par-annotation">Désactivation du sidecar par annotation</h4>
+<h3 id="deploiement-dune-application-de-test">Déploiement d’une application de test</h3>
+<h4 id="principe-de-lexposition-dapplication-avec-istio">Principe de l’exposition d’application avec Istio</h4>
+<h4 id="preparation-du-fichier-de-deploiement-mailhog">Préparation du fichier de déploiement MailHog</h4>
+<h4 id="declaration-du-service-mailhog">Déclaration du service MailHog</h4>
+<h4 id="creation-du-gateway">Création du gateway</h4>
+<h4 id="creation-du-service-virtuel-virtualservice">Création du service virtuel (VirtualService)</h4>
+<h3 id="securisation-des-flux">Sécurisation des flux</h3>
+<h4 id="activation-de-mutual-tls-mtls">Activation de Mutual TLS (mTLS)</h4>
+<p>La puissance d'istio est qu'une fois qu'un service y est intégré, il devient possible de changer à la volée le protocole de communication et faire appel à du Mutual TLS à la place d'une communication sans chiffrement.</p>
+<p>TLS utilise des certificats pour vérifier l'athenticité de ses interlocuteurs. Dans le cas du protocole TLS simple, le client vérifie le serveur. De fait, n'importe qui peut donc communiquer avec le serveur</p>
+<p>En plus de cette vérification, le serveur peut également s'assurer de l'identité du client. On parle dans ce cas d'authentification TLS mutuelle (ou également de SSL two-way)</p>
+<p>Dans ce cas-là, le client est lui aussi soumis à une vérification pour interdire les communications externes non sollicités.</p>
+<p>L'activiation de ce mécanisme se fait à l'aide de déclaration d'objet DestinationRule dans lequel est spécifié:</p>
+<ul>
+<li>Le champ <code>host</code> indiquant l'entrée à protéger</li>
+<li>Le champ <code>trafficPolicy</code> indiquant le mode souhaité</li>
+</ul>
+<p>.. note::
+    Pour activer l'utilisation du protocole mTLS sur le service XXX du namespace XXX, déclarez le cotenue suivant:</p>
+<pre><code>.. code-block::
+
+    apiVersion: networking.istio.io/v1alpha3
+    kind: DestinationRule
+    metadata:
+      name: xxx
+      namespace: xxx
+    spec:
+      host: ratings.prod.svc.cluster.local
+      trafficPolicy:
+        tls:
+          mode: ISTIO_MUTUAL
+</code></pre>
+<h4 id="consultation-des-polices-du-service-mailhog">Consultation des polices du service MailHog</h4>
+<h4 id="forcer-lutilisation-de-mtls">Forcer l’utilisation de mTLS</h4>
+<h2 id="tableaux-de-bord">Tableaux de bord</h2>
+<h3 id="presentation-des-differentes-briques">Présentation des différentes briques</h3>
+<h3 id="interface-kiali">Interface Kiali</h3>
+<h3 id="interface-grafana">Interface Grafana</h3>
+<h3 id="interface-jaeger">Interface Jaeger</h3>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../kubernetes/" class="btn btn-neutral float-left" title="Kubernetes"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../about/" class="btn btn-neutral float-right" title="About">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../ansible/" class="btn btn-neutral float-right" title="Ansible">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -131,7 +212,7 @@ docs/
       <span><a href="../kubernetes/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../about/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../ansible/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

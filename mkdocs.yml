@@ -2,7 +2,7 @@ site_name: Mathod
 nav:
     - Home: index.md
     - Kubernetes: kubernetes.md
-    - ArgoCD: arcocd/foreword.md
+    - ArgoCD: argocd/foreword.md
     - Istio: istio.md
     - AWS: aws.md
     - Ansible: ansible.md

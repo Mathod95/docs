@@ -12,6 +12,7 @@ nav:
     - Keda: keda/foreword.md
     - Karpenter: karpenter/foreword.md
     - GitLab: gitlab/foreword.md
+              gitlab/usecase.md
     - Glossary: glossary.md
     - About: about.md
 theme: readthedocs

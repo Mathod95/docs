@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Foreword - Mathod</title>
+    <title>Usecase - Mathod</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Foreword";
-        var mkdocs_page_input_path = "gitlab/foreword.md";
+        var mkdocs_page_name = "Usecase";
+        var mkdocs_page_input_path = "gitlab/usecase.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -109,7 +109,7 @@
       <div class="wy-nav-content">
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="../.." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>Foreword</li>
+    <li><a href="../.." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>Usecase</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -119,9 +119,34 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <p><img alt="alt text" src="https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png" title="Logo Title Text 1" /></p>
-<p>Reference-style: 
-<img alt="alt text" src="https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png" title="Logo Title Text 2" /></p>
+                <pre><code>.. note::
+    Pour activer l'utilisation du protocole mTLS sur le service XXX du namespace XXX, déclarez le cotenue suivant:
+
+.. code-block::
+
+    wget https://cloud.debian.org/images/cloud/bullseye/latest/debian-11-generic-amd64.raw
+
+    virt-customize -a debian-11-generic-amd64.raw --install qemu-guest-agent
+
+    DATE=$(date +"%Y%m%d")
+    qm create 1000 --name "DEBIAN11-$DATE" --memory 8192 --balloon 4096 --net0 virtio,bridge=vmbr0 --cores 2 --sockets 4
+    qm importdisk 1000 debian-11-generic-amd64.raw local-zfs
+    qm set 1000 --scsihw virtio-scsi-pci --scsi0 local-zfs:vm-1000-disk-0
+    qm set 1000 --serial0 socket
+    qm set 1000 --boot c --bootdisk scsi0
+    qm set 1000 --tablet 0
+    qm set 1000 --ostype l26
+    qm set 1000 --agent 1,fstrim_cloned_disks=1
+    qm set 1000 --scsi1 local-zfs:cloudinit
+    qm resize 1000 scsi0 +48G
+    qm template 1000
+
+    qm clone 1000 110 --name DEBIAN11 --storage local-zfs --full --target SRV01
+    qm set 110 --ipconfig0 ip=146.59.254.96/32,gw=152.228.224.254
+    qm set 110 --net0 virtio,bridge=vmbr0,macaddr=02:00:00:23:da:6b
+    qm set 110 --ciuser mathod
+    qm set 110 --cipassword mathod
+</code></pre>
               
             </div>
           </div><footer>

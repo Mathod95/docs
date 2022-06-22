@@ -7,11 +7,11 @@ nav:
     - AWS: aws.md
     - Ansible: ansible.md
     - Wireguard: wireguard.md
-    - Mattermost: mattermost.md
-    - Harbor: harbor.md
-    - Keda: keda.md
-    - Karpenter: karpenter.md
-    - GitLab: gitlab.md
+    - Mattermost: mattermost/foreword.md
+    - Harbor: harbor/foreword.md
+    - Keda: keda/foreword.md
+    - Karpenter: karpenter/foreword.md
+    - GitLab: gitlab/foreword.md
     - Glossary: glossary.md
     - About: about.md
 theme: readthedocs

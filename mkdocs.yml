@@ -13,6 +13,9 @@ nav:
     - Karpenter: karpenter/foreword.md
     - GitLab: gitlab/foreword.md
               gitlab/usecase.md
+    - 'GitLab' :
+        - 'Foreword': 'foreword.md'
+        - 'Usecase': 'usecase.md'
     - Glossary: glossary.md
     - About: about.md
 theme: readthedocs

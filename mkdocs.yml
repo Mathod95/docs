@@ -4,7 +4,7 @@ nav:
     - Kubernetes: kubernetes.md
     - ArgoCD: argocd/foreword.md
     - Istio: istio.md
-    - 'PROVIDERS'
+    - 'PROVIDERS':
         - 'AWS': 'aws/foreword.md'
     - 'APPS':
         - 'Keda': 'keda/foreword.md'

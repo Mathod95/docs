@@ -1,6 +1,6 @@
 site_name: Mathod
 nav:
-    - Home: home.md
+    - Home: index.md
     - Kubernetes: kubernetes.md
     - 'PROVIDERS':
         - 'AWS': 'aws/foreword.md'

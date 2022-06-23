@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Usecase - Mathod</title>
+    <title>Prometheus - Mathod</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Usecase";
-        var mkdocs_page_input_path = "gitlab/usecase.md";
+        var mkdocs_page_name = "Prometheus";
+        var mkdocs_page_input_path = "prometheus/foreword.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -62,12 +62,12 @@
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">APPS</span></p>
-              <ul>
+              <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../../keda/foreword/">Keda</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../karpenter/foreword/">Karpenter</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../prometheus/foreword/">Prometheus</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Prometheus</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../grafana/foreword/">Grafana</a>
                   </li>
@@ -81,12 +81,12 @@
                 </li>
               </ul>
               <p class="caption"><span class="caption-text">GITLAB</span></p>
-              <ul class="current">
-                  <li class="toctree-l1"><a class="reference internal" href="../foreword/">Foreword</a>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../gitlab/foreword/">Foreword</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Usecase</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../gitlab/usecase/">Usecase</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../mattermost/">Mattermost</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../gitlab/mattermost/">Mattermost</a>
                   </li>
               </ul>
               <ul>
@@ -112,7 +112,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
-          <li>GITLAB &raquo;</li><li>Usecase</li>
+          <li>APPS &raquo;</li><li>Prometheus</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -122,40 +122,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <pre><code>.. note::
-    Pour activer l'utilisation du protocole mTLS sur le service XXX du namespace XXX, déclarez le cotenue suivant:
-
-.. code-block::
-
-    wget https://cloud.debian.org/images/cloud/bullseye/latest/debian-11-generic-amd64.raw
-
-    virt-customize -a debian-11-generic-amd64.raw --install qemu-guest-agent
-
-    DATE=$(date +"%Y%m%d")
-    qm create 1000 --name "DEBIAN11-$DATE" --memory 8192 --balloon 4096 --net0 virtio,bridge=vmbr0 --cores 2 --sockets 4
-    qm importdisk 1000 debian-11-generic-amd64.raw local-zfs
-    qm set 1000 --scsihw virtio-scsi-pci --scsi0 local-zfs:vm-1000-disk-0
-    qm set 1000 --serial0 socket
-    qm set 1000 --boot c --bootdisk scsi0
-    qm set 1000 --tablet 0
-    qm set 1000 --ostype l26
-    qm set 1000 --agent 1,fstrim_cloned_disks=1
-    qm set 1000 --scsi1 local-zfs:cloudinit
-    qm resize 1000 scsi0 +48G
-    qm template 1000
-
-    qm clone 1000 110 --name DEBIAN11 --storage local-zfs --full --target SRV01
-    qm set 110 --ipconfig0 ip=146.59.254.96/32,gw=152.228.224.254
-    qm set 110 --net0 virtio,bridge=vmbr0,macaddr=02:00:00:23:da:6b
-    qm set 110 --ciuser mathod
-    qm set 110 --cipassword mathod
-</code></pre>
+                
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../foreword/" class="btn btn-neutral float-left" title="Foreword"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../mattermost/" class="btn btn-neutral float-right" title="Mattermost">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../../karpenter/foreword/" class="btn btn-neutral float-left" title="Karpenter"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../grafana/foreword/" class="btn btn-neutral float-right" title="Grafana">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -178,10 +151,10 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../foreword/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../../karpenter/foreword/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../mattermost/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../../grafana/foreword/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

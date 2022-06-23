@@ -1,12 +1,12 @@
 site_name: Mathod
 nav:
-    - Home: index.md
+    - Home: home.md
     - Kubernetes: kubernetes.md
-    - ArgoCD: argocd/foreword.md
-    - Istio: istio.md
     - 'PROVIDERS':
         - 'AWS': 'aws/foreword.md'
     - 'APPS':
+        - 'ArgoCD': 'argocd/foreword.md'
+        - 'Istio': 'istio/foreword.md'
         - 'Keda': 'keda/foreword.md'
         - 'Karpenter': 'karpenter/foreword.md'
         - 'Prometheus': 'prometheus/foreword.md'
@@ -18,7 +18,7 @@ nav:
         - 'Foreword': 'gitlab/foreword.md'
         - 'Usecase': 'gitlab/usecase.md'
         - 'Mattermost': 'gitlab/mattermost.md'
-    - Glossary: glossary.md
-    - 'ABOUT': 
+    - 'OTHERS': 
+        - 'Glossary': glossary.md
         - 'About': about.md
 theme: readthedocs

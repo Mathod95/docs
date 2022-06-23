@@ -2,6 +2,9 @@ site_name: Mathod
 nav:
     - Home: index.md
     - Kubernetes: kubernetes.md
+    - 'AUTOMATION/CONFIGURATION':
+        - 'Terraform': 'terraform/foreword.md'
+        - 'Ansible': 'ansible/foreword.md'
     - 'PROVIDERS':
         - 'AWS': 'aws/foreword.md'
     - 'APPS':
@@ -13,7 +16,7 @@ nav:
         - 'Grafana': 'grafana/foreword.md'
         - 'Harbor': 'harbor/foreword.md'
         - 'WireGuard': 'wireguard/foreword.md'
-    - Ansible: ansible.md
+    
     - 'GITLAB' :
         - 'Foreword': 'gitlab/foreword.md'
         - 'Usecase': 'gitlab/usecase.md'

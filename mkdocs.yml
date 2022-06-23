@@ -4,18 +4,21 @@ nav:
     - Kubernetes: kubernetes.md
     - ArgoCD: argocd/foreword.md
     - Istio: istio.md
-    - AWS: aws.md
+    - 'PROVIDERS'
+        - 'AWS': 'aws/foreword.md'
+    - 'APPS':
+        - 'Keda': 'keda/foreword.md'
+        - 'Karpenter': 'karpenter/foreword.md'
+        - 'Prometheus': 'prometheus/foreword.md'
+        - 'Grafana': 'grafana/foreword.md'
+        - 'Harbor': 'harbor/foreword.md'
+        - 'WireGuard': 'wireguard/foreword.md'
     - Ansible: ansible.md
-    - Wireguard: wireguard.md
-    - Mattermost: mattermost/foreword.md
-    - Harbor: harbor/foreword.md
-    - Keda: keda/foreword.md
-    - Karpenter: karpenter/foreword.md
-    - GitLab: gitlab/foreword.md
-              gitlab/usecase.md
-    - 'GitLab' :
-        - 'Foreword': 'foreword.md'
-        - 'Usecase': 'usecase.md'
+    - 'GITLAB' :
+        - 'Foreword': 'gitlab/foreword.md'
+        - 'Usecase': 'gitlab/usecase.md'
+        - 'Mattermost': 'gitlab/mattermost.md'
     - Glossary: glossary.md
-    - About: about.md
+    - 'ABOUT': 
+        - 'About': about.md
 theme: readthedocs

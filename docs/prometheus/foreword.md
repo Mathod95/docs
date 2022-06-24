@@ -1,7 +1,7 @@
 Inline-style: 
-![alt text](https://github.com/Mathod95/docs/blob/main/docs/img/prometheus/prometheus-stacked-color.png "Logo Title Text 1")
+![alt text](https://raw.githubusercontent.com/Mathod95/docs/main/docs/img/prometheus/prometheus-stacked-color.png "Logo Title Text 1")
 
 Reference-style: 
 ![alt text][logo]
 
-[logo]: https://github.com/Mathod95/docs/blob/main/docs/img/prometheus/prometheus-stacked-color.png "Logo Title Text 2"
+[logo]: https://raw.githubusercontent.com/Mathod95/docs/main/docs/img/prometheus/prometheus-stacked-color.png "Logo Title Text 2"

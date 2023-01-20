@@ -2,8 +2,4 @@ site_name: Mathod
 theme: readthedocs
 nav:
     - Home: index.md
-    - Kubernetes: kubernetes/kubernetes.md
-    - 'Apps':
-        - 'Istio': 'argocd/foreword.md'
-    - 'Links':
-        - 'GitProject': 'links/project_git.md'
+    - Kubernetes: kubernetes.md

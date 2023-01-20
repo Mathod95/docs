@@ -3,3 +3,7 @@ theme: readthedocs
 nav:
     - Home: index.md
     - Kubernetes: kubernetes.md
+    - 'Apps':
+        - 'Istio': 'argocd/foreword.md'
+    - 'Links':
+        - 'GitProject': 'links/project_git.md'

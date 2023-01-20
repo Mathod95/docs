@@ -1,0 +1,5 @@
+site_name: Mathod
+theme: readthedocs
+nav:
+    - Home: index.md
+    - Kubernetes: kubernetes.md

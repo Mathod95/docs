@@ -1,16 +1,16 @@
-# Welcome to MkDocs
+# Kubernetes
 
 ## Forewords
 
 ## Apps
 
-### ISTIO
-### KEDA
-### KARPENTER
-### GITLAB
-### GRAFANA
-### HARBOR
-### SNYK
-### PROMETHEUS
-### ARGOCD
-### WIREGUARD
+### Istio
+### Keda
+### Karpenter
+### Gitlab
+### Grafana
+### Harbor
+### Snyk
+### Prometheus
+### Argo CD
+### Wireguard

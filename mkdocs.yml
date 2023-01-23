@@ -3,3 +3,5 @@ theme: readthedocs
 nav:
     - Home: index.md
     - Kubernetes: kubernetes.md
+    - Docker: docker.md
+    - Others: others.md

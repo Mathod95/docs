@@ -1,0 +1,61 @@
+site_name: DevOps Journey
+site_url: https://blog.mathod.fr
+
+nav:
+  - index.md
+  - Blog:
+    - blog/index.md
+
+theme:
+  language: fr
+  font:
+    text: JetBrains Sans
+    code: JetBrains Code
+  name: material
+  language: en
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/link
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off
+        name: Switch to system preference
+  features:
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+    - navigation.instant.preview
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.indexes
+    - toc.follow
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - search.share
+
+
+plugins:
+  - search
+    #- social # https://squidfunk.github.io/mkdocs-material/setup/setting-up-social-cards/
+  - blog
+  - tags
+
+extra:
+  analytics:
+    provider: google
+    property: G-FY4MN6NVXN

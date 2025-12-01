@@ -1,8 +1,10 @@
 site_name: DevOps Journey
 site_url: https://blog.mathod.fr
+repo_url: https://github.com/Mathod95/docs
 
 nav:
   - index.md
+  - Tags: tags.md
   - Blog:
     - blog/index.md
 
@@ -47,7 +49,6 @@ theme:
     - search.suggest
     - search.highlight
     - search.share
-
 
 plugins:
   - search

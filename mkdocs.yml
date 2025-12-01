@@ -5,10 +5,14 @@ repo_name: Mathod95/docs
 edit_uri: edit/main/docs/
 
 nav:
-  - index.md
+  - HOME: index.md
+  - Kuberentes: kubernetes/index.md
+  - Argo: argo/index.md
+  - Crossplane: crossplane/index.md
   - Tags: tags.md
   - Blog: # https://squidfunk.github.io/mkdocs-material/plugins/blog/#config.blog_dir-documentation--blog
     - blog/index.md
+  - About me: about-me/index.md
 
 theme:
   icon:

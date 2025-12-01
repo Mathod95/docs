@@ -1,20 +1,23 @@
 site_name: DevOps Journey
 site_url: https://blog.mathod.fr
 repo_url: https://github.com/Mathod95/docs
+repo_name: Mathod95/docs
+edit_uri: edit/main/docs/
 
 nav:
   - index.md
   - Tags: tags.md
-  - Blog:
+  - Blog: # https://squidfunk.github.io/mkdocs-material/plugins/blog/#config.blog_dir-documentation--blog
     - blog/index.md
 
 theme:
-  language: fr
+  icon:
+    repo: fontawesome/brands/github
   font:
     text: JetBrains Sans
     code: JetBrains Code
   name: material
-  language: en
+  language: fr
   palette:
     - media: "(prefers-color-scheme)"
       toggle:
@@ -49,14 +52,55 @@ theme:
     - search.suggest
     - search.highlight
     - search.share
+    - header.autohide
+    - navigation.footer
+    - content.action.view
+
+markdown_extensions:
+  - abbr # https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown/#abbreviations
+  - admonition
+  - attr_list
+  - def_list
+  - md_in_html
+  - toc:
+      toc_depth: 6
+      permalink: true
+  - tables
+  - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets # https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown-extensions/#snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
 
 plugins:
-  - search
+  - search:
+      lang: fr
     #- social # https://squidfunk.github.io/mkdocs-material/setup/setting-up-social-cards/
   - blog
   - tags
+  - git-revision-date-localized:
+      enable_creation_date: true
+  - git-committers:
+      repository: Mathod95/docs
+      branch: main
 
 extra:
   analytics:
     provider: google
     property: G-FY4MN6NVXN
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Mathod95
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/mathod/

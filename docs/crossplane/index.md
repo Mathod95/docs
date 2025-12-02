@@ -14,16 +14,8 @@ github:
   - https://github.com/akuity/awesome-argo?tab=readme-ov-file#ecosystem-projects # search crossplane
 ---
 
-# Page with Plugin
 
-!!! INFO
-    {{{user-defined-values}}}
-    
-### List ec2 instances for a region
 
-```
-aws ec2 describe-instances YOUR_AWS_ACCOUNT_ID --output table --region YOUR_AWS_REGION
-```
 
 
 ![](/assets/images/crossplane/image.png)

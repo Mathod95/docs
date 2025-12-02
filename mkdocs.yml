@@ -1,4 +1,4 @@
-site_name: DevOps Journey
+site_name: Mathod
 site_url: https://blog.mathod.fr
 repo_url: https://github.com/Mathod95/docs
 repo_name: Mathod95/docs
@@ -9,6 +9,7 @@ nav:
   - Kuberentes: kubernetes/index.md
   - Argo: argo/index.md
   - Crossplane: crossplane/index.md
+  - Awesome: awesome.md
   - Tags: tags.md
   - Blog: # https://squidfunk.github.io/mkdocs-material/plugins/blog/#config.blog_dir-documentation--blog
     - blog/index.md
@@ -17,9 +18,9 @@ nav:
 theme:
   icon:
     repo: fontawesome/brands/github
-  font:
-    text: JetBrains Sans
-    code: JetBrains Code
+  #font:
+  #  text: JetBrains Sans
+  #  code: JetBrains Code
   name: material
   language: fr
   palette:
@@ -59,6 +60,9 @@ theme:
     - header.autohide
     - navigation.footer
     - content.action.view
+    - content.code.copy
+    - content.code.select
+    - content.code.annotate
 
 markdown_extensions:
   - abbr # https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown/#abbreviations
@@ -85,18 +89,34 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
 
-
 plugins:
+  - open-in-new-tab               # https://github.com/JakubAndrysek/mkdocs-open-in-new-tab
   - search:
       lang: fr
-    #- social # https://squidfunk.github.io/mkdocs-material/setup/setting-up-social-cards/
+    #- social                     # https://squidfunk.github.io/mkdocs-material/setup/setting-up-social-cards/
   - blog
   - tags
-  - git-revision-date-localized:
+  - git-revision-date-localized:  # https://github.com/timvink/mkdocs-git-revision-date-localized-plugin
       enable_creation_date: true
-  - git-committers:
+  - git-committers:               # https://github.com/byrnereese/mkdocs-git-committers-plugin
       repository: Mathod95/docs
       branch: main
+      #token: 
+  #- mkdocs-video                 # https://github.com/soulless-viewer/mkdocs-video
+  #- drawio-exporter              # https://github.com/LukeCarrier/mkdocs-drawio-exporter
+  - glightbox                     # https://github.com/blueswen/mkdocs-glightbox
+  - toggle-sidebar:               # https://github.com/six-two/mkdocs-toggle-sidebar-plugin
+      enabled: True
+      show_navigation_by_default: true
+      show_toc_by_default: true
+      theme: material
+      toggle_button: all
+  - user-defined-values:
+      keywords:
+        YOUR_AWS_REGION:
+          placeholder: e.g. ap-southeast-2
+        YOUR_AWS_ACCOUNT_ID:
+          placeholder: e.g. 12355224536
 
 extra:
   analytics:

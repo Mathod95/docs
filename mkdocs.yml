@@ -100,7 +100,7 @@ plugins:
   - open-in-new-tab               # https://github.com/JakubAndrysek/mkdocs-open-in-new-tab
   - search:
       lang: fr
-    #- social                     # https://squidfunk.github.io/mkdocs-material/setup/setting-up-social-cards/
+  - social                        # https://squidfunk.github.io/mkdocs-material/setup/setting-up-social-cards/
   - blog
   - tags
   - git-revision-date-localized:  # https://github.com/timvink/mkdocs-git-revision-date-localized-plugin

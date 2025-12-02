@@ -44,6 +44,7 @@ theme:
         name: Switch to system preference
   features:
     - navigation.instant
+    - navigation.tracking
     - navigation.instant.prefetch
     - navigation.instant.progress
     - navigation.instant.preview
@@ -63,6 +64,7 @@ theme:
     - content.code.copy
     - content.code.select
     - content.code.annotate
+    - content.tooltips
 
 markdown_extensions:
   - abbr # https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown/#abbreviations
@@ -73,6 +75,7 @@ markdown_extensions:
   - toc:
       toc_depth: 6
       permalink: true
+  - meta
   - tables
   - pymdownx.betterem
   - pymdownx.caret
@@ -101,7 +104,7 @@ plugins:
   - git-committers:               # https://github.com/byrnereese/mkdocs-git-committers-plugin
       repository: Mathod95/docs
       branch: main
-      #token: 
+      #token:
   #- mkdocs-video                 # https://github.com/soulless-viewer/mkdocs-video
   #- drawio-exporter              # https://github.com/LukeCarrier/mkdocs-drawio-exporter
   - glightbox                     # https://github.com/blueswen/mkdocs-glightbox

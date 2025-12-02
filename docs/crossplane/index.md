@@ -14,10 +14,6 @@ github:
   - https://github.com/akuity/awesome-argo?tab=readme-ov-file#ecosystem-projects # search crossplane
 ---
 
-
-
-
-
 ![](/assets/images/crossplane/crossplane.svg)
 
 ## Install Crossplane

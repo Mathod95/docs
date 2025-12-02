@@ -1,0 +1,493 @@
+---
+title: Install Cilium in KinD
+date: 2025-10-03
+categories:
+  - Kubernetes
+tags:
+  - Kubernetes
+  - Tutorial
+  - KinD
+  - Cilium
+  - eBPF
+  - CNI
+sources:
+  - https://medium.com/@nahelou.j/play-with-cilium-native-routing-in-kind-cluster-5a9e586a81ca
+  - https://medium.com/@charled.breteche/kind-cluster-with-cilium-and-no-kube-proxy-c6f4d84b5a9d
+---
+
+# Install Cilium in KinD
+
+![post01](post01.svg)
+
+<!-- more -->
+## Introduction
+
+
+
+### Objectifs
+
+Ce guide vous explique comment déployer un cluster Kind (Kubernetes dans Docker) configuré pour :
+
+- désactiver le CNI par défaut de Kind (kindnet)
+- désactiver kube-proxy
+- utiliser Cilium comme CNI avec un remplacement strict du proxy
+- utiliser le mode de routage natif / routage direct
+- activer en option :
+    - le masquage basé sur eBPF
+    - les annonces L2
+    - l’accélération XDP
+    - les pools d’adresses IP pour le load-balancer (LB)
+
+L’objectif est de simuler localement une configuration de type production, avec moins de dépendances à iptables/ipvs, de meilleures performances, et une couche réseau plus proche de celle des clusters réels.
+
+### Prérequis
+
+### Ma configuration
+- kind v0.29.0 go1.24.3 linux/amd64
+
+---
+
+## Configuration de KinD
+
+``` yaml title="kind-config.yaml" linenums="1"
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+  - role: worker
+  - role: worker
+networking:
+  disableDefaultCNI: true
+  kubeProxyMode: none
+```
+Running the command below will spin up a cluster without kindnet and will not install kube-proxy:
+```bash hl_lines="1"
+kind create cluster --config=kind-config.yaml
+Creating cluster "kind" ...
+ ✓ Ensuring node image (kindest/node:v1.33.1) 🖼
+ ✓ Preparing nodes 📦 📦 📦
+ ✓ Writing configuration 📜
+ ✓ Starting control-plane 🕹
+ ✓ Installing StorageClass 💾
+ ✓ Joining worker nodes 🚜
+Set kubectl context to "kind-kind"
+You can now use your cluster with:
+kubectl cluster-info --context kind-kind
+Have a nice day! 👋
+```
+??? success "OUTPUT"
+    Lorsque le cluster démarre suite à `kind create cluster --config=kind-config.yaml`, de nombreux pods resteront en `Pending` et les nœuds pourront apparaître comme `NotReady`, car aucun CNI n’est encore présent.
+    ``` bash hl_lines="1"
+    kubectl get pods --all-namespaces
+    NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+    kube-system          coredns-674b8bbfcf-9gvrc                     0/1     Pending   0          61m
+    kube-system          coredns-674b8bbfcf-rlx56                     0/1     Pending   0          61m
+    kube-system          etcd-kind-control-plane                      1/1     Running   0          61m
+    kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          61m
+    kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          61m
+    kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          61m
+    local-path-storage   local-path-provisioner-7dc846544d-hztkz      0/1     Pending   0          61m
+    ```
+    ``` bash hl_lines="1"
+    kubectl get nodes
+    NAME                 STATUS     ROLES           AGE   VERSION
+    kind-control-plane   NotReady   control-plane   24h   v1.33.1
+    kind-worker          NotReady   <none>          24h   v1.33.1
+    kind-worker2         NotReady   <none>          24h   v1.33.1
+    ```
+
+## Installation de Cilium
+
+``` bash
+helm repo add cilium https://helm.cilium.io
+"cilium" has been added to your repositories
+```
+``` bash
+helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "cilium" chart repository
+Update Complete. ⎈Happy Helming!⎈
+```
+``` bash
+helm show values cilium/cilium > cilium-values.yaml
+```
+
+``` yaml title="cilium-config.yaml" linenums="1"
+kubeProxyReplacement: true
+k8sServiceHost: kind-control-plane
+k8sServicePort: 6443
+ipam:
+  mode: kubernetes
+routingMode: native
+ipv4NativeRoutingCIDR: 10.244.0.0/16
+autoDirectNodeRoutes: true
+bpf:
+  masquerade: true
+ipMasqAgent:
+  enabled: true
+  config:
+    nonMasqueradeCIDRs:
+      - 10.244.0.0/8
+l2announcements:
+  enabled: true
+loadBalancer:
+  acceleration: native
+  mode: hybrid
+hubble:
+  relay:
+    enabled: true
+  ui:
+    enabled: true
+```
+``` bash
+$ helm install -n kube-system cilium cilium/cilium -f cilium-values.yaml
+```
+??? success "OUTPUT"
+    Insert some text here
+    ``` bash hl_lines="1"
+    helm install -n kube-system cilium cilium/cilium -f cilium-values.yaml
+    NAME: cilium
+    LAST DEPLOYED: Sun Oct  5 08:56:31 2025
+    NAMESPACE: kube-system
+    STATUS: deployed
+    REVISION: 1
+    TEST SUITE: None
+    NOTES:
+    You have successfully installed Cilium with Hubble Relay and Hubble UI.
+
+    Your release version is 1.18.2.
+
+    For any further help, visit https://docs.cilium.io/en/v1.18/gettinghelp
+    ```
+    ``` bash hl_lines="1"
+    kubectl get pods --all-namespaces
+    NAMESPACE            NAME                                         READY   STATUS    RESTARTS     AGE
+    kube-system          cilium-d68lg                                 1/1     Running   0            3m59s
+    kube-system          cilium-envoy-h42wt                           1/1     Running   0            3m59s
+    kube-system          cilium-envoy-mbs97                           1/1     Running   0            3m59s
+    kube-system          cilium-envoy-sbwgg                           1/1     Running   0            3m59s
+    kube-system          cilium-gdw4g                                 1/1     Running   0            3m59s
+    kube-system          cilium-operator-67786d88c8-6kmv8             1/1     Running   0            3m59s
+    kube-system          cilium-operator-67786d88c8-kjvpx             1/1     Running   0            3m59s
+    kube-system          cilium-v9krx                                 1/1     Running   0            3m59s
+    kube-system          coredns-674b8bbfcf-9gvrc                     1/1     Running   0            2d1h
+    kube-system          coredns-674b8bbfcf-rlx56                     1/1     Running   0            2d1h
+    kube-system          etcd-kind-control-plane                      1/1     Running   0            2d1h
+    kube-system          hubble-relay-b5cc85765-jsf6z                 1/1     Running   0            3m59s
+    kube-system          hubble-ui-6445786767-dr97w                   2/2     Running   0            3m59s
+    kube-system          kube-apiserver-kind-control-plane            1/1     Running   0            2d1h
+    kube-system          kube-controller-manager-kind-control-plane   1/1     Running   1 (8h ago)   2d1h
+    kube-system          kube-scheduler-kind-control-plane            1/1     Running   1 (8h ago)   2d1h
+    local-path-storage   local-path-provisioner-7dc846544d-hztkz      1/1     Running   0            2d1h
+    ```
+    ``` bash hl_lines="1"
+    kubectl get nodes
+    NAME                 STATUS   ROLES           AGE    VERSION
+    kind-control-plane   Ready    control-plane   2d1h   v1.33.1
+    kind-worker          Ready    <none>          2d1h   v1.33.1
+    kind-worker2         Ready    <none>          2d1h   v1.33.1
+    ```
+
+``` bash hl_lines="1"
+kubectl get nodes -o yaml | yq '.items[] | {"name": .metadata.name, "podCIDR": .spec.podCIDR}'
+name: kind-control-plane
+podCIDR: 10.244.0.0/24
+name: kind-worker
+podCIDR: 10.244.2.0/24
+name: kind-worker2
+podCIDR: 10.244.1.0/24
+```
+
+
+
+---
+
+## Conclusion
+
+### En rapport avec cet article
+
+### Liens utile
+
+Running a Kind cluster with Cilium (no kube‑proxy, native routing, XDP, etc.)
+
+This guide walks you through deploying a Kind (Kubernetes in Docker) cluster configured to:
+
+disable the default Kind CNI (kindnet)
+
+disable kube-proxy
+
+use Cilium as the CNI with strict proxy replacement
+
+use native routing mode / direct routing
+
+optionally enable eBPF-based masquerading, L2 announcements, XDP acceleration, and LB IP pools
+
+The goal is to approximate a production‐grade setup locally, with fewer iptables/ipvs dependencies, higher performance, and a networking layer closer to real clusters.
+
+Why do this?
+
+Closer to production: Many real clusters disable kube-proxy in favor of eBPF / Cilium handling service load‑balancing & routing.
+
+Performance & simplicity: With native routing, traffic across nodes leverages Linux routing (and optionally XDP), avoiding overlays or encapsulation.
+
+Observability & security: Cilium enables fine-grained policies (CiliumNetworkPolicy, CiliumClusterwideNetworkPolicy), flow visibility (Hubble), etc.
+
+Learning & testing: Running this locally helps validate behavior you’d expect in production (e.g. service reachability, routing, node‑to‑node pod traffic).
+
+Overview of steps & challenges
+
+Create Kind cluster with default CNI disabled and kube-proxy off
+
+Install Cilium with appropriate configuration
+
+tell Cilium how to reach the control plane (k8s service host/port)
+
+set kubeProxyReplacement: strict
+
+enable native routing
+
+optionally enable features: masquerading via eBPF, L2 announcements, XDP, LB IP pools
+
+Ensure inter-node routing of pod subnets
+
+Optional: set up load balancing (service of type LoadBalancer)
+
+Resolve issues (DNS, external access, ARP/L2 announcements, etc.)
+
+Validate with sample workloads
+
+(Optional) Enable acceleration: XDP
+
+Below is a merged, refined narrative with commands and explanation.
+
+1. Create the Kind cluster (no default CNI, no kube‑proxy)
+
+Use a cluster config like:
+
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  disableDefaultCNI: true     # do not install kind’s default CNI (kindnet)
+  kubeProxyMode: none         # do not run kube-proxy
+nodes:
+  - role: control-plane
+    # optionally add extraPortMappings for ingress / Hubble UI, etc.
+  - role: worker
+  - role: worker
+
+
+Then:
+
+kind create cluster --config kind-config.yaml
+
+
+When the cluster comes up, many pods will remain Pending and the nodes may show NotReady because no CNI is present. 
+Medium
++1
+
+2. Install Cilium with required configuration
+
+You must give Cilium enough context so it can function with no kube-proxy. A minimal config (via Helm or manifest) includes:
+
+# cilium-config.yaml (merged ideas)
+kubeProxyReplacement: strict
+k8sServiceHost: kind-control-plane
+k8sServicePort: 6443
+
+ipam:
+  mode: kubernetes
+
+# routing settings
+routingMode: native
+ipv4NativeRoutingCIDR: 10.244.0.0/16
+autoDirectNodeRoutes: true
+
+# masquerading (optional enhancement)
+bpf:
+  masquerade: true
+ipMasqAgent:
+  enabled: true
+  config:
+    nonMasqueradeCIDRs:
+      - 10.244.0.0/8
+
+# L2 announcements (for service LoadBalancer reachability)
+l2announcements:
+  enabled: true
+
+# load balancer / LB IP pool
+loadBalancer:
+  acceleration: native
+  mode: hybrid
+
+# Hubble observability
+hubble:
+  relay:
+    enabled: true
+  ui:
+    enabled: true
+
+
+Then deploy with Helm (or helm upgrade --install) into the kube-system namespace. Be sure to include or patch with the above CLI options. 
+Medium
++1
+
+One of the early pitfalls is that Cilium’s pods / operator may crash because they can't reach the Kubernetes API server (via the in-cluster service) — you must explicitly set k8sServiceHost and k8sServicePort so that Cilium knows how to contact the control plane in the Docker / Kind network. 
+Medium
++1
+
+Also, in the original Brétéché article, it is noted that setting hostServices.enabled: false, and enabling externalIPs, nodePort, hostPort etc., may be required for the correct service exposure behavior. 
+Medium
+
+After installation, the Cilium pods (daemonset + operator) should become ready. 
+Medium
++1
+
+3. Ensure inter-node routing of pod subnets
+
+With native routing, Cilium must insert kernel routes for each node’s pod CIDR so that traffic destined to pods on other nodes can be routed correctly. If this is not done, cross-node pod-to-pod traffic may not work properly. 
+Medium
+
+By enabling autoDirectNodeRoutes: true, the Cilium agent automatically adds these routes based on cluster pod CIDRs. This is convenient if your nodes are in a flat L2 network. 
+Medium
+
+You can inspect routes on a node:
+
+kubectl exec -it <node-pod> -- ip route
+
+
+You should see routes for the other nodes’ pod subnets pointing via eth0 or whichever interface. 
+Medium
+
+4. (Optional) Configure service load balancing (LoadBalancer type)
+
+To expose services externally (north‑south), Cilium supports a LoadBalancer mode and IP pools (CiliumLoadBalancerIPPool). In the Nahelou article, the author does:
+
+define a CiliumLoadBalancerIPPool object, e.g.:
+
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: "default"
+spec:
+  blocks:
+    - cidr: "172.18.250.0/24"
+
+
+create a Service of type LoadBalancer and ensure its external IP is assigned (e.g. 172.18.250.1). 
+Medium
+
+To reach that external IP from your host, you may need:
+
+A route on the host machine pointing the LB IP subnet to the Docker / Kind bridge
+
+Or ARP announcements (L2 announcements) so that neighboring nodes or host sees the MAC/IP for LB IPs
+
+Use l2announcements.enabled: true in Cilium config
+
+A CiliumL2AnnouncementPolicy that selects which nodes / interfaces announce the LB IPs
+
+Example:
+
+apiVersion: "cilium.io/v2alpha1"
+kind: CiliumL2AnnouncementPolicy
+metadata:
+  name: default
+spec:
+  nodeSelector:
+    matchExpressions:
+      - key: node-role.kubernetes.io/control-plane
+        operator: DoesNotExist
+  interfaces:
+    - ^eth[0-9]+
+  externalIPs: true
+  loadBalancerIPs: true
+
+
+Then, on your host, create a route:
+
+sudo ip route add 172.18.250.0/24 dev br-<docker-bridge> src 172.18.0.1
+
+
+This ensures that when you try to hit 172.18.250.1 from your host, traffic goes to the Docker bridge and into the cluster. 
+Medium
+
+5. DNS, external resolution & iptables interactions
+
+A subtle trap: Docker and the host may impose iptables rules (e.g. redirecting DNS to local DNS) that interfere with external DNS resolution inside pods. For example, Docker’s DOCKER_OUTPUT chain may hijack DNS traffic. 
+Medium
+
+As a workaround, you may need to patch CoreDNS:
+
+Edit the coredns ConfigMap to replace forward . /etc/resolv.conf with a fixed DNS server (e.g. your LAN router’s DNS)
+
+Then restart the coredns deployment
+
+This ensures pods’ DNS queries reach valid upstream servers, bypassing Docker’s internal redirections. 
+Medium
+
+6. (Optional) Enable XDP acceleration
+
+For additional performance, enable XDP (Express Data Path) acceleration in Cilium. This allows packet processing before they traverse the kernel stack, reducing latency. 
+Medium
+
+In your cilium-config.yaml, you may set:
+
+loadBalancer:
+  acceleration: native
+  mode: hybrid
+
+
+Then, after an upgrade/rollout of Cilium, check:
+
+kubectl -n kube-system exec ds/cilium -- cilium-dbg status --verbose | grep XDP
+
+
+You should see something like: XDP Acceleration: Native 
+Medium
+
+On the node itself, you can check the interface for XDP capabilities (e.g. ip addr | grep xdp). 
+Medium
+
+7. Validate with a sample workload
+
+Deploy a simple sample app (e.g. Cilium’s http-sw-app.yaml) across nodes:
+
+kubectl apply -f https://raw.githubusercontent.com/cilium/cilium/HEAD/examples/minikube/http-sw-app.yaml
+
+
+Then exec from a pod, try to curl to a service in another namespace:
+
+kubectl exec <pod> -- curl http://<service-name>.<namespace>.svc.cluster.local
+
+
+Test DNS resolution, pod-to-pod cross-node communication, and external reachability (via LoadBalancer IP) from your host.
+
+In the Nahelou article, he also validates with the Star Wars API example:
+
+kubectl exec tiefighter -- curl --connect-timeout 10 -s https://swapi.dev/api/starships
+kubectl exec tiefighter -- curl … deathstar.default.svc.cluster.local/v1/request-landing
+
+
+Those serve to confirm that the internal cluster mechanisms are working. 
+Medium
+
+Tips, caveats & lessons from both
+
+Always explicitly set k8sServiceHost / k8sServicePort so the Cilium operator / pods can reach the control plane — this is essential when kube-proxy is disabled. 
+Medium
++1
+
+Use routingMode: native + autoDirectNodeRoutes: true to avoid needing a tunnel or overlay.
+
+If your nodes are on a flat L2, routing is simpler. If not, you might need to manually manage routes.
+
+For LoadBalancer type services, you need an IP pool, L2 announcements, and a corresponding route on the host to reach that pool.
+
+Pay attention to how Docker’s iptables rules may interfere with DNS or other networking.
+
+Enabling XDP and eBPF-based masquerading can offer performance gains, but may require kernel support and compatibility.
+
+Observability via Hubble UI is helpful to debug flows, policies, etc.
+
+If you like, I can prepare a polished markdown article (or blog post) with this fusion, complete with diagrams, commands, and side-by-side comparisons. Would you like me to format it and send it to you?

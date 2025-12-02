@@ -19,11 +19,11 @@ author: "Mathias FELIX"
 ## Argo CD
 Declarative continuous delivery with a fully-loaded UI.
 
-### syncPolicy
+### Automated syncPolicy
 
 Il existe plusieurs paramètres que vous pouvez configurer pour gérer la synchronisation des applications.
 
-### Auto-Pruning
+#### Auto-Pruning
 
 L'auto-pruning est une fonctionnalité utile pour éviter de conserver des ressources inutiles dans le cluster. Lors de la réconciliation, ArgoCD supprimera les ressources qui ne sont plus présentes dans le dépôt Git.
 
@@ -84,6 +84,8 @@ kubectl -n argocd rollout restart deployment argocd-repo-server
 
 Cela permettra de rafraîchir le dépôt Git toutes les 3 heures. Si la réconciliation automatique est activée et qu’il n’y a pas de fenêtre de synchronisation en cours, la réconciliation du cluster aura lieu toutes les 3 heures.
 
+---
+
 ## Argo Workflows
 Kubernetes-native workflow engine supporting DAG and step-based workflows.
 
@@ -93,10 +95,30 @@ Event based dependency management for Kubernetes.
 ## Argo Rollouts
 Advanced Kubernetes deployment strategies such as Canary and Blue-Green made easy.
 
-!!! Abstract "**Documentation officielle**"
-    - [https://argoproj.github.io/](https://argoproj.github.io/)
-    - [Documentation Argo Workflows](https://argo-workflows.readthedocs.io/en/latest/)
-    - [Documentation Argo CD](https://argo-cd.readthedocs.io/en/stable/)
-    - [Documentation Argo Rollouts](https://argoproj.github.io/argo-rollouts/)
-    - [Documentation Argo Events](https://argoproj.github.io/argo-events/)
-    - [Certification CAPA](https://training.linuxfoundation.org/certification/certified-argo-project-associate-capa/)
+<div class="admonition note">
+  <p class="admonition-title">Crossplane Docs</p>
+
+```embed
+url: https://argoproj.github.io/
+```
+
+```embed
+url: https://argo-workflows.readthedocs.io/en/latest/
+```
+
+```embed
+url: https://argo-cd.readthedocs.io/en/stable/
+```
+
+```embed
+url: https://argoproj.github.io/argo-rollouts/
+```
+
+```embed
+url: https://argoproj.github.io/argo-events/
+```
+
+```embed
+url: https://training.linuxfoundation.org/certification/certified-argo-project-associate-capa/
+```
+</div>

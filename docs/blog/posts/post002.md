@@ -1,0 +1,356 @@
+---
+title: "Crossplane Composition"
+date: 2025-02-10
+description: "A simple demo showing how to create a blog post in MkDocs Material."
+categories:
+  - Crossplane
+  - Tutorial
+  - Composition
+tags:
+  - Crossplane
+  - Tutorial
+  - Composition
+author: "Mathod"
+todo: regarder la doc officiel de crossplane car ils ont des highlight au survol dans l'admonition important pour les plural et mydatabases
+---
+
+## Introduction
+Contexte + intérêt du sujet.  
+Phrase contenant ton mot-clé principal.
+
+<!-- more -->
+
+### Objectifs
+  - découvrir comment organiser un article dans MkDocs Material
+  - utiliser une structure claire et hiérarchique
+  - faciliter la lecture grâce à des sections adaptées
+
+### Prérequis
+  - connaître les bases du Markdown
+  - utiliser MkDocs et le thème Material
+  - savoir lancer `mkdocs serve`
+
+### Ma configuration
+  - **OS :** Ubuntu 22.04  
+  - **MkDocs :** 1.6.x  
+  - **Theme Material :** 9.x  
+  - **Plugins :** blog, search  
+
+---
+
+```shell
+# Create a kind cluster
+kind create cluster
+kubectl get crd
+
+# Install Crossplane
+helm dependency update crossplane-install
+helm upgrade --install crossplane --namespace crossplane-system crossplane-install --create-namespace
+kubectl wait --for=condition=ready pod -l app=crossplane --namespace crossplane-system --timeout=120s
+
+# Check Crossplane is there & get CRDs before the Provider installation
+kubectl get all -n crossplane-system
+kubectl get crd
+
+# Install AWS Provider (Official Upbound Provider Family-based)
+kubectl apply -f upbound/provider-aws-s3/config/provider-aws-s3.yaml
+kubectl wait --for=condition=healthy --timeout=180s provider/upbound-provider-aws-s3
+kubectl get crd
+kubectl get crossplane
+
+# Configure AWS Provider 
+echo "[default]
+aws_access_key_id = $(aws configure get aws_access_key_id)
+aws_secret_access_key = $(aws configure get aws_secret_access_key)
+" > aws-creds.conf
+
+kubectl create secret generic aws-creds -n crossplane-system --from-file=creds=./aws-creds.conf
+
+kubectl apply -f upbound/provider-aws-s3/config/provider-config-aws.yaml
+
+# Create Simple S3 Bucket (based on Crossplane Managed Resources only)
+kubectl apply -f upbound/provider-aws-s3/resources/simple-bucket.yaml
+kubectl get crossplane
+kubectl delete -f upbound/provider-aws-s3/resources/simple-bucket.yaml
+```
+
+!!! note "What are XRs, XRDs and Compositions ?"
+    A composite resource or `XR` is a custom API.
+      
+    You use two Crossplane types to create a new custom API:
+
+      - A Composite Resource Definition (XRD) - Defines the XR’s schema.
+      - A Composition - Configures how the XR creates other resources.
+
+## CompositeResourceDefinitions (XRDs)
+
+```yaml title="definition.yaml" linenums="1"
+apiVersion: apiextensions.crossplane.io/v2
+kind: CompositeResourceDefinition
+metadata:
+  name: xobjectstorages.mathod.io #(1)!
+spec:
+  scope: Namespaced
+  group: mathod.io #(2)!
+  names:
+    kind: XObjectStorage
+    plural: xobjectstorages
+  versions:
+    - name: v1alpha1
+      served: true
+      referenceable: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                parameters:
+                  type: object
+                  properties:
+                    bucketName:
+                      type: string
+                      description: "Nom du bucket S3"
+                    region:
+                      type: string
+                      description: "Région AWS"
+                      default: "eu-west-1"
+                    versioning:
+                      type: boolean
+                      description: "Activer le versioning"
+                      default: false
+                    encryption:
+                      type: boolean
+                      description: "Activer le chiffrement"
+                      default: true
+                    publicAccess:
+                      type: boolean
+                      description: "Autoriser l'accès public"
+                      default: false
+                  required:
+                    - bucketName
+              required:
+                - parameters
+            status:
+              type: object
+              properties:
+                bucketArn:
+                  type: string
+                bucketDomain:
+                  type: string
+```
+
+  1.  XRDs must be named "x<plural>.<group>"
+      Règles à respecter
+
+      Préfixe x : Par convention, les XRD commencent par x (pour "composite")
+      Cohérence avec le spec : Le nom doit correspondre à :
+
+      yaml   spec:
+           group: storage.example.com  # ← doit matcher le suffix du name
+           names:
+             plural: xobjectstorages   # ← doit matcher le prefix du name
+
+      Format DNS : Doit être un nom de domaine valide (lowercase, pas d'espaces, etc.)
+      Unique dans le cluster : Pas de collision avec d'autres XRD
+
+  2.  This XRD defines an XR in the 'crossplane.jonashackt.io' API group.
+      The XR or Claim must use this group together with the spec.versions[0].name as it's apiVersion, like this:
+      'crossplane.jonashackt.io/v1alpha1'
+
+  3.  XR names should always be prefixed with an 'X'
+
+
+```shell hl_lines="1 4" 
+kubectl apply -f xrds.yaml
+compositeresourcedefinition.apiextensions.crossplane.io/xobjectstorages.mathod.io created
+
+kubectl get compositeresourcedefinitions.apiextensions.crossplane.io
+NAME                        ESTABLISHED   OFFERED   AGE
+xobjectstorages.mathod.io   True                    23s
+
+```
+## Craft a Composition
+
+```yaml title="composition.yaml" linenums="1"
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: s3bucket.aws.mathod.io
+  labels:
+    provider: aws
+    type: s3
+spec:
+  compositeTypeRef:
+    apiVersion: mathod.io/v1alpha1
+    kind: XObjectStorage
+  
+  mode: Pipeline
+  
+  pipeline:
+    - step: patch-and-transform
+      functionRef:
+        name: function-patch-and-transform
+      input:
+        apiVersion: pt.fn.crossplane.io/v1beta1
+        kind: Resources
+        resources:
+          # Bucket S3
+          - name: s3-bucket
+            base:
+              apiVersion: s3.aws.m.upbound.io/v1beta1
+              kind: Bucket
+              spec:
+                forProvider:
+                  region: eu-west-1
+                providerConfigRef:
+                  name: aws-provider
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parameters.bucketName
+                toFieldPath: metadata.name
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parameters.region
+                toFieldPath: spec.forProvider.region
+              - type: ToCompositeFieldPath
+                fromFieldPath: status.atProvider.arn
+                toFieldPath: status.bucketArn
+              - type: ToCompositeFieldPath
+                fromFieldPath: status.atProvider.bucketDomainName
+                toFieldPath: status.bucketDomain
+
+          # Configuration du versioning
+          - name: bucket-versioning
+            base:
+              apiVersion: s3.aws.m.upbound.io/v1beta1
+              kind: BucketVersioning
+              spec:
+                forProvider:
+                  bucketRef:
+                    name: ""
+                  versioningConfiguration:
+                    - status: Disabled
+                providerConfigRef:
+                  name: aws-provider
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parameters.bucketName
+                toFieldPath: spec.forProvider.bucketRef.name
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parameters.versioning
+                toFieldPath: spec.forProvider.versioningConfiguration[0].status
+                transforms:
+                  - type: map
+                    map:
+                      "true": Enabled
+                      "false": Suspended
+
+          # Configuration du chiffrement
+          - name: bucket-encryption
+            base:
+              apiVersion: s3.aws.m.upbound.io/v1beta1
+              kind: BucketServerSideEncryptionConfiguration
+              spec:
+                forProvider:
+                  bucketRef:
+                    name: ""
+                  rule:
+                    - applyServerSideEncryptionByDefault:
+                        - sseAlgorithm: AES256
+                providerConfigRef:
+                  name: aws-provider
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parameters.bucketName
+                toFieldPath: spec.forProvider.bucketRef.name
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parameters.encryption
+                toFieldPath: spec.forProvider.rule[0].applyServerSideEncryptionByDefault[0].sseAlgorithm
+                transforms:
+                  - type: map
+                    map:
+                      "true": AES256
+                      "false": ""
+
+          # Bloquer l'accès public
+          - name: bucket-public-access-block
+            base:
+              apiVersion: s3.aws.m.upbound.io/v1beta1
+              kind: BucketPublicAccessBlock
+              spec:
+                forProvider:
+                  bucketRef:
+                    name: ""
+                  blockPublicAcls: true
+                  blockPublicPolicy: true
+                  ignorePublicAcls: true
+                  restrictPublicBuckets: true
+                providerConfigRef:
+                  name: aws-provider
+            patches:
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parameters.bucketName
+                toFieldPath: spec.forProvider.bucketRef.name
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parameters.publicAccess
+                toFieldPath: spec.forProvider.blockPublicAcls
+                transforms:
+                  - type: map
+                    map:
+                      "true": false
+                      "false": true
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parameters.publicAccess
+                toFieldPath: spec.forProvider.blockPublicPolicy
+                transforms:
+                  - type: map
+                    map:
+                      "true": false
+                      "false": true
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parameters.publicAccess
+                toFieldPath: spec.forProvider.ignorePublicAcls
+                transforms:
+                  - type: map
+                    map:
+                      "true": false
+                      "false": true
+              - type: FromCompositeFieldPath
+                fromFieldPath: spec.parameters.publicAccess
+                toFieldPath: spec.forProvider.restrictPublicBuckets
+                transforms:
+                  - type: map
+                    map:
+                      "true": false
+                      "false": true
+```
+
+## Craft a Composite Resource (XR)
+
+```yaml title="xr.yaml" linenums="1"
+apiVersion: mathod.io/v1alpha1
+kind: XObjectStorage
+metadata:
+  name: my-s3-bucket-example
+  namespace: default
+spec:
+  parameters:
+    bucketName: mon-bucket-exemple-123
+    region: eu-west-1
+    versioning: true
+    encryption: true
+    publicAccess: false
+  crossplane:
+    compositionRef:
+      name: s3bucket.aws.mathod.io
+```
+
+---
+
+## Conclusion
+
+### En rapport avec cet article
+
+### Liens utile
+  - https://docs.crossplane.io/latest/composition/composite-resource-definitions/

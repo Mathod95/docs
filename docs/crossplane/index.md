@@ -18,7 +18,7 @@ github:
 
 
 
-![](/assets/images/crossplane/image.png)
+![](/assets/images/crossplane/crossplane.svg)
 
 ## Install Crossplane
 
@@ -104,8 +104,24 @@ github:
         watchoperations.ops.crossplane.io                               2025-11-16T18:22:34Z
         ```
 
-    !!! Question "**Documentation officielle**"
-        [Documentation Crossplane](https://docs.crossplane.io/v2.1/)
+<div class="admonition abstract">
+  <p class="admonition-title">Documentation</p>
+
+```embed
+url: https://docs.crossplane.io/latest
+image: https://avatars.githubusercontent.com/u/45158470?s=280&v=4
+```
+</div>
+
+<details class="admonition Question">
+  <summary>Documentation</summary>
+
+```embed
+url: https://docs.crossplane.io/latest
+image: https://avatars.githubusercontent.com/u/45158470?s=280&v=4
+```
+  </details>
+</div>
 
 ---
 

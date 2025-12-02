@@ -83,7 +83,11 @@ markdown_extensions:
   - pymdownx.tilde
   - pymdownx.critic
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: embed
+          class: embed
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.snippets # https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown-extensions/#snippets
@@ -120,7 +124,7 @@ plugins:
           placeholder: e.g. ap-southeast-2
         YOUR_AWS_ACCOUNT_ID:
           placeholder: e.g. 12355224536
-  - link-embeds:
+  - link-embeds:                  # https://github.com/Aetherinox/mkdocs-link-embeds
       enabled: true
       name_default: "Untitled Link"
       desc_default: "No description found"

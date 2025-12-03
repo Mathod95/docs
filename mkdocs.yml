@@ -18,7 +18,8 @@ nav:
   - Tags: tags.md
   - Blog: # https://squidfunk.github.io/mkdocs-material/plugins/blog/#config.blog_dir-documentation--blog
     - blog/index.md
-  - About me: about-me/index.md
+  - About me: aboutme/index.md
+  - Syntax: syntax.md
 
 theme:
   icon:
@@ -95,7 +96,9 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.highlight
   - pymdownx.inlinehilite
-  - pymdownx.snippets # https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown-extensions/#snippets
+  - pymdownx.snippets: # https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown-extensions/#snippets
+      auto_append:
+        - includes/abbreviations.md
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.tasklist:
@@ -155,3 +158,6 @@ extra:
 
 extra_css:
   - stylesheets/link-embeds.css
+
+watch:
+  - includes

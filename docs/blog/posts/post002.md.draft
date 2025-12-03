@@ -4,8 +4,6 @@ date: 2025-02-10
 description: "A simple demo showing how to create a blog post in MkDocs Material."
 categories:
   - Crossplane
-  - Tutorial
-  - Composition
 tags:
   - Crossplane
   - Tutorial
@@ -14,6 +12,7 @@ author: "Mathod"
 todo: regarder la doc officiel de crossplane car ils ont des highlight au survol dans l'admonition important pour les plural et mydatabases
 ---
 
+![](/assets/images/crossplane/crossplane.svg)
 ## Introduction
 Contexte + intérêt du sujet.  
 Phrase contenant ton mot-clé principal.

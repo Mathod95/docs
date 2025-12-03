@@ -1,6 +1,7 @@
 ---
 title: Install Cilium in KinD
 date: 2025-10-03
+draft: true
 categories:
   - Kubernetes
 tags:
@@ -16,8 +17,6 @@ sources:
 ---
 
 # Install Cilium in KinD
-
-![post01](post01.svg)
 
 <!-- more -->
 ## Introduction

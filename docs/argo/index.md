@@ -19,45 +19,7 @@ author: "Mathias FELIX"
 ## Argo CD
 Declarative continuous delivery with a fully-loaded UI.
 
-### Automated syncPolicy
 
-Il existe plusieurs paramètres que vous pouvez configurer pour gérer la synchronisation des applications.
-
-#### Auto-Pruning
-
-L'auto-pruning est une fonctionnalité utile pour éviter de conserver des ressources inutiles dans le cluster. Lors de la réconciliation, ArgoCD supprimera les ressources qui ne sont plus présentes dans le dépôt Git.
-
-Pour l'activer via la ligne de commande :
-
-```shell hl_lines="1"
-argocd app set argocd/simple-app --auto-prune
-```
-
-Ou dans le manifest de l'application (à ajouter dans le spec de l'application) :
-
-```yaml linenums="1"
-syncPolicy:
-  automated:
-    prune: true
-```
-
-#### Self-Heal
-
-Le self-heal permet de réconcilier automatiquement le cluster lorsqu'une ressource est modifiée manuellement. Par exemple, si un utilisateur modifie un secret, ArgoCD détectera cette différence entre le cluster et la source de vérité et rétablira la configuration d'origine.
-
-Pour l'activer via la ligne de commande :
-
-```shell hl_lines="1"
-argocd app set argocd/simple-app --self-heal
-```
-
-Ou dans le manifest de l'application (à ajouter dans le spec de l'application) :
-
-```yaml linenums="1"
-syncPolicy:
-  automated:
-    selfHeal: true
-```
 
 ---
 

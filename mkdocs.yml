@@ -7,7 +7,12 @@ edit_uri: edit/main/docs/
 nav:
   - HOME: index.md
   - Kuberentes: kubernetes/index.md
-  - Argo: argo/index.md
+  - Argo: 
+    - argo/index.md
+    - cd: argo/cd/index.md
+    - events: argo/events/index.md
+    - workflows: argo/workflows/index.md
+    - rollouts: argo/rollouts/index.md
   - Crossplane: crossplane/index.md
   - Awesome: awesome.md
   - Tags: tags.md
@@ -105,10 +110,10 @@ plugins:
   - tags
   - git-revision-date-localized:  # https://github.com/timvink/mkdocs-git-revision-date-localized-plugin
       enable_creation_date: true
-  - git-committers:               # https://github.com/byrnereese/mkdocs-git-committers-plugin
-      repository: Mathod95/docs
-      branch: main
-      #token:
+  #- git-committers:               # https://github.com/byrnereese/mkdocs-git-committers-plugin
+  #    repository: Mathod95/docs
+  #    branch: main
+  #    token:
   #- mkdocs-video                 # https://github.com/soulless-viewer/mkdocs-video
   #- drawio-exporter              # https://github.com/LukeCarrier/mkdocs-drawio-exporter
   - glightbox                     # https://github.com/blueswen/mkdocs-glightbox

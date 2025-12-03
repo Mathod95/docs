@@ -1,16 +1,13 @@
 ---
 title: "Titre de ton article"
-description: "Courte description pour l’aperçu et le SEO"
 date: 2025-02-10
+draft: true
 tags:
   - tutoriel
   - mkdocs
   - guide
 categories:
   - Documentation
-author: "Mathias FELIX"
-thumbnail: images/mkdocs-thumb.png
-other: https://www.youtube.com/watch?v=pPEUhfTZswc
 ---
 
 ## Introduction

@@ -15,9 +15,10 @@ nav:
     - rollouts: argo/rollouts/index.md
   - Crossplane: crossplane/index.md
   - Awesome: awesome.md
-  - Tags: tags.md
   - Blog: # https://squidfunk.github.io/mkdocs-material/plugins/blog/#config.blog_dir-documentation--blog
     - blog/index.md
+  - Tags: tags.md
+  - Glossaire: glosarry.md
   - About me: aboutme/index.md
   - Syntax: syntax.md
 

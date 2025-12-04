@@ -9,7 +9,9 @@ categories:
   - Documentation
 tags:
   - template
-todo:
+user-defined-values:
+  - YOUR_APPNAME
+  - YOUR_ENV
 ---
 ```
 
@@ -70,3 +72,37 @@ url: https://docs.crossplane.io/latest
 ```
   </details>
 </div>
+
+
+---
+
+```
+---
+user-defined-values:
+  - YOUR_APPNAME
+  - YOUR_ENV
+---
+```
+
+
+!!! Example
+    {{{user-defined-values}}}
+
+```
+---
+apiVersion: v1 
+kind: Pod 
+metadata: 
+  name: YOUR_APPNAME-pod 
+  namespace: app1
+  labels: 
+    app: YOUR_APPNAME
+    env: YOUR_ENV
+  annotations: 
+    aws-account: "2389849082948"
+    maintainer: "dev@mathod.io"
+spec: 
+  containers: 
+  - name: nginx-container
+    image: nginx
+```

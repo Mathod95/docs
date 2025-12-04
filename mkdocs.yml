@@ -129,10 +129,16 @@ plugins:
       toggle_button: all
   - user-defined-values:
       keywords:
-        YOUR_AWS_REGION:
-          placeholder: e.g. ap-southeast-2
-        YOUR_AWS_ACCOUNT_ID:
-          placeholder: e.g. 12355224536
+        AWS_REGION:
+          placeholder: ex. eu-west-3
+        AWS_ACCOUNT_ID:
+          placeholder: ex. 12355224536
+        YOUR_BANANA:
+          placeholder: ex. apple
+        YOUR_APPNAME:
+          placeholder: ex. app01
+        YOUR_ENV:
+          placeholder: ex. production
   #- link-embeds:                  # https://github.com/Aetherinox/mkdocs-link-embeds
   #    enabled: true
   #    name_default: "Untitled Link"

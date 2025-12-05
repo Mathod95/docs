@@ -17,45 +17,89 @@ user-defined-values:
 
 ---
 
-``` yaml
-theme:
-  features:
-    - content.code.annotate # (1)
-```
 
-1.  :man_raising_hand: I'm a code annotation! I can contain `code`, __formatted
-    text__, images, ... basically anything that can be written in Markdown.
+!!! example "Code Annotate"
+
+    ``` yaml
+    theme:
+      features:
+        - content.code.annotate # (1)
+    ```
+
+    1.  :man_raising_hand: I'm a code annotation! I can contain `code`, __formatted
+        text__, images, ... basically anything that can be written in Markdown.
+
+
+    ````
+    ``` yaml
+    theme:
+      features:
+        - content.code.annotate # (1)
+    ```
+
+    1.  :man_raising_hand: I'm a code annotation! I can contain `code`, __formatted
+        text__, images, ... basically anything that can be written in Markdown.
+    ````
+
+
 
 ---
 
-=== "Python"
+!!! INFO
 
-    !!! note "Note for Python"
-        This is a note inside the Python tab.
+    === "Python"
 
-=== "JavaScript"
+        !!! note "Note for Python"
+            This is a note inside the Python tab.
 
-    !!! warning "Warning for JavaScript"
-        This is a warning inside the JavaScript tab.
+    === "JavaScript"
 
-!!! note "Parent Admonition"
+        !!! warning "Warning for JavaScript"
+            This is a warning inside the JavaScript tab.
 
-    This is the outer admonition content.
+    !!! note "Parent Admonition"
 
-    === "Tab 1"
+        This is the outer admonition content.
 
-        !!! tip "Tip inside Tab 1"
-            This is the first tab's inner admonition.
+        === "Tab 1"
 
-    === "Tab 2"
+            !!! tip "Tip inside Tab 1"
+                This is the first tab's inner admonition.
 
-        !!! warning "Warning inside Tab 2"
-            This is the second tab's inner admonition.
+        === "Tab 2"
+
+            !!! warning "Warning inside Tab 2"
+                This is the second tab's inner admonition.
+    ```
+    === "Python"
+
+        !!! note "Note for Python"
+            This is a note inside the Python tab.
+
+    === "JavaScript"
+
+        !!! warning "Warning for JavaScript"
+            This is a warning inside the JavaScript tab.
+
+    !!! note "Parent Admonition"
+
+        This is the outer admonition content.
+
+        === "Tab 1"
+
+            !!! tip "Tip inside Tab 1"
+                This is the first tab's inner admonition.
+
+        === "Tab 2"
+
+            !!! warning "Warning inside Tab 2"
+                This is the second tab's inner admonition.
+    ```
 
 ---
 
 <div class="admonition note">
-  <p class="admonition-title">Crossplane Docs</p>
+  <p class="admonition-title">Documentation</p>
 
 ```embed
 url: https://docs.crossplane.io/latest
@@ -65,7 +109,7 @@ url: https://docs.crossplane.io/latest
 ---
 
 <details class="admonition note">
-  <summary>Crossplane Docs</summary>
+  <summary>Documentation</summary>
 
 ```embed
 url: https://docs.crossplane.io/latest

@@ -1553,6 +1553,10 @@ image: https://raw.githubusercontent.com/cncf/artwork/9e203aa38643bbf0fcb081dbaa
 ```
 
 ```embed
+url: https://github.com/akuity/awesome-argo
+```
+
+```embed
 url: https://argo-workflows.readthedocs.io/en/latest/
 image: https://raw.githubusercontent.com/cncf/artwork/9e203aa38643bbf0fcb081dbaa80abbd0f6f0698/projects/argo/icon/color/argo-icon-color.svg
 ```

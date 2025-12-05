@@ -1,7 +1,6 @@
 ---
 title: Installation de Komoplane
 date: 2025-12-03
-draft: true
 categories:
   - Crossplane
 tags:

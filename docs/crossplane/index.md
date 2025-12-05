@@ -725,3 +725,14 @@ The instances as been removed from AWS since we deleted the resources !
   - https://docs.crossplane.io/latest/guides/import-existing-resources/
   - https://docs.crossplane.io/v2.1/guides/upgrade-to-crossplane-v2/
   - https://docs.crossplane.io/v2.1/whats-new/
+
+
+
+
+<div class="admonition note">
+  <p class="admonition-title">Documentation</p>
+
+```embed
+url: https://github.com/DevOpsHiveHQ/awesome-crossplane
+```
+</div>

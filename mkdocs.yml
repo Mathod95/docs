@@ -6,21 +6,21 @@ edit_uri: edit/main/docs/
 
 nav:
   - HOME: index.md
-  - Kuberentes: kubernetes/index.md
-  - Argo: 
+  - KUBERNETES: kubernetes/index.md
+  - ARGO: 
     - argo/index.md
-    - cd: argo/cd/index.md
-    - events: argo/events/index.md
-    - workflows: argo/workflows/index.md
-    - rollouts: argo/rollouts/index.md
-  - Crossplane: crossplane/index.md
-  - Awesome: awesome.md
-  - Blog: # https://squidfunk.github.io/mkdocs-material/plugins/blog/#config.blog_dir-documentation--blog
+    - CD: argo/cd/index.md
+    - WORKFLOWS: argo/workflows/index.md
+    - ROLLOUTS: argo/rollouts/index.md
+    - EVENTS: argo/events/index.md
+  - CROSSPLANE: crossplane/index.md
+  - AWESOME: awesome.md
+  - BLOG: # https://squidfunk.github.io/mkdocs-material/plugins/blog/#config.blog_dir-documentation--blog
     - blog/index.md
-  - Tags: tags.md
-  - Glossaire: glosarry.md
-  - About me: aboutme/index.md
-  - Syntax: syntax.md
+  - TAGS: tags.md
+  - GLOSSAIRE: glosarry.md
+  - CONTACT: aboutme/index.md
+  - syntax: syntax.md
 
 theme:
   icon:
@@ -139,18 +139,18 @@ plugins:
           placeholder: ex. app01
         YOUR_ENV:
           placeholder: ex. production
-  #- link-embeds:                  # https://github.com/Aetherinox/mkdocs-link-embeds
-  #    enabled: true
-  #    name_default: "Untitled Link"
-  #    desc_default: "No description found"
-  #    image_default: "https://github.com/Aetherinox/mkdocs-link-embeds/assets/118329232/c0298d98-0910-4235-a88f-0c3e2f704ba7"
-  #    image_disabled: false
-  #    favicon_default: "https://github.com/Aetherinox/mkdocs-link-embeds/assets/118329232/b37da9c6-6f17-4c3f-9c94-c346a6f31bfa"
-  #    favicon_disabled: false
-  #    favicon_size: 25
-  #    target: "blank"
-  #    accent: "FFFFFF1A"
-  #    verbose: false
+  - link-embeds:                  # https://github.com/Aetherinox/mkdocs-link-embeds
+      enabled: true
+      name_default: "Untitled Link"
+      desc_default: "No description found"
+      image_default: "https://github.com/Aetherinox/mkdocs-link-embeds/assets/118329232/c0298d98-0910-4235-a88f-0c3e2f704ba7"
+      image_disabled: false
+      favicon_default: "https://github.com/Aetherinox/mkdocs-link-embeds/assets/118329232/b37da9c6-6f17-4c3f-9c94-c346a6f31bfa"
+      favicon_disabled: false
+      favicon_size: 25
+      target: "blank"
+      accent: "FFFFFF1A"
+      verbose: false
 
 extra:
   analytics:

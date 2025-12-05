@@ -9,11 +9,27 @@ nav:
   - KUBERNETES: kubernetes/index.md
   - ARGO: 
     - argo/index.md
-    - CD: argo/cd/index.md
+    - CD: 
+      - argo/cd/index.md
+      - AutoPilot: argo/cd/argo-cd-autopilot.md
     - WORKFLOWS: argo/workflows/index.md
     - ROLLOUTS: argo/rollouts/index.md
     - EVENTS: argo/events/index.md
-  - CROSSPLANE: crossplane/index.md
+  - CROSSPLANE: 
+    - crossplane/index.md
+    - AWS:
+      - S3: crossplane/aws/s3/s3.md
+  - APPS:
+    - Helm:
+      - Wrapper: apps/helm/wrapper.md
+      - Cheatsheet: apps/helm/helm-cheatsheet.md
+    - Kind:
+      - Cheatsheet: apps/kind/kind-cheatsheet.md
+  - LINUX:
+    - Debian:
+      - Packages: 
+          - linux/packages/index.md
+          - ZSH: linux/packages/zsh/zsh.md
   - AWESOME: awesome.md
   - BLOG: # https://squidfunk.github.io/mkdocs-material/plugins/blog/#config.blog_dir-documentation--blog
     - blog/index.md

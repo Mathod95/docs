@@ -132,7 +132,7 @@ Chaque provider fonctionne comme un plugin isolé dans son propre pod, ce qui am
 - La possibilité de mettre à jour un provider indépendamment du reste.
 
 ### Exemple : provider AWS S3
-```shell hl_lines="1" title="provider-aws-s3.yaml"
+```yaml linenums="1" title="provider-aws-s3.yaml"
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:

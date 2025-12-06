@@ -1,26 +1,27 @@
-```shell 
----
-title: "Titre de ton article"
-description: "Courte description pour l’aperçu et le SEO"
-date: 2025-02-10
-hide:
-  - tags
-categories:
-  - Documentation
-tags:
-  - template
-user-defined-values:
-  - YOUR_APPNAME
-  - YOUR_ENV
----
-```
+!!! example "Header"
+    
+    ```shell 
+    ---
+    title: "Titre de ton article"
+    description: "Courte description pour l’aperçu et le SEO"
+    date: 2025-02-10
+    hide:
+      - tags
+    categories:
+      - Documentation
+    tags:
+      - template
+    user-defined-values:
+      - YOUR_APPNAME
+      - YOUR_ENV
+    ---
+    ```
 
 ---
-
 
 !!! example "Code Annotate"
 
-    ``` yaml
+    ```yaml title="Visual"
     theme:
       features:
         - content.code.annotate # (1)
@@ -30,8 +31,8 @@ user-defined-values:
         text__, images, ... basically anything that can be written in Markdown.
 
 
-    ````
-    ``` yaml
+    ````title="Code"
+    ```yaml
     theme:
       features:
         - content.code.annotate # (1)
@@ -40,12 +41,10 @@ user-defined-values:
     1.  :man_raising_hand: I'm a code annotation! I can contain `code`, __formatted
         text__, images, ... basically anything that can be written in Markdown.
     ````
-
-
 
 ---
 
-!!! INFO
+!!! example "Tabbed codeBlocks"
 
     === "Python"
 
@@ -150,3 +149,79 @@ spec:
   - name: nginx-container
     image: nginx
 ```
+
+---
+
+!!! example "ADMONITIONS"
+
+    !!! note
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et
+        euismod nulla. Curabitur feugiat, tortor non consequat finibus, justo
+        purus auctor massa, nec semper lorem quam in massa.
+
+    !!! abstract
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et
+        euismod nulla. Curabitur feugiat, tortor non consequat finibus, justo
+        purus auctor massa, nec semper lorem quam in massa.
+
+    !!! info
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et
+        euismod nulla. Curabitur feugiat, tortor non consequat finibus, justo
+        purus auctor massa, nec semper lorem quam in massa.
+
+    !!! tip
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et
+        euismod nulla. Curabitur feugiat, tortor non consequat finibus, justo
+        purus auctor massa, nec semper lorem quam in massa.
+
+    !!! success
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et
+        euismod nulla. Curabitur feugiat, tortor non consequat finibus, justo
+        purus auctor massa, nec semper lorem quam in massa.
+
+    !!! question
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et
+        euismod nulla. Curabitur feugiat, tortor non consequat finibus, justo
+        purus auctor massa, nec semper lorem quam in massa.
+
+    !!! warning
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et
+        euismod nulla. Curabitur feugiat, tortor non consequat finibus, justo
+        purus auctor massa, nec semper lorem quam in massa.
+
+    !!! failure
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et
+        euismod nulla. Curabitur feugiat, tortor non consequat finibus, justo
+        purus auctor massa, nec semper lorem quam in massa.
+
+    !!! danger
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et
+        euismod nulla. Curabitur feugiat, tortor non consequat finibus, justo
+        purus auctor massa, nec semper lorem quam in massa.
+
+    !!! bug
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et
+        euismod nulla. Curabitur feugiat, tortor non consequat finibus, justo
+        purus auctor massa, nec semper lorem quam in massa.
+
+    !!! example
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et
+        euismod nulla. Curabitur feugiat, tortor non consequat finibus, justo
+        purus auctor massa, nec semper lorem quam in massa.
+
+    !!! quote
+
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et
+        euismod nulla. Curabitur feugiat, tortor non consequat finibus, justo
+        purus auctor massa, nec semper lorem quam in massa.

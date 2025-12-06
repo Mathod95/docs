@@ -16,6 +16,8 @@ categories:
 author: "Mathias FELIX"
 ---
 
+![](../../assets/images/argo/argo.svg)
+
 ## Introduction
 
 ### Chapter Overview and Objectives

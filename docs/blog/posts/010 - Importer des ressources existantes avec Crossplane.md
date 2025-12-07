@@ -1,5 +1,5 @@
 ---
-title: Crossplane Import existing resources
+title: Importer des ressources existantes avec Crossplane
 date: 2025-12-03
 draft: true
 categories:

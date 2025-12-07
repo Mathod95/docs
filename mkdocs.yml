@@ -135,8 +135,14 @@ plugins:
   #    repository: Mathod95/docs
   #    branch: main
   #    token:
-  #- mkdocs-video                 # https://github.com/soulless-viewer/mkdocs-video
+  #- mkdocs-video:                 # https://github.com/soulless-viewer/mkdocs-video
+  #    is_video: True
+  #    video_muted: True
+  #    video_controls: True
+  #    css_style:
+  #      width: "50%"
   #- drawio-exporter              # https://github.com/LukeCarrier/mkdocs-drawio-exporter
+  - include-markdown              # https://github.com/mondeja/mkdocs-include-markdown-plugin
   - glightbox                     # https://github.com/blueswen/mkdocs-glightbox
   - toggle-sidebar:               # https://github.com/six-two/mkdocs-toggle-sidebar-plugin
       enabled: True

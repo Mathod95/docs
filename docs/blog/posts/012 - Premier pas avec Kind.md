@@ -6,6 +6,7 @@ categories:
 tags:
   - Kind
 info: Il existe un articles plus complet dans "archives/012.md"
+todo: Ajouter un embed de la doc en fin d'article
 sources:
   - https://mcvidanagama.medium.com/set-up-a-multi-node-kubernetes-cluster-locally-using-kind-eafd46dd63e5
   - https://itnext.io/kubernetes-multi-cluster-implementation-in-under-10-minutes-2927952fb84c
@@ -25,9 +26,9 @@ sources:
 ![](../../assets/images/kind/kind.png)
 
 ## Introduction
-[Kind](https://kind.sigs.k8s.io/) *(Kubernetes in Docker)* est un outil qui facilitent l'exécution de clusters Kubernetes locaux en utilisant des container Docker ! Cette outils à été créer principalement pour tester Kubernetes.
-Il existe de multiples solution pour déployer un cluster Kubernetes. Kubeadm, Kops, Minikube pour ne citer qu'eux ! Cependant la plus part de ces solutions sont parfois assez limité en terme de configuration, voir complexe à mettre en place...
-La documentation de kind est facile à comprendre, pour plus de détails, référez vous à ce [lien](https://kind.sigs.k8s.io/docs/user/quick-start/).
+[Kind](https://kind.sigs.k8s.io/) (Kubernetes in Docker) est un outil permettant de créer des clusters Kubernetes locaux à l’aide de conteneurs Docker. D’autres solutions existent, comme Kubeadm, Kops ou Minikube, mais elles sont souvent plus complexes à configurer.
+
+Kind se distingue par sa simplicité, avec une [documentation](https://kind.sigs.k8s.io/docs/user/quick-start/) claire.
 
 <!-- more -->
 
@@ -53,7 +54,7 @@ La documentation de kind est facile à comprendre, pour plus de détails, réfé
 
 ### Prérequis
 
-Le seul prérequis pour utiliser Kind est d'avoir Docker d'installer. Dans notre cas nous utiliserons Docker-Desktop sous Windows et nous le lieront a un WSL Debian. Pour les autres systèmes je vous invite à suivre [la documentation officiel](https://kind.sigs.k8s.io/docs/user/quick-start/)
+Le seul prérequis pour utiliser Kind est d'avoir Docker d'installer. Dans notre cas nous utiliserons Docker-Desktop sous Windows lié à WSL.
 
 Sur Debian pour l'installation nous utiliserons les commandes suivante:
 

@@ -1,1 +1,1 @@
-![](../../assets/images/kubernetes/kubernetes.svg)
+![](../assets/images/kubernetes/kubernetes.svg)

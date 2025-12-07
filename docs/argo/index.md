@@ -16,7 +16,7 @@ categories:
 author: "Mathias FELIX"
 ---
 
-![](../../assets/images/argo/argo.svg)
+![argo](../assets/images/argo/argo.svg)
 
 ## Introduction
 

@@ -4,9 +4,11 @@ hide:
   - navigation
 ---
 
-# Bienvenue
-
-Ceci est la page d’accueil de la documentation.
+{%
+    include-markdown "../README.md"
+    start="<!--intro-start-->"
+    end="<!--intro-end-->"
+%}
 
 <div style="max-width: 700px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 20px; justify-items: center;">
   <a href="https://www.ansible.com/" target="_blank" style="display: flex; justify-content: center; align-items: center; padding: 10px;">

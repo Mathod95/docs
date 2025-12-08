@@ -194,6 +194,7 @@ extra:
 
 extra_css:
   - stylesheets/link-embeds.css
+  - stylesheets/style.css
 
 watch:
   - includes

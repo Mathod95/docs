@@ -1,0 +1,2526 @@
+---
+hide:
+  - tags
+title: Argo CD
+description: "Argo CD"
+date: 2025-12-07
+tags:
+  - Argo
+  - Argo CD
+categories:
+  - Documentation
+  - Argo CD
+author: "Mathias FELIX"
+---
+
+https://kodekloud.com/kk-media/image/upload/v1704814793/course-resource-new/ArgoCD.pdf
+https://github.com/sidd-harth/gitops-argocd
+
+## Introduction
+
+### What is GitOps
+GitOps is an operational framework that leverages Git as the single source of truth for managing both infrastructure and application code. It extends the principles of Infrastructure as Code, enabling automated deployments and rollbacks by controlling the entire code delivery pipeline through Git version control.
+
+### GitOps Workflow
+Developers begin by committing their changes to a centralized Git repository. Typically, they work in feature branches created as copies of the main codebase. These branches allow teams to develop new features in isolation until they are deemed ready. A Continuous Integration (CI) service automatically builds the application and runs unit tests on the new code. Once tests pass, the changes undergo a review and approval process by relevant team members before being merged into the central repository.
+
+The final step in the pipeline is Continuous Deployment (CD), where changes from the repository are automatically released to Kubernetes clusters.
+
+The image illustrates the GitOps workflow, showing the integration of infrastructure, configuration, and application code into a Git repository, followed by continuous integration (CI) and continuous deployment (CD) processes to a Kubernetes cluster. It also depicts a branching and merging process in Git.
+
+At the heart of GitOps is the concept of a declaratively defined state. This involves maintaining your infrastructure, application configurations, and related components within one or more Git repositories. An automated process continuously verifies that the state stored in Git matches the actual state in the production environment. This synchronization is managed by a GitOps operator running within a Kubernetes cluster. The operator monitors the repository for updates and applies the desired changes to the cluster—or even to other clusters as needed.
+
+When a developer merges new code into the application repository, a series of automated steps is triggered: unit tests are run, the application is built, a Docker image is created and pushed to a container registry, and finally, the Kubernetes manifests in another Git repository are updated.
+
+The image illustrates a GitOps workflow, showing the process from application code merging and continuous integration to deploying Kubernetes manifests, with GitOps operators ensuring the desired state matches the actual state in production environments.
+
+The GitOps operator continuously compares the desired state (as defined in Git) with the actual state in the Kubernetes cluster. If discrepancies are found, the operator pulls the necessary changes to ensure that the production environment remains aligned with the desired configuration.
+
+The image illustrates a GitOps workflow, showing the process from application code repository through continuous integration to Kubernetes deployment, highlighting the synchronization between desired and actual states.
+
+!!! info "Ease of Rollbacks"
+
+    One of the key benefits of GitOps is the seamless rollback process. Since the entire configuration is maintained in Git, reverting to a previous state is as simple as executing a git revert command. The GitOps operator detects this change and automatically rolls back the production environment to match the desired state.
+
+The image illustrates a GitOps workflow, showing the process from application code repository through continuous integration to Kubernetes deployment, highlighting the synchronization between desired and actual states.
+
+---
+
+### GitOps Principles
+In this lesson, we will explore the core principles of GitOps—an approach to continuous deployment that leverages Git as the single source of truth for infrastructure and application state. The GitOps methodology is built upon four foundational principles.
+
+Remember
+
+GitOps ensures system consistency and reduces human error by enforcing a declarative model of infrastructure management.
+
+### 1. Declarative vs. Imperative Approach
+The first principle stresses a declarative methodology over an imperative one. In the declarative model, the entire system—including both infrastructure and application manifests—is described in a desired state. This contrasts with the imperative approach, where specific commands are executed sequentially to change the system state. Relying on the imperative style can complicate reconciliation since it does not maintain a comprehensive record of the system's intended state.
+
+### 2. Storing the Desired State in Git
+The second principle mandates that all declarative files, which represent the desired state of the system, be stored in a Git repository. Git not only offers powerful version control capabilities but also preserves immutability. Storing the desired state in Git makes it the definitive source of truth for system configuration. Any changes pushed to Git are automatically recognized and applied across the system.
+
+### 3. Automated Application of the Desired State via GitOps Operators
+The third principle involves using GitOps operators—software agents that continuously monitor Git for updates. Once they detect changes, these operators automatically retrieve the desired state from the repository and apply it across one or more clusters or environments. Consider the following deployment manifest example that a GitOps operator might manage:
+
+```yaml title="deployment.yaml" linenums="1"
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+```
+This operator can run in a single cluster and propagate configuration changes to other clusters as necessary, ensuring uniformity and scalability.
+
+### 4. Reconciliation and Self-Healing
+The final principle centers on continuous reconciliation. GitOps operators maintain a self-healing system by constantly checking for discrepancies between the actual state of the system and the desired state stored in Git. They execute this process through three key steps:
+
+**Observe**: Monitor the Git repository for updates.
+**Diff**: Compare the desired state from Git with the current state of the cluster.
+**Act**: Reconcile any differences by updating the system to reflect the declared desired state.
+This ongoing reconciliation loop minimizes the risk of configuration drift and helps maintain a robust, error-resistant system.
+
+By understanding and applying these GitOps principles, you can ensure your infrastructure remains consistent, scalable, and resilient to changes.
+
+---
+
+## GitOps Introduction
+
+### DevOps vs GitOps
+This lesson dives into the contrasting approaches of DevOps and GitOps—two methodologies that share common goals but differ significantly in execution and toolsets.
+
+GitOps leverages containerization technologies such as OpenShift and Kubernetes. It uses Git as the single source of truth for both infrastructure and deployments. In comparison, DevOps is a broader methodology that can be applied to diverse application environments and workflows.
+
+#### DevOps Pipeline
+A typical DevOps pipeline operates as follows:
+
+A developer writes code in an Integrated Development Environment (IDE) and commits it to a source code management system.
+A Continuous Integration (CI) process detects the commit, runs tests, and builds the necessary artifacts.
+The pipeline then creates a container image and publishes it to a container repository.
+Finally, the Continuous Deployment (CD) process connects to a Kubernetes cluster and uses a command-line tool such as kubectl (with imperative commands) to push updates directly to the cluster.
+Key Point
+
+In DevOps, the deployment is initiated by pushing changes directly into the cluster.
+
+#### GitOps Pipeline
+While the CI processes in a GitOps pipeline mirror those of DevOps up to the point of publishing the container image, the deployment process is distinct:
+
+Two separate Git repositories are maintained: one dedicated to application code and another for Kubernetes manifests.
+Once the image is published, the manifest repository is cloned and updated—typically the new image name is specified. These changes are then committed and pushed.
+The pipeline automatically raises a pull request for the manifest repository. A team member reviews the pull request, suggests adjustments if necessary, and merges the changes upon approval.
+A GitOps operator, running within the Kubernetes cluster, continuously monitors the repository. When changes are detected, it synchronizes the cluster state to match the repository configuration.
+Takeaway
+
+In a GitOps pipeline, the deployment operator pulls changes from the repository and applies them to the cluster, contrasting with the push-based approach in traditional DevOps workflows.
+
+The image below illustrates a side-by-side comparison of the CI/CD pipelines in both DevOps and GitOps. It highlights the key steps—ranging from code development to deployment—and emphasizes the differences in update management and application.
+
+The image compares DevOps and GitOps CI/CD pipelines, illustrating the processes of continuous integration and deployment for each approach. It highlights the steps from code development to deployment, showing differences in how updates are managed and applied.
+
+#### Conclusion
+This article compared DevOps and GitOps pipelines by detailing the key stages of each process. Understanding these differences is essential for choosing the right methodology for your projects. In the next lesson, we will explore the advantages and challenges associated with each approach.
+
+---
+
+### Push vs Pull
+In this article, we explore the differences between push-based and pull-based deployment strategies for Kubernetes clusters. We will examine their benefits, challenges, and use cases, helping you determine the best approach for your environment.
+
+#### Push-Based Deployment
+Push-based deployment is commonly used in CI/CD pipelines. With this approach, the application code goes through various stages within the CI pipeline before updates are pushed directly to the Kubernetes cluster.
+
+##### Key Characteristics
+- The CI system requires read-write access to the Kubernetes cluster, which means Kubernetes credentials are stored in the CI system outside the cluster. This arrangement may introduce potential security risks.
+- Typically, the CI system has read-only access to the Git repository and read-write access to the container registry, while the Kubernetes cluster itself only has read-only access to the registry.
+- Deployments can leverage a variety of plugins and tools. For instance, Jenkins can use multiple plugins or approaches, and Helm plugins further simplify the deployment of Helm charts.
+Security Consideration
+
+!!! Warning "Security Consideration"
+    Storing Kubernetes credentials in the CI system exposes a potential security risk, as these credentials grant read-write access to the cluster.
+
+##### Challenges
+- The deployment configuration is tightly coupled with the CI system. Migrating from one CI platform to another (for example, switching from Jenkins to a different platform) often requires reworking many deployment configurations.
+- Embedding cluster credentials in the CI system increases the risk of unauthorized access if the CI system is compromised.
+
+#### Pull-Based Deployment
+Pull-based deployment, frequently associated with GitOps, employs an operator running within the Kubernetes cluster. This operator monitors for changes—either in a container registry for new images or in a Git repository for updated manifests—and then autonomously deploys those changes.
+
+##### Key Characteristics
+- The CI/CD system only needs read-write access to the container registry, without requiring direct access to the Kubernetes cluster.
+- Deployments are executed internally from within the cluster, enhancing security by minimizing external access.
+- GitOps operators are particularly supportive of multi-tenant environments, allowing teams to manage multiple repositories and namespaces. For example, different teams can maintain separate Git repositories and corresponding namespaces for their deployments.
+- Secrets can be securely managed by encrypting them using tools like HashiCorp Vault or Bitnami Sealed Secrets. These encrypted secrets are stored in Git or decrypted during the deployment process.
+- GitOps operators can monitor container registries for newer image versions and automatically trigger deployments of the latest images.
+
+!!! Info "Secret Management"
+
+    While GitOps encourages declarative management—including secrets—in Git, the process often requires additional tools and steps (e.g., encryption and decryption) to ensure security, especially with Helm chart deployments.
+
+##### Challenges
+- Managing secrets and configurations can be more complex compared to the push-based model. Although GitOps principles promote a declarative approach, handling encrypted credentials adds an extra layer of complexity.
+
+#### Visual Comparison
+The image compares push-based and pull-based deployment methods for Kubernetes, highlighting their processes, access permissions, and advantages or disadvantages.
+
+The image compares push-based and pull-based deployment methods for Kubernetes, highlighting their processes, advantages, and disadvantages. It includes diagrams and lists of pros and cons for each approach.
+
+#### Summary
+
+| **Deployment Strategy** | **Pros** | **Cons** |
+|-------------------------|----------|----------|
+| Push-Based          | - Direct integration with CI/CD pipelines<br>- Flexible deployment configurations using various tools and plugins | - Requires CI system to have cluster credentials<br>- Tightly coupled to specific CI systems, making migrations challenging|
+| Pull-Based          | - Enhanced security by limiting external access<br>- Supports multi-tenant environments and automated image updates | - More complex secret management<br>- Additional tools required for encrypting and decrypting configurations |
+
+In summary, push-based deployment strategies simplify certain aspects of automation but may lead to inflexibility and potential security issues. In contrast, pull-based (GitOps) deployments enhance internal management and security at the cost of added complexity in handling secrets and configuration management.
+
+Explore more about these methodologies in the [Kubernetes Documentation](https://kubernetes.io/docs/) and learn how GitOps can revolutionize your deployment pipeline.
+
+---
+
+### GitOps Feature Set
+This article provides an in-depth overview of GitOps features and their associated use cases, demonstrating how storing every configuration declaratively in a Git repository can transform your deployment workflows.
+
+Every configuration is stored declaratively in Git, which serves as the single source of truth containing the full desired state of the system. This approach not only simplifies application rollbacks—enabling a quick recovery with a simple git revert—but also ensures that audit trails are automatically available through pull requests and commit histories.
+
+!!! info "Key Benefit"
+    Storing configurations in Git allows teams to effortlessly rollback to a previous state and maintain a complete audit trail for all changes.
+
+#### Automated CI/CD and Continuous Deployment
+CI/CD automation is a cornerstone of GitOps. By leveraging automation:
+
+- Building, testing, and deployment tasks are triggered automatically based on the desired state stored in Git.
+- Continuous deployment becomes seamless and consistent, as applications are deployed automatically to clusters without manual intervention.
+
+#### Extending GitOps to Infrastructure and Cluster Resources
+Once GitOps is established for application deployment, extend these practices to manage both cluster resources and Infrastructure as Code. For instance, in Kubernetes environments, you can manage various resources including:
+
+- Secrets management
+- Networking agents and service mesh configurations
+- Database provisioning
+- Prometheus monitoring
+
+The core principle here is automatic reconciliation: the system continuously compares the desired state in Git with the actual state in the cluster. If any unintended changes occur, the system automatically reverts them, ensuring consistency.
+
+!!! info "Automatic Reconciliation"
+    GitOps continuously compares Git’s desired state against the actual runtime state and reverts any drift, maintaining alignment across your infrastructure.
+
+#### Detecting and Preventing Configuration Drift
+Early detection of configuration drift is a fundamental aspect of GitOps. Identifying drift as soon as it happens allows teams to resolve inconsistencies before they evolve into significant issues. This proactive stance distinguishes GitOps from other deployment methodologies.
+
+#### Multi-Cluster Deployment Made Easy
+Managing multiple clusters, especially across different geographical locations, can be challenging. GitOps simplifies this process by centralizing cluster state within Git. This means:
+
+- A single operator can deploy applications across multiple clusters.
+- There is no need to install or set up the operator individually on each cluster.
+- The deployment process is streamlined and significantly more efficient.
+
+The image illustrates a GitOps feature set and use cases, showing a workflow involving tools like Helm and Jenkins, Git repositories, and Kubernetes clusters for continuous deployment and automation. It highlights concepts such as single source of truth, everything as code, auditable processes, and multi-cluster deployments.
+
+For more details on deploying and managing resources with GitOps, explore additional resources such as:
+
+- Kubernetes Documentation
+- GitOps Tools Overview
+- Modern CI/CD Practices
+By leveraging GitOps, teams can achieve high levels of deployment efficiency, improved management across diverse environments, and robust recovery mechanisms, making it an essential strategy for modern infrastructure management.
+
+---
+
+### GitOps Benefits Drawbacks
+This article reviews the key advantages and challenges associated with GitOps, providing insights for managing Kubernetes application deployments effectively.
+
+#### Benefits of GitOps
+GitOps offers several compelling advantages:
+
+- It is lightweight and vendor-neutral, leveraging the open-source Git protocol to work seamlessly across diverse platforms.
+- GitOps enables faster and safer deployments by ensuring immutable and reproducible environments.
+- In team setups where environmental changes might occur unexpectedly, GitOps prevents unintended modifications. The GitOps operator enforces consistency by disallowing manual updates, thus eliminating configuration drift.
+- In the event of a manual update, the GitOps operator automatically restores the desired state from Git.
+- Developers enjoy the familiarity of using Git and CI/CD tools. The workflow remains straightforward: push the code to the repository, and a CI/CD pipeline handles testing and deployment.
+- Git’s history tracking allows for easy comparison between declarative file revisions, making it simple to correlate changes with specific change requests.
+
+!!! Note
+    For more details on CI/CD integrations with GitOps, refer to the official GitOps Documentation.
+
+#### Challenges of GitOps
+Despite its advantages, GitOps introduces a few challenges that need to be addressed:
+
+- Centralized Secret Management:
+GitOps does not secure secrets by default. Although it recommends storing secrets declaratively in Git repositories, operations teams must integrate additional tools to manage secrets securely.
+
+- Repository Organization:
+As the number of microservices and environments grows, organizing Git repositories becomes complex. Decisions need to be made about whether to store source code and manifests in a single repository or use multiple repositories/branches. There is no one-size-fits-all solution—each organization must tailor this approach to fit its specific application requirements.
+
+- Update Conflicts:
+Frequent application updates in continuous delivery environments can trigger simultaneous CI processes, leading to multiple pull requests. This may result in conflicts when several processes attempt to update the GitOps repository concurrently, often necessitating manual resolution.
+
+- Governance and Policy Enforcement:
+Relying on pull requests (PRs) for approval can reduce the effectiveness of enforcing strict company policies after a PR is approved.
+
+- Configuration Validation:
+Malformed YAML files or configuration errors can occur. External validation tools are essential for ensuring that manifest files meet the required standards.
+
+!!! Warning
+
+    Ensure that you integrate robust secret management and repository organization strategies when implementing GitOps to mitigate these challenges effectively.
+
+The image lists the benefits and challenges of GitOps, highlighting advantages like being lightweight and vendor-neutral, and challenges such as secret management and the number of Git repositories.
+
+---
+
+### GitOps Projects Tools
+In this article, we explore a diverse range of GitOps projects and tools available as of this recording. These solutions have been designed to streamline the management of Kubernetes applications by leveraging GitOps practices through various controllers and automation tools.
+
+!!! Overview
+    This guide provides insights into both GitOps controllers and complementary tools that enhance Kubernetes application deployment and management.
+
+#### GitOps Controller: ArgoCD
+ArgoCD is our primary GitOps controller. It is a declarative continuous deployment tool for Kubernetes that simplifies application management while ensuring your deployment process remains automated and consistent.
+
+#### Additional GitOps Tools
+Enhance your Kubernetes GitOps workflows with these additional tools:
+
+- Atlantis: Automates Terraform workflows by integrating directly with pull requests.
+- AutoApply: Automatically applies configuration changes from a Git repository to your Kubernetes cluster, saving manual intervention.
+- CloudRollout: Provides advanced feature flagging, enabling teams to deploy and iterate rapidly without sacrificing safety.
+- GitOps with FluxCD: Offers continuous and progressive delivery solutions optimized for Kubernetes environments.
+- Helm Operator: Automates the release of Helm charts following GitOps principles.
+- The image lists various GitOps projects and tools, each represented by a logo and name, such as ArgoCD, FluxCD, and JenkinsX.
+- Flagger: A Kubernetes operator focused on progressive delivery. It supports canary releases, A/B testing, and blue-green deployments.
+- Ignite: Functions as a virtual machine manager with a container-like user experience, incorporating built-in GitOps capabilities.
+- Faros: A GitOps controller that utilizes Custom Resource Definitions (CRDs) for streamlined operations.
+- GitKube: Facilitates Docker image building and deployment to Kubernetes clusters through a Git push workflow.
+- Jenkins X: Tailored for Kubernetes, this CI/CD platform provides pipeline automation with integrated GitOps and preview environments.
+- KubeStack: Leverages Terraform to provide a GitOps framework for cloud Kubernetes distributions such as AKS, GKE, and EKS, complete with CI/CD examples.
+- Weave Cloud: An automation and management platform designed to support both development and DevOps teams.
+- PipeCD: A continuous delivery solution built for declarative Kubernetes, serverless, and infrastructure applications.
+
+!!! Further Learning
+    For additional insights into Kubernetes and GitOps practices, consider exploring resources like Kubernetes Documentation and Docker Hub.
+
+---
+---
+
+## ArgoCD Basics
+
+### WhatWhyHow ArgoCD
+This lesson explores ArgoCD, covering what it is, why you should consider using it, and how it operates to revolutionize your continuous delivery workflow.
+
+ArgoCD leverages declarative specifications and Git-based configuration management, offering significant benefits for continuous delivery. It serves as a pivotal element for achieving continuous operations by combining monitoring, analytics, and automated remediation, making it ideal for enterprise environments. Its advanced features such as auditability, compliance, security, RBAC, and SSO further enhance its appeal.
+
+#### What is ArgoCD?
+ArgoCD is a GitOps continuous delivery tool designed for Kubernetes. It treats a Git repository as the single source of truth for your desired application state. By continuously monitoring running applications, ArgoCD compares the current state with the desired state stored in Git. When discrepancies occur, it not only flags these differences but also provides visual insights, allowing developers to synchronize the live state with the desired configuration either manually or automatically.
+
+!!! info "Key Takeaway"
+    ArgoCD simplifies Kubernetes resource management by ensuring that your application's live state always reflects the configuration defined in your Git repository.
+
+#### How Does ArgoCD Work?
+ArgoCD adheres to the GitOps model by using Git repositories as the authority for both your application’s desired state and its target deployment environment. This transparent and consistent approach makes deployment processes reliable and easily auditable.
+
+The image is an infographic explaining ArgoCD, a GitOps continuous delivery tool for Kubernetes, detailing what it is, why to use it, and how it works. It highlights its benefits, such as declarative specifications, continuous monitoring, and enterprise-friendly features.
+
+ArgoCD supports a variety of Kubernetes manifests. Whether you work with customized applications, Helm charts, JSON files, or YAML configurations, ArgoCD automates the synchronization process to ensure that deployed application states across all target environments are always aligned with those defined in Git.
+
+For a deeper dive into continuous delivery with ArgoCD, consider exploring more about GitOps practices and Kubernetes resource management.
+
+---
+
+### ConceptsTerminology
+Before diving into the ArgoCD architecture, it is essential to understand its core concepts and terminology. Familiarity with Git, Docker, Kubernetes, CI/CD principles, and GitOps is highly recommended to maximize your ArgoCD experience.
+
+!!! Recommendation
+    Before getting started, ensure you have a solid understanding of the foundational technologies mentioned above for a smoother integration with ArgoCD.
+
+#### Key ArgoCD Concepts
+##### ArgoCD Applications
+In ArgoCD, you work primarily with objects known as ArgoCD applications. These applications are custom resource definitions installed with ArgoCD that define both the source (Git repository) and the destination (Kubernetes cluster) for your Kubernetes resources.
+
+##### Source Types
+Each ArgoCD application is associated with a source type that identifies the tool or method used to build the application.
+
+Helm and Kustomize are common examples of source types.
+This modular approach allows you to use different tools depending on your deployment strategy.
+
+##### ArgoCD Projects
+An ArgoCD project acts as a logical grouping of applications, making it easier to manage resources especially when multiple teams are involved. Grouping related applications under a single project simplifies policy enforcement and resource segmentation.
+
+Target State vs Live State
+Target State: The desired configuration stored in your Git repository.
+Live State: The current status of deployed resources (e.g., pods, secrets, config maps) in your Kubernetes cluster.
+ArgoCD continually compares these two states.
+
+##### Sync Operation
+When you create an ArgoCD application, the tool synchronizes the desired state (from Git) with the live state (in the cluster). This process, known as sync, reconciles the current configuration of the cluster with the version specified in Git. For instance, if modifications are made within the Git repository, a sync operation updates the Kubernetes cluster accordingly.
+
+Sync Status: Indicates whether the live state matches the target state.
+Operation Status: Shows whether a sync operation has successfully completed.
+
+##### Refresh Operation
+A refresh operation in ArgoCD re-evaluates the latest code in Git against the current live state. It:
+
+Identifies any differences.
+Can automatically initiate a sync or prompt an administrator to manually trigger one.
+
+##### Health Assessments
+ArgoCD includes built-in health assessments for standard Kubernetes resources. These assessments provide an overall health status for your applications, ensuring you have visibility into both their operational state and configuration compliance.
+
+---
+
+### Features
+ArgoCD stands out by streamlining application deployment, monitoring, and management across multiple clusters. Below is an overview of its key features:
+
+- Automatic Deployment: Continuously deploy applications to designated targets across clusters, ensuring consistency and rapid updates.
+- Comprehensive Audit Trail: Maintain full visibility with a detailed audit trail of application events and API calls.
+- SSO Integrations: Secure your infrastructure with single sign-on integrations using platforms such as GitHub, GitLab, Microsoft, and LinkedIn.
+- Webhook Synchronization: Respond promptly to push events by syncing applications using webhooks from popular source code management systems like GitHub, Bitbucket, and GitLab.
+- Rollback Capabilities: Easily revert to any prior configuration stored in your Git repository if issues arise.
+- Intuitive Web UI: Monitor real-time application activities through an easy-to-use web interface.
+- Drift Detection and Visualization: Automatically detect configuration drift between the desired state and the live environment, with visual tools to pinpoint differences.
+- Integrated Monitoring: Utilize out-of-the-box Prometheus metrics that can be visualized with Grafana for enhanced monitoring.
+- Flexible Configuration Management: Choose between multiple configuration tools such as Kustomize, Helm, or plain YAML to suit your deployment needs.
+- Advanced Rollout Strategies: Enhance deployment strategies with pre-sync, sync, and post-sync hooks, supporting blue-green deployments and canary upgrades.
+- Multi-Tenancy Support: Implement custom RBAC policies to manage authorization roles in multi-tenant environments securely.
+- Robust CLI and Automation: Take advantage of a comprehensive CLI and access token support to integrate seamlessly with continuous integration workflows.
+- Health Status Analysis: Gain insights into the health of all application resources with integrated and customizable health checks.
+- Customizable Synchronization: Choose between automatic or manual synchronization to maintain the desired application state.
+
+!!! Note
+    ArgoCD's rich feature set simplifies complex deployment workflows, making it highly scalable and an excellent choice for organizations of all sizes.
+
+---
+
+### Architecture
+This article provides a comprehensive overview of the ArgoCD architecture, detailing its integration with Kubernetes and its powerful GitOps workflow. By leveraging ArgoCD, you can seamlessly manage your applications and infrastructure, ensuring that the live environment always aligns with the desired state defined in your Git repositories.
+
+#### Key Features and Capabilities
+ArgoCD operates as a Kubernetes controller once installed in your Kubernetes environment. It provides a robust interface through both a command-line interface (CLI) and a web-based UI, enabling you to:
+
+- Create and manage ArgoCD applications
+- Organize and maintain projects efficiently
+- Integrate single sign-on (SSO) with external providers
+- Fine-tune synchronization options for application deployments
+
+!!! How Synchronization Works
+    ArgoCD continuously monitors deployed applications by comparing the current running state with the desired state stored in your Git repository. When changes are committed to the repository, ArgoCD automatically pulls and applies these updates, ensuring your environments remain consistent.
+
+#### GitOps Workflow and Multi-Cluster Deployment
+ArgoCD’s GitOps approach ensures that any modifications in the Git repository trigger an automated update of the target environments. You can also set up a webhook on your Git repository to alert ArgoCD about specific events, leading to prompt synchronization.
+
+This design supports both single-cluster and multi-cluster deployment models, allowing you to connect and deploy resources across multiple Kubernetes environments such as development, staging, and production.
+
+#### API and Integration
+The core of ArgoCD’s functionality lies in its API server, implemented as a gRPC REST server. This API is accessible to:
+
+- Web-based User Interface (UI)
+- Command-line Interface (CLI)
+- CI/CD systems
+This flexible API structure enables easy integration with a variety of tools and workflows, supporting seamless automation and orchestration of your infrastructure tasks.
+
+#### Monitoring and Observability
+ArgoCD also provides an out-of-the-box notification service that features multiple triggers and customizable message templates. This service can send alerts to various third-party platforms like Slack, email, and GitHub. Additionally, it exposes a suite of Prometheus metrics that you can visualize with Grafana, significantly enhancing monitoring and overall system observability.
+
+Integrated Monitoring
+
+Make sure to configure Prometheus and Grafana to take full advantage of ArgoCD's monitoring capabilities, allowing you to gain critical insights into application performance and synchronization events.
+
+The image illustrates the ArgoCD architecture, showing the workflow from GitHub to various Kubernetes clusters (prod, dev, staging) with interactions through UI, CLI, and gRPC/REST, and notifications sent to platforms like Teams, Gmail, and Slack.
+
+#### Summary
+ArgoCD streamlines application deployment by integrating GitOps principles with Kubernetes. Its ability to monitor, automate, and alert across multiple clusters makes it a powerful tool for modern continuous delivery pipelines.
+
+For further details and best practices, consider exploring the following resources:
+
+- ArgoCD Documentation
+- Kubernetes Basics
+- Prometheus Monitoring
+
+---
+
+### nstallation Options
+Explore the various ArgoCD installation models to determine which best suits your deployment needs. ArgoCD can be installed in two primary modes: a core installation for single-tenant use and a multi-tenant installation for environments requiring isolated access for multiple teams.
+
+#### Core Installation
+The core installation is designed for users running ArgoCD as a standalone service. This mode provides a minimal, non-high availability (non-HA) deployment, making it perfect for simpler setups that do not require multi-tenancy.
+
+#### Multi-Tenant Installation
+Multi-tenant deployments are ideal for organizations with multiple application development teams, typically managed by a centralized platform team. Within the multi-tenant model, you have two installation variants:
+
+##### 1. Non-High Availability (non-HA)
+This variant is excellent for evaluation, testing, and proof-of-concept deployments, even though it is not recommended for production use.
+
+install.yaml:
+Deploys ArgoCD with cluster-admin access, making it suitable for clusters where ArgoCD also deploys applications. Additionally, the provided credentials allow for deploying to remote clusters.
+
+namespace-installed.yaml:
+Configures ArgoCD for namespace-level access, offering restricted permissions. This option is useful when you want to limit ArgoCD’s access while still deploying applications in the same cluster if needed.
+
+##### 2. High Availability (HA)
+For production environments, the high availability option is the recommended choice. It improves resilience by deploying multiple replicas for critical components. Two manifests are provided:
+
+ha-install.yaml
+ha-namespace-installed.yaml
+The image is a flowchart illustrating installation options, showing paths for "Core" and "Multi-Tenant" leading to "Non High Availability" and "High Availability" configurations with corresponding YAML files. An octopus character is on the left side.
+
+!!! Deployment Note
+    In this lesson, we will deploy ArgoCD within the argocd namespace using the non-HA installation manifest (install.yaml).
+
+#### Installing ArgoCD with Helm
+In addition to the standard installation, ArgoCD can be installed using Helm through a community-maintained chart. By default, the Helm chart deploys the non-HA version of ArgoCD.
+
+After installation, download the ArgoCD CLI from its GitHub repository and move it to your local binary directory. The CLI allows you to efficiently interact with the ArgoCD API server.
+
+#### Installation Commands
+Use the following commands to install ArgoCD:
+
+```shell
+# Deploy ArgoCD using Kubernetes manifest
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+
+# Add the Helm repository for ArgoCD
+helm repo add argo https://argoproj.github.io/argo-helm
+
+
+# Install ArgoCD using Helm (non-HA version)
+helm install my-argo-cd argo/argo-cd --version 4.8.0
+
+
+# Download the latest ArgoCD CLI
+curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+
+
+# Set execute permissions on the CLI
+chmod +x /usr/local/bin/argocd
+```
+
+---
+
+### ArgoCD Installation
+In this lesson, we will guide you through installing ArgoCD and its CLI. We follow the official ArgoCD documentation from the Getting Started page to ensure you have the latest best practices. The installation process includes creating a dedicated Kubernetes namespace, applying the official manifest, and configuring the ArgoCD server for external access.
+
+#### Installing ArgoCD
+Start by creating the "argocd" namespace and applying the stable manifest:
+
+```shell hl_lines="1 2"
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+```
+You can also install the ArgoCD CLI on your machine. For Homebrew users, execute:
+
+```
+brew install argocd
+```
+
+After installing the CLI, patch the ArgoCD server service to expose it externally as a LoadBalancer and then forward the port:
+```
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+```
+```
+kubectl port-forward svc/argocd-server -n argocd 8800:443
+```
+For this lesson, we are using version 2.4.11 of ArgoCD. If you need to install a specific version, run:
+
+```
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v2.4.12/manifests/install.yaml
+```
+There are two installation options available: non-HA and HA. For simplicity, this lesson utilizes the non-HA version. Copy and execute the following commands:
+
+```
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/V2.4.11/manifests/install.yaml
+```
+This installation is performed on a single-node Kubernetes cluster running version 1.24.3. Verify your node status with:
+
+```
+kubectl get nodes
+```
+Expected output:
+```
+NAME            STATUS   ROLES         AGE   VERSION
+demo-cluster    Ready    control-plane 18h   v1.24.3
+```
+
+#### Verifying the Installation
+After installation, check the resources created in the "argocd" namespace. The following command displays all deployments, pods, and services:
+
+```
+kubectl get all -n argocd
+```
+A sample output might be:
+```
+NAME                                           READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/argocd-applicationset-controller   0/1     1           0           11s
+deployment.apps/argocd-dex-server                  0/1     1           0           11s
+deployment.apps/argocd-notifications-controller     1/1     1           1           11s
+deployment.apps/argocd-redis                        0/1     1           0           11s
+deployment.apps/argocd-repo-server                  0/1     1           0           11s
+deployment.apps/argocd-server                       0/1     1           0           11s
+
+
+NAME                                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/argocd-applicationset-controller-7b74965f8c   1       1           0         11s
+replicaset.apps/argocd-dex-server-7f75d56bc6                  1       1           0         11s
+replicaset.apps/argocd-notifications-controller-54dd686846   1       1           1         11s
+replicaset.apps/argocd-redis-5dff748d9c                       1       1           0         11s
+replicaset.apps/argocd-repo-server-5576f8d84b                  1       1           0         11s
+replicaset.apps/argocd-server-76cf74d4c7b                      1       1           0         11s
+
+
+NAME
+statefulset.apps/argocd-application-controller   0/1      11s
+```
+After a few minutes, when all deployments are fully initialized, verify that all pods are running:
+```
+kubectl get all -n argocd
+```
+Example output once the pods are running:
+```
+NAME                                     READY   STATUS    RESTARTS   AGE
+pod/argocd-application-controller-0      1/1     Running   0          33s
+pod/argocd-applicationset-controller-7b74965f8c-7fnw4   1/1     Running   0          33s
+pod/argocd-dex-server-77d56b6c6-nvj96   1/1     Running   0          33s
+pod/argocd-notifications-controller-54d686846-4b4r4   1/1     Running   0          33s
+pod/argocd-redis-5dff748d9c-psrw        1/1     Running   0          33s
+pod/argocd-repo-server-5576f8d84b-whtsg  1/1     Running   0          33s
+pod/argocd-server-76c7d4c7b-fnkdk       1/1     Running   0          33s
+To check the status of services:
+```
+```
+kubectl get svc -n argocd
+```
+Example output:
+```
+NAME                                      TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                 AGE
+service/argocd-applicationset-controller   ClusterIP   10.100.58.34    <none>        7000/TCP,8080/TCP       34s
+service/argocd-dex-server                  ClusterIP   10.109.179.192  <none>        5556/TCP,5557/TCP,5558/TCP 34s
+service/argocd-metrics                     ClusterIP   10.100.111.162  <none>        8082/TCP                34s
+service/argocd-notifications-controller-metrics ClusterIP 10.110.116.143 <none>       9001/TCP                33s
+service/argocd-redis                       ClusterIP   10.106.239.172  <none>        6379/TCP                33s
+service/argocd-repo-server                 ClusterIP   10.101.4.27     <none>        8081/TCP,8084/TCP       33s
+service/argocd-server                      ClusterIP   10.98.110.228   <none>        80/TCP,443/TCP          33s
+service/argocd-server-metrics              ClusterIP   10.97.180.219   <none>        8083/TCP                33s
+```
+
+The image shows a terminal window displaying Kubernetes service and deployment information, including details about ClusterIP addresses, ports, and the status of various deployments and replicasets.
+
+#### Exposing the ArgoCD Server
+By default, ArgoCD services are configured with the ClusterIP type, which restricts external access. To access the ArgoCD UI, modify the ArgoCD server service to use the NodePort type. Edit the service and change the "type" field:
+```
+creationTimestamp: "2022-09-23T14:01:00Z"
+labels:
+  app.kubernetes.io/component: server
+  app.kubernetes.io/name: argocd-server
+  app.kubernetes.io/part-of: argocd
+name: argocd-server
+namespace: argocd
+resourceVersion: "81300"
+uid: 23c477a6-23ad-4c14-8874-2f144ba396e3
+spec:
+  clusterIP: 10.98.110.228
+  clusterIPs:
+  - 10.98.110.228
+  internalTrafficPolicy: Cluster
+  ipFamiles:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/name: argocd-server
+  sessionAffinity: None
+  type: ClusterIP
+  loadBalancer: {}
+```
+After editing, verify the change by listing the services:
+```
+kubectl get svc -n argocd
+```
+You should now see the ArgoCD server service type as NodePort:
+```
+NAME                              TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)                      AGE
+argocd-applicationset-controller   ClusterIP   10.100.58.34   <none>        7000/TCP,8080/TCP            105s
+argocd-dex-server                  ClusterIP   10.109.179.192 <none>        5556/TCP,5557/TCP,5558/TCP   105s
+argocd-metrics                     ClusterIP   10.100.111.162 <none>        8082/TCP                    104s
+argocd-notifications-controller-metrics ClusterIP 10.110.116.143 <none>        9001/TCP                    104s
+argocd-redis                       ClusterIP   10.106.239.177 <none>        6379/TCP                    104s
+argocd-repo-server                 ClusterIP   10.101.4.27    <none>        8081/TCP,8084/TCP           104s
+argocd-server                      NodePort    10.98.110.228  <none>        80:30663/TCP,443:31194/TCP   104s
+argocd-server-metrics              ClusterIP   10.97.180.219  <none>        8083/TCP                    104s
+```
+With the NodePort configuration, the ArgoCD server is now accessible externally via the server’s IP address and its designated NodePort (for example, 30663).
+
+Open your web browser and navigate to the server’s IP (such as 139.59.21.103) along with the NodePort. Note that because the server uses a self-signed certificate, your browser will display a warning regarding the connection's privacy.
+
+!!! Info "Browser Warning"
+    Since this installation uses a self-signed certificate, you might see a browser warning indicating that the connection is not private. Accept the certificate to continue.
+
+The image shows a browser warning page indicating that the connection is not private, with options to proceed unsafely or go back to safety.
+
+#### Logging into the ArgoCD UI
+The default login credentials for ArgoCD are:
+
+Username: admin
+Password: Retrieved from the initial admin secret
+To retrieve the initial admin password, inspect the secret within the "argocd" namespace. First, list the secrets:
+
+kubectl get secret -n argocd
+Expected output:
+
+NAME                           TYPE     DATA   AGE
+argocd-initial-admin-secret    Opaque   1      2m44s
+argocd-notifications-secret    Opaque   0      3m4s
+argocd-secret                  Opaque   5      3m4s
+Next, retrieve the secret in JSON format:
+
+kubectl get secret argocd-initial-admin-secret -n argocd -o json
+To decode the password, run:
+
+kubectl get secret argocd-initial-admin-secret -n argocd -o json | jq .data.password -r
+Then decode the base64 output:
+
+kubectl get secret argocd-initial-admin-secret -n argocd -o json | jq .data.password -r | base64 -d
+Copy the decoded password and use it with the username "admin" to log in. Once logged in, update your password via the UI by visiting the user settings page, where you can configure repositories, certificates, clusters, projects, and accounts.
+
+The image shows the settings page of Argo CD, displaying options for configuring repositories, certificates, GnuPG keys, clusters, projects, and accounts. The interface is accessed through a web browser.
+
+To update your password, enter the current password, specify your new password, and confirm the new password:
+
+The image shows a web interface for updating an account password, with fields for the current password, new password, and confirmation of the new password. There are buttons for saving the new password or canceling the action.
+
+After updating, the UI will automatically log you out. Log back in using your new credentials.
+
+#### Installing the ArgoCD CLI
+Managing ArgoCD from the command line is facilitated by the ArgoCD CLI. Download the appropriate CLI binary for your system from the releases page. For version 2.4.11 on Linux AMD64, run:
+
+wget https://github.com/argoproj/argo-cd/releases/download/v2.4.11/argocd-linux-amd64
+After downloading, rename the file, make it executable, and move it to your system's binary path:
+
+mv argocd-linux-amd64 argocd
+chmod +x argocd
+mv argocd /usr/local/bin/
+Test the CLI by checking its available commands:
+
+argocd
+#### Logging into ArgoCD via CLI
+Access the ArgoCD server using the CLI by executing the login command with the server’s IP address:
+
+argocd login 10.98.110.228
+Since the server uses a self-signed certificate, you will be prompted with a certificate warning:
+
+WARNING: server certificate had error: x509: cannot validate certificate for 10.98.110.228 because it doesn't contain any IP SANs. Proceed insecurely (y/n)? y
+Username: admin
+Password:
+Once logged in, you can list applications and clusters.
+
+To list applications:
+
+argocd app list
+Expected output (initially empty as no applications are deployed):
+
+NAME   CLUSTER   NAMESPACE   PROJECT   STATUS   HEALTH   SYNC POLICY   CONDITIONS   REPO   PATH   TARGET
+To display available clusters, run:
+
+argocd cluster list
+Example output:
+
+SERVER                             NAME         VERSION   STATUS    MESSAGE
+https://kubernetes.default.svc    in-cluster   Unknown   Cluster has no applications and is not being monitored.
+By default, the Kubernetes cluster on which ArgoCD is installed becomes the target cluster. In future lessons, we will explore how to deploy applications across multiple clusters.
+
+#### Summary of Commands and Resource Checks
+Below is a summary of the most important commands executed during this installation process:
+
+Command	Description
+kubectl get svc -n argocd	Displays the ArgoCD service configuration in the argocd namespace.
+argocd login 10.98.110.228	Logs into the ArgoCD server via the CLI.
+argocd app list	Lists the deployed applications (empty initially).
+argocd cluster list	Lists the available clusters, showing the default in-cluster configuration.
+Example command outputs:
+
+kubectl get svc -n argocd
+NAME                              TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)                      AGE
+argocd-applicationset-controller   ClusterIP   10.100.58.34   <none>        7000/TCP,8080/TCP            7m42s
+argocd-dex-server                  ClusterIP   10.109.179.192 <none>        5556/TCP,5557/TCP,5558/TCP   7m42s
+argocd-metrics                     ClusterIP   10.100.111.162 <none>        8082/TCP                   7m42s
+argocd-notifications-controller-metrics ClusterIP 10.110.116.143 <none>      9001/TCP                   7m41s
+argocd-redis                       ClusterIP   10.106.239.172 <none>        6379/TCP                   7m41s
+argocd-repo-server                 ClusterIP   10.101.4.27    <none>        8081/TCP,8084/TCP          7m41s
+argocd-server                      NodePort    10.98.110.228  <none>        80:30663/TCP,443:31194/TCP  7m41s
+argocd-server-metrics              ClusterIP   10.97.180.219  <none>        8083/TCP                   7m41s
+argocd login 10.98.110.228
+WARNING: server certificate had error: x509: cannot validate certificate for 10.98.110.228 because it doesn't contain any IP SANs. Proceed insecurely (y/n)? y
+Username: admin
+Password:
+'admin:login' logged in successfully
+Context '10.98.110.228' updated
+argocd app list
+NAME    CLUSTER    NAMESPACE    PROJECT    STATUS    HEALTH    SYNCPOLICY    CONDITIONS    REPO    PATH    TARGET
+argocd cluster list
+SERVER                             NAME         VERSION   STATUS     MESSAGE
+https://kubernetes.default.svc    in-cluster   Unknown   Cluster has no applications and is not being monitored.
+This completes the installation and initial setup of ArgoCD and its CLI. In subsequent lessons, we will dive deeper into using the UI and managing applications across multiple clusters.
+
+---
+
+### ArgoCD App projects
+Discover how to leverage ArgoCD applications and projects to deploy and manage applications in Kubernetes clusters effectively. In this guide, we explore the core concepts of ArgoCD, explain how to create applications using both the CLI and YAML, and provide detailed code examples.
+
+ArgoCD revolves around two main concepts: the application and the project.
+
+An application in ArgoCD is a Custom Resource Definition (CRD) that represents a deployed instance within your Kubernetes cluster. It includes two primary components:
+
+#### 1. Source:
+Points to the Git repository (or supported alternatives like Helm charts, Kustomize, or Jsonnet) where the desired state of your Kubernetes manifests is defined.
+
+#### 2. Destination:
+Defines the target Kubernetes cluster and namespace where the resources will be deployed.
+
+Additionally, an application specifies the project it belongs to and incorporates synchronization policies that ensure the deployed state stays in sync with the source repository.
+
+The image is a diagram of an ArgoCD application, showing different sources like Git, Helm, and Jsonnet, along with destination, project, sync policy, and ignore diff settings.
+
+There are several methods to create an ArgoCD application, including using the CLI, YAML specification, or the user interface.
+
+!!! Tip
+    When choosing the creation method, consider your team's workflow. The CLI is great for quick operations while YAML is preferred for version-controlled deployments.
+
+#### Creating an Application
+##### Creating an Application Using the CLI
+When managing ArgoCD via the Command Line Interface (CLI), you supply critical parameters including the repository URL, manifest path, destination Kubernetes server, and destination namespace. Use the following example:
+
+```shell hl_lines="1"
+$ argocd app create color-app \
+  --repo https://github.com/sid/app-1.git \
+  --path team-a/color-app \
+  --dest-namespace color \
+  --dest-server https://kubernetes.default.svc
+Application `color-app` created
+```
+
+After running this command, ArgoCD retrieves the manifest from the provided Git repository and deploys the resources to the specified namespace.
+
+##### Creating an Application Using YAML
+For a more declarative approach, you can define your application using a YAML file. Below is a sample YAML manifest for an ArgoCD application, where the application is created within the default ArgoCD project:
+
+```yaml title="application.yaml"
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: color-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/sid/app-1.git
+    targetRevision: HEAD
+    path: team-a/color
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: color
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+```
+
+The manifest details illustrate how the components—source, destination, and sync policy—integrate to ensure consistent deployment and automatic rollback if needed.
+
+!!! info "Further Exploration"
+    For additional guidance on managing and configuring ArgoCD projects, explore our detailed documentation and recommended practices.
+
+ArgoCD projects offer a way to centrally manage permissions and settings across multiple applications, providing a more scalable approach to modern GitOps workflows.
+
+For more detailed information, check out the following resources:
+
+- Kubernetes Documentation
+- ArgoCD Official Docs
+- GitOps Resources
+
+By integrating these best practices into your GitOps pipeline, you can streamline application deployments and maintain robust, scalable infrastructure management in Kubernetes.
+
+---
+
+### Create Application using UI
+In this lesson, you will learn how to create an ArgoCD application using its user interface. For demonstration purposes, we will use Gitea—a self-hosted Git service—for all labs and demo sessions. Although any Git service (such as GitHub, Bitbucket, or GitLab) can be used, this guide will focus on Gitea.
+
+The image is a webpage for Gitea, a self-hosted Git service, highlighting its features such as being easy to install, cross-platform, lightweight, and open source.
+
+After signing into Gitea, locate the repository named gitops-argocd. This repository contains the demo exercises for the training. For our example, we will deploy an application using the "solar system" manifest stored inside the repository.
+
+The image shows a Gitea repository interface with a list of folders and recent commit messages. The repository is named "gitops-argocd" and has 170 commits.
+
+Within the repository, navigate to the solar system directory to find two Kubernetes manifests:
+
+- Deployment Manifest: Configures a deployment that uses a custom image (version v3), deployed as a single replica, and exposes port 80.
+- Service Manifest: Exposes the application via a NodePort.
+Below is the content of the deployment manifest:
+
+```yaml linenums="1"
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: solar-system
+  name: solar-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: solar-system
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: solar-system
+    spec:
+      containers:
+        - image: siddharth67/solar-system:v3
+          name: solar-system
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+```
+
+And here is the service manifest:
+
+```yaml linenums="1"
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: solar-system
+  name: solar-system-service
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: solar-system
+  type: NodePort
+```
+
+#### Creating the ArgoCD Application
+To create an application using the ArgoCD UI:
+
+Click on + New App.
+Enter an application name (for example, "solar-system-app-1").
+Select an ArgoCD project. By default, the "default" project is available.
+Choose the synchronization policy. For this guide, select Manual.
+Under Source Settings, select the repository you previously configured.
+!!! note "Repository Configuration" To connect your Git repository in ArgoCD, navigate to the Manage Repositories section. ArgoCD supports SSH, HTTPS, and GitHub App integrations. This demo uses HTTPS.
+
+The image shows a web interface for Argo CD with no applications currently listed. It prompts the user to create a new application to manage resources in a cluster.
+
+When configuring repository connections, enter the repository URL (up to the GitOps part of your URL). Username, password, and TLS certificates are optional and only required for private repositories.
+
+The image shows a web interface for connecting a repository using HTTPS, with options to select the type (git or helm), and fields for repository URL, username, password, and TLS client certificate.
+
+After providing proper details, click Connect. A successful connection status will be displayed.
+
+The image shows a web interface for connecting a Git repository using HTTPS in Argo CD, with fields for repository URL, username, and password.
+
+The image shows the Argo CD interface with a repository connection status marked as "Successful." There are options to connect repositories using SSH, HTTPS, or GitHub App.
+
+ArgoCD stores these connection details securely in Kubernetes secrets. To inspect these secrets, use the command below:
+```shell
+kubectl -n argocd get secrets
+```
+For example, you might see:
+
+```shell 
+NAME                              TYPE    DATA  AGE
+argocd-initial-admin-secret       Opaque  1     60m
+argocd-secret                     Opaque  5     61m
+repo-3254474260                   Opaque  3     52s
+```
+
+To view the details of a secret:
+
+kubectl -n argocd get secrets repo-3254474260 -o json
+This secret includes fields such as "project", "type", and "url" (all base64 encoded), ensuring sensitive information remains secure.
+
+Return to the ArgoCD UI and complete the application creation process:
+
+Under Source Configuration, select the repository you connected.
+Set the Path to the solar system directory within your repository.
+Configure the Destination by selecting the Kubernetes cluster where ArgoCD is installed and specifying a namespace (e.g., "solar-system"). You can opt to auto-create the namespace during synchronization if it does not exist.
+Leave additional plugin or directory options at their default values.
+Click Create.
+The image shows a web interface for creating a new application in Argo CD, with fields for application name, project name, and various sync policy options.
+
+After creation, the application status may appear as "Missing" and the sync status as "OutOfSync" because the defined Kubernetes resources are not yet deployed. Verify by running:
+
+```
+kubectl get ns
+kubectl get pod -A
+```
+
+At this point, the "solar-system" namespace and its resources should not be present.
+
+#### Synchronizing the Application
+To deploy the application:
+
+Click the Sync button in the ArgoCD UI.
+ArgoCD will detect two Kubernetes resources from your Git repository: the deployment and the service.
+!!! warning "Missing Namespace Alert" If the target namespace ("solar-system") does not exist during sync, the process may fail. Ensure you have either created the namespace manually or enabled the Auto-create namespace option.
+
+The image shows a dashboard interface indicating a failed sync operation due to a missing "solar-system" namespace. It lists details such as the operation status, message, and result.
+
+Once the namespace is available, ArgoCD will deploy the resources. The application health changes to "Healthy" and the sync status updates to "Synced".
+
+The image shows a dashboard interface for managing an application called "solar-system-app-1," displaying its health and sync status as "Healthy" and "Synced." It includes a visual representation of the application's components and their relationships.
+
+Verify the deployment by inspecting the namespace:
+
+kubectl get ns
+kubectl -n solar-system get all
+You can also inspect the live manifest details in ArgoCD by clicking on the service resource. A typical service manifest will resemble the following:
+
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: >-
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"solar-system","app.kubernetes.io/instance":"solar-system-app-1"},"name":"solar-system-service","namespace":"solar-system"}}
+  labels:
+    app: solar-system
+  name: solar-system-service
+  namespace: solar-system
+spec:
+  clusterIP: 10.108.211.169
+  ports:
+    - nodePort: 30280
+      port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: solar-system
+  type: NodePort
+Access the service via the NodePort (for example, 30280) to view a PHP application representing the solar system. With the v3 image, the UI displays a limited set of planets (the Sun, Mercury, Venus, and Earth).
+
+#### Updating the Application Image
+To simulate an update, modify the deployment manifest in your Git repository to change the image version from v3 to v6 (which displays six planets). Edit the deployment manifest as follows:
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: solar-system
+  name: solar-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: solar-system
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: solar-system
+    spec:
+      containers:
+        - image: siddharth67/solar-system:v6
+          name: solar-system
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+Commit your changes with a message like "Updated the image to v6".
+
+The image shows a code repository interface where a user is committing changes with the message "updated the image to v6" on the main branch.
+
+After committing, ArgoCD automatically checks the repository at regular intervals. To expedite the update, perform a hard refresh in the UI so that ArgoCD detects the changes. The sync status will once again be marked as "OutOfSync".
+
+Click the Synchronize button. ArgoCD then deploys the updated resources, creates a new replica set, and starts a new pod with the updated image.
+
+The image shows a dashboard interface for managing applications, displaying the health and sync status of a "solar-system-app-1" with a visual representation of its components and their statuses.
+
+If the update results in unexpected behavior—such as an incorrect display of planets—you can roll back to a previous version. In the ArgoCD UI, click History and Rollbacks, select a previous revision (for example, the one deployed five minutes ago), and confirm the rollback.
+
+The image shows a dashboard interface of a deployment application, displaying details about deployment times, revisions, and sync status. The app health is marked as "Healthy" and the current sync status is "Synced."
+
+After the rollback, the application status updates accordingly and the original display of planets is restored.
+
+Deleting the Application
+To delete the application in ArgoCD:
+
+#### Delete the application via the ArgoCD UI.
+All the associated Kubernetes resources (deployment, replica set, pod, and service) are automatically removed from the cluster.
+Note that the target namespace (e.g., "solar-system") remains intact.
+Verify the deletion by running the following commands:
+
+kubectl get ns
+kubectl -n solar-system get all
+Expected output before deletion:
+
+kubectl -n solar-system get all
+NAME                                        READY   STATUS    RESTARTS   AGE
+pod/solar-system-556d76fc6-mxk6z           1/1     Running   0          34s
+service/solar-system-service                NodePort    10.108.211.169  <none>       80:30280/TCP     34s
+deployment.apps/solar-system                1/1     1            1           34s
+replicaset.apps/solar-system-556dd76fc6      1         1         1       34s
+And after deletion:
+
+kubectl -n solar-system get all
+No resources found in solar-system namespace.
+Listing namespaces will confirm that "solar-system" still exists:
+
+kubectl get ns
+NAME             STATUS   AGE
+argocd           Active   71m
+default          Active   19h
+kube-node-lease  Active   19h
+kube-public      Active   19h
+kube-system      Active   19h
+solar-system     Active   6m40s
+
+In upcoming lessons, you will explore creating the same application using the ArgoCD CLI and further automating the continuous deployment process.
+
+---
+
+### Create Application using CLI
+In this guide, you will learn how to create, synchronize, and verify an ArgoCD application using the command-line interface (CLI). Previously, we explored creating and deleting applications via the UI. Now, we'll delve into performing these tasks with the CLI for a more automated and scriptable approach.
+
+#### Creating Applications
+You can create an ArgoCD application with the argocd app create command. This command supports various configuration options, allowing you to deploy applications managed as Git directory-based manifests, Jsonnet, Helm (from both Git and Helm repositories), Kustomize, or even using a custom configuration management plugin.
+
+Below are examples for different application types:
+
+```
+# Create a directory-based app
+argocd app create guestbook \
+  --repo https://github.com/argoproj/argocd-example-apps.git \
+  --path guestbook \
+  --dest-namespace default \
+  --dest-server https://kubernetes.default.svc \
+  --directory-recurse
+
+
+# Create a Jsonnet app
+argocd app create jsonnet-guestbook \
+  --repo https://github.com/argoproj/argocd-example-apps.git \
+  --path jsonnet-guestbook \
+  --dest-namespace default \
+  --dest-server https://kubernetes.default.svc \
+  --jsonnet-ext-str replicas=2
+
+
+# Create a Helm app from a Git repository
+argocd app create helm-guestbook \
+  --repo https://github.com/argoproj/argocd-example-apps.git \
+  --path helm-guestbook \
+  --dest-namespace default \
+  --dest-server https://kubernetes.default.svc \
+  --helm-set replicaCount=2
+
+
+# Create a Helm app from a Helm repository
+argocd app create nginx-ingress \
+  --repo https://charts.helm.sh/stable \
+  --helm-chart nginx-ingress \
+  --revision 1.24.3 \
+  --dest-name nginx-ingress \
+  --dest-namespace default \
+  --dest-server https://kubernetes.default.svc
+
+
+# Create a Kustomize app
+argocd app create kustomize-guestbook \
+  --repo https://github.com/argoproj/argocd-example-apps.git \
+  --path kustomize-guestbook \
+  --dest-namespace default \
+  --dest-server https://kubernetes.default.svc \
+  --kustomize-image gcr.io/heptio-images/ks-guestbook-demo:0.1
+
+
+# Create an app using a custom configuration management plugin (e.g., kasane)
+argocd app create kasane \
+  --repo https://github.com/argoproj/argocd-example-apps.git \
+  --path plugins/kasane \
+  --dest-namespace default \
+  --dest-server https://kubernetes.default.svc \
+  --config-management-plugin kasane
+```
+
+In these examples, you provide the application name, repository URL, path to your manifest files within the repository, destination namespace, and target server details.
+
+#### Creating a Git Directory Application
+Next, create a Git directory application named "solar-system-app-2". This command specifies all required parameters, including the repository URL, the path to the application manifests, destination namespace, and the Kubernetes API server.
+
+```shell 
+argocd app create solar-system-app-2 \
+  --repo http://139.59.21.103:3000/siddharth/gitops-argocd \
+  --path ./solar-system \
+  --dest-namespace solar-system \
+  --dest-server https://kubernetes.default.svc
+```
+
+After creating the application, list all applications to verify its creation:
+
+```
+argocd app list
+```
+
+Once executed, the output will include the new application with details about its repository, destination namespace, and target server. Initially, the status may appear as "OutOfSync".
+
+#### Synchronizing Applications
+Synchronizing your application with its repository is simple with the argocd app sync command. This command handles syncing for individual applications, multiple applications, or even resources filtered by label selectors.
+
+```
+# Sync a single application
+argocd app sync solar-system-app-2
+
+
+# Sync multiple applications at once
+argocd app sync my-app other-app
+
+
+# Sync applications by label (helpful for app-of-apps scenarios)
+argocd app sync -l app.kubernetes.io/instance=my-app
+
+
+# Sync a specific resource within an application
+argocd app sync my-app --resource :Service:my-service
+argocd app sync my-app --resource argoproj.io:Rollout:my-rollout
+argocd app sync my-app --resource argoproj.io:Rollout:my-namespace/my-rollout
+```
+
+##### Key Flags for the Sync Command
+
+| Flag             | Description                                                           |
+|------------------|-----------------------------------------------------------------------|
+|--assumeYes       | Automatically confirms all prompts.                                   |
+|--async           | Does not wait for the sync process to complete.                       |
+|--dry-run         | Previews changes without applying them.                               |
+|--force           | Forces the apply action, useful for overriding conflicts.             |
+|--info            | Provides key-value pairs used during synchronization.                 |
+|--label           | Filters resources by label, supports label-based operations.          |
+|--local           | Specifies a local directory, bypassing Git queries.                   |
+|--local-repo-root | Defines the repository root when using a local directory.             |
+|--preview-changes | Shows differences before applying changes.                            |
+|--prune           | Enables removal of resources not defined in the Git repository.       |
+|--replace         | Uses a create/replace strategy instead of patching existing resources.|
+
+
+After syncing, ArgoCD will provide detailed output on the application's sync status. For example:
+
+```shell 
+Name:              solar-system-app-2
+Project:           default
+Server:            https://kubernetes.default.svc
+Namespace:         solar-system
+URL:               https://10.98.110.228/applications/solar-system-app-2
+Repo:              http://139.59.21.103:3000/siddharth/gitops-argocd
+Target:            ./solar-system
+SyncWindow:        Sync Allowed
+Sync Policy:       <none>
+Sync Status:       Synced to (cb535e5)
+Health Status:     Progressing
+
+
+Operation:         Sync
+Sync Revision:     cb535e59f804f8d4e795e92737c1d75235d1b1d
+Phase:             Succeeded
+Start:             2022-09-23 15:28:51 +0000 UTC
+Finished:          2022-09-23 15:28:51 +0000 UTC
+Duration:          0s
+Message:           successfully synced (all tasks run)
+
+
+GROUP   KIND         NAMESPACE             NAME
+apps    Deployment   solar-system          solar-system
+Service               solar-system-service  Synced     Healthy  service/solar-system-service created
+```
+
+This output confirms that the Deployment and Service were successfully applied to your Kubernetes cluster.
+
+#### Verifying the Deployment
+After synchronization, you can verify that the deployed resources are running correctly by using kubectl:
+
+kubectl -n solar-system get all
+A sample output might be:
+
+NAME                                  READY   STATUS    RESTARTS   AGE
+pod/solar-system-7c569b7bdb-csslx       1/1     Running   0          34s
+
+
+NAME                                    TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)         AGE
+service/solar-system-service            NodePort    10.96.97.234    <none>        80:31761/TCP    34s
+
+
+NAME                                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/solar-system             1/1     1            1           34s
+
+
+NAME                                     DESIRED   CURRENT   READY   AGE
+replicaset.apps/solar-system-7c569b7bdb    1         1         1       34s
+
+!!! Note
+    This output confirms that a new pod is running and that the service is exposed on a NodePort (31761).
+
+#### Updating the Application
+When you update your application (for example, by switching to a new Docker image version), you can inspect the updated Deployment manifest. Below is an example manifest that uses an updated image version ("vi"), ensuring that all nine planets are displayed in the solar system view:
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: solar-system
+  name: solar-system
+  namespace: solar-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: solar-system
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: solar-system
+    spec:
+      containers:
+        - image: siddharth67/solar-system:vi
+          imagePullPolicy: Always
+          name: solar-system
+          ports:
+            - containerPort: 80
+```
+
+After updating the manifest, synchronize the application using the CLI. Once applied, accessing the application via the designated NodePort should display all nine planets of the solar system.
+
+#### Conclusion
+This article demonstrated how to manage ArgoCD applications using the CLI. The guide included creating applications using various configuration management tools, synchronizing those applications, and verifying their deployments within a Kubernetes cluster. This CLI-based approach provides a flexible, efficient alternative to managing GitOps workflows via the UI.
+
+---
+
+### Create ArgoCD Project
+In this guide, you'll learn how to create a custom ArgoCD project that enforces specific restrictions on source repositories and cluster-level resources. We begin by reviewing the default project configuration, then move on to creating and configuring a custom project, and finally deploy and synchronize an application to validate the restrictions.
+
+#### Reviewing the Default Project
+Before implementing a custom project, it is important to understand how the default project is configured. The default project is highly permissive—it allows deployments to any destination and namespace without restrictions on source repositories or resources.
+
+Run the following command to list the projects:
+
+argocd proj list
+The output will show that the default project accepts any source (*) and destination (*,*), with no restrictions on cluster-level or namespace-level resources:
+
+NAME     DESCRIPTION        DESTINATIONS   SOURCES   CLUSTER-RESOURCE-WHITELIST   NAMESPACE-RESOURCE-BLACKLIST   SIGNATURE-KEYS   ORPHANED-RESOURCES
+default  *i,*               *             */*                                    <none>                        disabled
+For clarity, here's another similar output:
+
+argocd proj list
+NAME      DESCRIPTION    DESTINATIONS    SOURCES    CLUSTER-RESOURCE-WHITELIST    NAMESPACE-RESOURCE-BLACKLIST    SIGNATURE-KEYS    ORPHANED-RESOURCES
+default   *.*            *               */*        <none>                        <none>                          disabled
+Note
+
+The default project does not limit which clusters or namespaces can be deployed to, nor does it restrict source repositories. This open configuration may not be suitable for every production environment.
+
+#### Checking Applications and Projects
+You may also want to verify the current applications and projects using the Kubernetes CLI within the ArgoCD namespace.
+
+To list all applications:
+
+k -n argocd get applications
+Output:
+
+NAME                     SYNC STATUS   HEALTH STATUS
+solar-system-app-2       Synced        Healthy
+To list the projects available in ArgoCD:
+
+k -n argocd get appproj
+Output:
+
+NAME       AGE
+default    102m
+#### Creating a Custom Project
+Next, we will create a new custom project. This project will restrict allowed source repositories and control cluster-level resource deployment. You can create this project using either the UI or CLI. Below is the CLI output that shows the default state before introducing our custom project:
+
+argocd proj list
+NAME       DESCRIPTION     DESTINATIONS       SOURCES       CLUSTER-RESOURCE-WHITELIST   NAMESPACE-RESOURCE-BLACKLIST   SIGNATURE-KEYS   ORPHANED-RESOURCES
+default    *,*             *                   */*           <none>                          disabled
+Additionally, review the current applications and projects:
+
+k -n argocd get applications
+NAME                       SYNC STATUS     HEALTH STATUS
+solar-system-app-2         Synced          Healthy
+k -n argocd get appproj
+NAME       AGE
+default    102m
+#### Configuring the Custom Project via the UI
+To start, open the ArgoCD user interface and navigate to the Projects configuration via the sidebar. You will see the default project configuration listed. Click on "Create a new project" to begin setting up your custom project, for instance named "special-project". Provide a clear description outlining the restrictions that will be applied.
+
+The image shows the settings page of Argo CD, displaying options to configure repositories, certificates, GnuPG keys, clusters, projects, and accounts. The interface includes a sidebar with navigation icons.
+
+##### Setting Source Repository Restrictions
+Within the project settings, limit the allowed source repositories by replacing the default wildcard (*) with the specific Git repository URL containing the pod metadata resources. For example, allow only the "pod metadata" repository:
+
+The image shows a web interface of a code repository on Gitea, displaying details like branches, commits, and options to create a new file or pull request.
+
+##### Defining Deployment Destinations
+Under the Destinations section, restrict deployments to the current cluster by specifying its server URL (e.g., https://kubernetes.default.svc). You may keep the namespace wildcard (*) to allow flexible namespace usage.
+
+The image shows a web interface for managing a project, displaying sections for source repositories, scoped repositories, and destinations. It includes options to edit, save, or cancel changes, and shows a destination server URL.
+
+##### Configuring Resource Denial
+To enhance security, configure the project to deny certain cluster-level resources. In this example, we restrict ClusterRole resources to prevent unauthorized full-access permissions. Suppose you have a manifest for a ClusterRole resource as shown below:
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: pod-master
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - "*"
+Add an entry to the project’s deny list for ClusterRole resources. When editing, select "ClusterRole" as the kind and leave the group field empty.
+
+The image shows a web interface for managing project settings, specifically focusing on cluster and namespace resource allow and deny lists. It includes options to add resources and buttons to save or cancel changes.
+
+After saving your settings, view the new project summary in the UI:
+
+The image shows a web interface for managing a project named "special-project," displaying sections for general information, source repositories, and other project settings. The interface includes options to edit details and manage roles, sync windows, and events.
+
+#### Verifying the Custom Project via CLI
+After configuration, verify that the new "special-project" has been created alongside the default project using:
+
+argocd proj list
+Expected output:
+
+NAME                DESCRIPTION                                       DESTINATIONS                         SOURCES                                         CLUSTER-RESOURCE-WHITELIST    NAMESPACE-RESOURCE-BLACKLIST     SIGNATURE-KEYS      ORPHANED-RESOURCES
+default             /*                                                 *,*                                 *                                              /*                           /*                              <none>              disabled
+special-project     This project has restrictions                     https://kubernetes.default.svc,*    http://139.59.21.103:3000/siddharth/pod-metadata    <none>                      disabled
+To view detailed configuration in YAML format, run:
+
+argocd proj get special-project -o yaml
+Below is an example snippet of the YAML output:
+
+metadata:
+  creationTimestamp: "2022-09-23T15:44:52Z"
+  generation: 4
+  name: special-project
+  namespace: argocd
+spec:
+  clusterResourceBlacklist:
+    - group: ''
+      kind: 'ClusterRole'
+      description: This project has restrictions
+  description: This project has restrictions
+  destinations:
+    - name: in-cluster
+      namespace: '*'
+      server: https://kubernetes.default.svc
+  sourceRepos:
+    - http://139.59.21.103:3000/siddharth/pod-metadata
+status: {}
+Verify these settings again after any updates with:
+
+argocd proj get special-project -o yaml
+Important
+
+Ensure that all fields are correctly populated. For instance, an empty group field for a ClusterRole should be represented properly in YAML quotes.
+
+#### Creating and Testing an Application with the Custom Project
+Now, create an application that is associated with the "special-project" custom project. When creating the application (e.g., "special-pod-app"), verify that the connected repository is correct. Note that the application sync policy should be set to manual and the namespace will be auto-created if necessary.
+
+If you try deploying an application from a disallowed repository, an error will appear similar to the following:
+
+The image shows an Argo CD interface with a configuration screen for creating an application. An error message indicates that the application spec is invalid due to a repository permission issue.
+
+Once you select the approved pod metadata repository and set the application manifest path (e.g., "manifest"), click "Create." The application should now appear in the dashboard.
+
+The image shows a user interface for creating or managing an application in Argo CD, with options for setting the application name, project, and various sync settings.
+
+The ArgoCD dashboard will display both "special-pod-app" and the previously existing "solar-system-app-2":
+
+The image shows a dashboard from Argo CD displaying two application tiles: "special-pod-app" with a status of "Missing" and "OutOfSync," and "solar-system-app-2" with a status of "Healthy" and "Synced."
+
+#### Synchronizing the Application and Handling Denied Resources
+To deploy the application, click "Sync" for "special-pod-app." During synchronization, ArgoCD will try to apply all resources defined in the repository—including a ClusterRole resource. Since the custom project denies ClusterRole resources, the sync will fail with an error indicating that the resource is not permitted.
+
+The image shows a dashboard interface indicating a failed synchronization operation for an application, with a message stating that one or more synchronization tasks are not valid. The result section highlights a "SyncFailed" status due to a "ClusterRole" not being permitted in the specified project.
+
+To resolve this, deselect the ClusterRole resource during the sync operation. This will deploy the remaining resources (the deployment and service) successfully. After resynchronizing, "special-pod-app" should deploy the pod metadata application and expose it via the configured service.
+
+#### Application Details
+Upon successful synchronization, the application deploys a simple PHP application that displays pod details (such as pod IP, pod name, UID, CPU requests, etc.) using the Kubernetes Downward API.
+
+For reference, here is part of the deployment manifest:
+
+replicas: 1
+revisionHistoryLimit: 10
+selector:
+  matchLabels:
+    app: pod-metadata
+strategy:
+  rollingUpdate:
+    maxSurge: 25%
+    maxUnavailable: 25%
+  type: RollingUpdate
+template:
+  metadata:
+    labels:
+      api: downward
+      app: pod-metadata
+      env: dev
+      usage: global
+  spec:
+    containers:
+      - name: test-container
+        env:
+          - name: MY_NODE_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+          - name: MY_POD_ID
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: MY_POD_UID
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.uid
+          - name: MY_CPU_REQUEST
+            valueFrom:
+              resourceFieldRef:
+                containerName: test-container
+                resource: requests.cpu
+          - name: MY_CPU_LIMIT
+            valueFrom:
+              resourceFieldRef:
+                containerName: test-container
+                resource: limits.cpu
+The following service manifest exposes the application via a node port (e.g., 32651):
+
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"pod-metadata"},"name":"pod-metadata-service","namespace":"default"},"spec":{"clusterIP":"10.107.42.62","clusterIPs":["10.107.42.62"],"externalTrafficPolicy":"Cluster","internalTrafficPolicy":"Cluster","ipFamilies":["IPv4"],"ipFamilyPolicy":"SingleStack","ports":[{"nodePort":32651,"port":80,"protocol":"TCP","targetPort":80}],"selector":{"app":"pod-metadata"}}}
+  creationTimestamp: "2022-09-23T18:05:38Z"
+  labels:
+    app: pod-metadata
+  name: pod-metadata-service
+  namespace: default
+spec:
+  clusterIP: 10.107.42.62
+  clusterIPs:
+  - 10.107.42.62
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - nodePort: 32651
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: pod-metadata
+After deployment, access the application via node port 32651 to view pod details, including pod name, IP, UID, host IP, and other metadata retrieved via the Downward API.
+
+The image displays a table with Kubernetes pod details such as Pod Name, Pod IP, Pod UID, and other metadata, retrieved via the Downward API.
+
+#### Summary
+In this lesson, you have learned how to:
+
+Review the default ArgoCD project configuration.
+Create a custom project with restrictions on source repositories and cluster-level resource deployment.
+Configure project settings via the UI by whitelisting an approved repository and denying ClusterRole resources.
+Deploy an application using the custom project, address synchronization errors due to denied resources, and verify a successful deployment of allowed resources.
+Implementing project restrictions in ArgoCD allows you to enforce fine-grained control over application deployments, ensuring that only authorized resources and repositories are used.
+
+---
+
+## ArgoCD Intermediate
+
+### Reconciliation loop
+ArgoCD continuously reconciles the current state of your Kubernetes cluster to match the desired state defined in Git. In a GitOps workflow, application updates occur several times a day as developers commit changes. This article explains how ArgoCD synchronizes these updates with your cluster using its reconciliation loop.
+
+ArgoCD’s reconciliation loop determines how frequently it pulls the desired state from the Git repository. Typically, the default timeout is set to 3 minutes. This timeout value, configurable within the ArgoCD repo server, dictates the wait period for a reconciliation operation before timing out.
+
+The ArgoCD repo server fetches the desired state from Git and its behavior can be modified through the environment variable ARGOCD_RECONCILIATION_TIMEOUT. This variable is established using the key timeout.reconciliation in the ArgoCD configuration map (argocd-cm). By default, this configuration map is empty upon installation. You can customize the reconciliation timeout (for example, to 300 seconds) by patching this configuration map and then restarting the ArgoCD repo server deployment.
+
+Once the configuration is updated and the deployment is restarted, ArgoCD checks for any changes in the Git repository every 5 minutes—unless webhooks are implemented to trigger immediate reconciliations.
+
+!!! Note
+    For immediate synchronization after each commit, configure a webhook on your Git provider that targets [ARGOCD_SERVER_URL]/api/webhook. This setup bypasses the default polling mechanism.
+
+Below is a consolidated set of commands to patch the configuration map, restart the repo server, and verify the updated timeout setting:
+
+```shell
+# Check the current reconciliation timeout setting
+kubectl -n argocd describe pod argocd-repo-server | grep -i "ARGOCD_RECONCILIATION_TIMEOUT:" -B1
+
+
+# Patch the ArgoCD config map with a custom timeout of 300 seconds
+kubectl -n argocd patch configmap argocd-cm --patch='{"data":{"timeout.reconciliation":"300s"}}'
+
+
+# Restart the ArgoCD repo server deployment to apply the new setting
+kubectl -n argocd rollout restart deploy argocd-repo-server
+
+
+# Verify that the new timeout is active
+kubectl -n argocd describe pod argocd-repo-server | grep -i "ARGOCD_RECONCILIATION_TIMEOUT:" -B1
+```
+In summary, the repo server relies on the reconciliation timeout parameter from the ArgoCD configuration map. Without any modifications, ArgoCD typically checks for manifest changes every 3 to 5 minutes. However, integrating a webhook—such as one from GitHub targeting [ARGOCD_SERVER_URL]/api/webhook—can trigger instant notifications, reducing synchronization delays.
+
+The image illustrates a reconciliation loop using webhooks, showing a process flow from code commit to deployment in a Kubernetes environment, with configuration settings for managing webhooks.
+
+---
+
+### Git Webhook Configuration
+In this article, we describe how to configure a Git webhook on your repository so that any push event triggers a notification to the ArgoCD server. Previously, we created two applications; here, we'll create another application and examine the reconciliation process in detail.
+
+#### Creating the Git Webhook Application
+Begin by creating a new application called "Git Webhook" that will handle the webhook configuration. Use the default project with a manual synchronization policy and enable the auto-creation of the namespace. For the repository, reference the GitOps ArgoCD repository that contains an Nginx application. This Nginx application includes a directory with a deployment manifest that deploys the Nginx app with one replica.
+
+The image shows a user interface of Argo CD, displaying options for creating or managing applications, with settings for sync options and source repository URLs.
+
+Below is the deployment manifest for the Nginx application:
+```yaml linenums="1"
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+```
+Deploy this application in a namespace named "webhook." Once the application is created and synchronized, it deploys the Nginx application and creates an Nginx pod.
+
+The image shows a dashboard interface for managing applications, displaying the status of a "git-webhook-app" with components like "nginx" and a pod, all marked as healthy and synced.
+
+At this point, since there is no service defined (as we are focusing solely on reconciliation), the application status remains synced.
+
+#### Modifying the Deployment and Checking Reconciliation
+To test ArgoCD's response to changes, update the deployment manifest by changing the number of replicas from one to two. Below is the manifest before any modification:
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+```
+
+Commit these changes. Even after the update, if you inspect the ArgoCD application, the sync status remains "Synced" because ArgoCD polls the repository every three minutes by default. To expedite the process, click the "Refresh" button manually. This forces ArgoCD to recheck the repository and update the synchronization status accordingly. At this point, the Nginx application scales to two pods.
+
+The image shows a dashboard interface of a web application, displaying the health and sync status of a "git-webhook-app" with a visual representation of its deployment components. The application is marked as "Healthy" and "Synced," with details about the deployment and pods.
+
+#### Adjusting Polling Time via Repository Server Configuration
+If you need a different polling interval (for example, one, five, or ten minutes instead of three), modify the polling time in the ArgoCD repository server configuration. First, check the ArgoCD repo server pod in the ArgoCD namespace by running:
+
+``` shell
+k -n argocd describe po argocd-repo-server-5576f8d84b-whtsg | grep -i recon
+```
+This command shows several volume configurations and environment parameters. The ArgoCD repo server fetches data from the Git repository and performs reconciliation based on the ARGOCD_RECONCILIATION_TIMEOUT environment parameter. This parameter derives its value from the ArgoCD config map.
+
+To update the reconciliation timeout (for example, to 300 seconds), edit the ArgoCD config map (argocd-cm). Start by retrieving the config map:
+
+```shell
+k -n argocd get cm argocd-cm -o yaml
+```
+The retrieved configuration might look like:
+
+```yaml linenyms="1"
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"ConfigMap","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"argocd-cm","app.kubernetes.io/part-of":"argocd"},"name":"argocd-cm","namespace":"argocd"},"data":{}}
+  creationTimestamp: "2022-09-23T14:01:01Z"
+  labels:
+    app.kubernetes.io/name: argocd-cm
+  name: argocd-cm
+  namespace: argocd
+  resourceVersion: "81266"
+  uid: 898f14a2-4f23-456f-9561-0767f2388485
+```
+
+Add an entry for "timeout.reconciliation": "300" (or any desired timeout value) inside the data field. The repository server will detect the change and adjust its polling frequency thereafter.
+
+An alternative approach is to use webhooks to update the synchronization status immediately when a push event occurs.
+
+To verify the updated reconciliation timeout, run:
+```
+k -n argocd describe po argocd-repo-server-5576f8d84b-whtsg | grep -i recon
+```
+
+And check the config map again with:
+
+```
+k -n argocd get cm argocd-cm -o yaml
+```
+The output should now display the timeout.reconciliation field with your configured value.
+
+#### Configuring the Git Webhook
+Navigate to the webhooks section in your Git repository settings. With no webhooks configured initially, add a new webhook with the following details:
+
+- Target URL: Your ArgoCD server URL appended with /api/webhook
+- HTTP Method: POST
+- Content Type: application/json
+- Secret: (Leave empty if not used)
+
+The image shows a web interface for adding a webhook in a Gitea repository, with fields for target URL, HTTP method, content type, and event triggers.
+
+Select push events as the trigger and save the webhook configuration. Once configured, test the delivery. If the webhook delivery fails with a certificate error (for example, "cannot validate the certificate" due to a self-signed certificate), adjust your ArgoCD server settings to allow insecure connections.
+
+#### Configuring ArgoCD Server for Insecure (HTTP) Connections
+To bypass certificate validation issues (often encountered with self-signed certificates), configure the ArgoCD server deployment to run in insecure mode using plain HTTP. Edit the ArgoCD server deployment with the following command:
+
+```shell hl_lines="1"
+k -n argocd edit deployments.apps argocd-server
+```
+
+Within the deployment specification, locate the container command that starts argocd-server and modify the environment variables by adding a tag named ARGCOD_SERVER_INSECURE. Below is an excerpt of the configuration:
+
+```yaml linenums="1"
+labels:
+  app.kubernetes.io/name: argocd-server
+spec:
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: argocd-server
+          topologyKey: kubernetes.io/hostname
+        weight: 100
+  containers:
+  - command:
+    - argocd-server
+    env:
+    - name: ARGCOD_SERVER_INSECURE
+      valueFrom:
+        configMapKeyRef:
+          key: server.insecure
+          name: argocd-cmd-params-cm
+      optional: true
+    - name: ARGCOD_SERVER_BASEHREF
+      valueFrom:
+        configMapKeyRef:
+          key: server.basehref
+          name: argocd-cmd-params-cm
+      optional: true
+    - name: ARGCOD_SERVER_ROOTPATH
+      valueFrom:
+        configMapKeyRef:
+          key: server.rootpath
+          name: argocd-cmd-params-cm
+```
+
+Save your changes so that the ArgoCD server redeploys. Monitor the new pods coming up by running:
+
+```
+k -n argocd get po
+```
+
+After the new ArgoCD server pod is running, it will listen on HTTP instead of HTTPS. Update the webhook URL accordingly (i.e., replace https:// with http://).
+
+The image shows a dashboard interface of Argo CD with three application tiles, each displaying details like project name, status, repository, and options to sync, refresh, or delete. The sidebar includes filters for sync status, health status, labels, projects, and clusters.
+
+Finally, update the webhook configuration to use HTTP and test the delivery again.
+
+The image shows a webhook configuration interface with options for setting the target URL, HTTP method, and trigger events. It also displays recent delivery details, including a successful POST request.
+
+!!! Warning
+    Running the ArgoCD server in insecure mode (HTTP) can expose your environment to potential security risks. Use this configuration only for testing or in controlled environments.
+
+#### Testing Reconciliation with Webhooks
+To demonstrate how synchronization occurs when the Git repository is updated, open the deployment manifest for the Nginx application which currently deploys two pods:
+
+```yaml linenums="1"
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+```
+
+Edit the file to change the replica count (for example, increase it to four replicas), and commit the change. The push event triggers the webhook, which immediately notifies the ArgoCD server. Consequently, the application status in the ArgoCD dashboard will change from "Synced" to "OutOfSync."
+
+The image shows a dashboard interface for managing applications, displaying the sync status and health of a "git-webhook-app" with a visual representation of its components and their statuses. The current sync status is "OutOfSync," while the last sync result is "Sync OK."
+
+Synchronize the application to update the deployment. ArgoCD will then scale the application accordingly. You can further experiment by scaling down to one replica; after committing this change, the status turns out of sync, and synchronizing will adjust the deployment to match the desired state.
+
+The image shows a dashboard interface for managing applications, displaying the sync status and health of a "git-webhook-app" with a visual representation of its deployment and pods.
+
+#### Summary
+In summary, this article demonstrated two effective approaches for triggering reconciliation in ArgoCD:
+
+1. Adjusting the reconciliation timeout in the ArgoCD config map to control how often the repository server polls the Git repository.
+2. Configuring webhooks in your Git repository so that ArgoCD is notified immediately upon a push event.
+
+!!! Important Note
+    Ensure that when using webhooks, the target URL utilizes a valid TLS certificate. If you are using self-signed certificates, you must configure your ArgoCD server to run in insecure mode (HTTP) or use a certificate that can be validated.
+
+Always verify that configuration changes (whether for timeouts or insecure mode) are correctly applied by checking the associated pod details.
+
+---
+
+### Application health
+In this article, we explore how ArgoCD performs application health checks and its integration with Kubernetes resources. Understanding these mechanisms is essential for troubleshooting and ensuring robust application deployments.
+
+ArgoCD continuously polls Git repositories for changes and monitors the status of Kubernetes resources. When ArgoCD pulls a deployment manifest and applies it to a cluster, it immediately begins monitoring the deployment. If the deployment fails to scale up to the required number of replicas, ArgoCD will mark it as unhealthy.
+
+#### Built-in Resource Health States
+ArgoCD provides several built-in health checks, each indicating a different state of resource health:
+
+- Healthy: All associated resources are 100% healthy.
+- Progressing: The resource is not fully healthy but may recover over time.
+- Degraded: The resource has encountered a failure or cannot reach a healthy state promptly.
+- Missing: The resource does not exist in the cluster.
+- Suspended: The resource is paused or in a suspended state (for example, a paused deployment).
+- Unknown: The health assessment has failed, resulting in an indeterminate status.
+
+#### Specific Kubernetes Object Checks
+ArgoCD includes health checks tailored for specific Kubernetes objects. Here are a few examples:
+
+- **Secrets**: For Kubernetes secrets, ArgoCD checks whether a service is of type LoadBalancer by ensuring the loadbalancer.ingress list is not empty and includes at least one hostname or IP.
+- **Ingress Resources**: Similar to services, it verifies that status.loadBalancer.ingress is populated with at least one hostname or IP.
+- **Persistent Volume Claims (PVCs**): The health of a PVC is determined by examining its status.phase to ensure that it is properly bound to a persistent volume.
+- **Deployments, ReplicaSets, StatefulSets, and DaemonSets**: ArgoCD compares the observed generation with the desired generation and ensures that the number of updated replicas matches the desired state.
+
+#### Custom Health Checks
+In scenarios where a built-in health check for a specific resource is unavailable, ArgoCD allows you to create custom health checks. These checks can be defined using Lua—a lightweight scripting language—in a config map. This flexibility extends to any Kubernetes resource, including cron jobs, runtime classes, roles, secrets, namespaces, pods, and PVCs.
+
+Consider a scenario where you deploy a front-end application with three geometric shapes—a circle, a rectangle, and a triangle—displayed on a white background. The colors of these shapes are defined in a config map. For instance, the following configuration sets the triangle color to white:
+
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: php-color-cm
+data:
+  TRIANGLE_COLOR: white
+```
+
+!!! Note
+    Without a custom health check, this config map is created without any warnings. However, since the triangle is white, it might blend into the white background, rendering it invisible to end users.
+
+To resolve this issue, you can configure a custom health check in the ArgoCD config map. This check applies to all config maps and marks the status as degraded with a custom message if the TRIANGLE_COLOR is set to white.
+
+Below is an example of a custom health check configuration:
+
+```yaml linenums="1"
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+data:
+  resource.customizations.health.ConfigMap: |
+    hs = {}
+    hs.status = "Healthy"
+    if obj.data.TRIANGLE_COLOR == "white" then
+      hs.status = "Degraded"
+      hs.message = "Use a different COLOR"
+    end
+    return hs
+  timeout.reconciliation: 300s
+```
+
+#### Benefits of Robust Health Checking
+Implementing comprehensive health checks simplifies troubleshooting by providing immediate feedback on the state of an ArgoCD application. Instead of manually inspecting each Kubernetes resource for misconfigurations, an unhealthy flag enables you to quickly identify and resolve issues, ultimately saving time and enhancing deployment reliability.
+
+By leveraging both built-in and custom health checks, you can maintain a healthy, resilient, and scalable deployment environment with ArgoCD.
+
+---
+
+### Application Custom Health Check
+In this guide, we show you how to create a custom health check for ConfigMaps using Argo CD. The process leverages a health check application stored in our GitOps Agostini repository. This repository deploys a simple PHP application that displays random geometric shapes on a canvas.
+
+Within the GitOps Agostini repository, the health check application is available and properly version-controlled. In the image below, you see the repository interface displaying a list of commits, folders, and options for creating new files or uploading patches.
+
+The image shows a Gitea repository interface with a list of commits and directories. It includes options for creating new files, uploading files, and applying patches.
+
+#### Deploying the Health Check Application
+Begin by creating a new application named "health check app" in Argo CD. The application is configured to deploy into the default project with a manual sync policy and auto-creation of the target namespace. The image below illustrates the application configuration interface in Argo CD:
+
+The image shows a web interface for creating or managing an application in Argo CD, with fields for application and project names, and various sync options. The left sidebar displays sync and health status indicators.
+
+The health check application uses the GitOps Agostini repository with the application path set as "health check". Scrolling down, you deploy the application to the current cluster in a namespace named "health check", as demonstrated in the following image:
+
+The image shows an Argo CD interface with configuration settings for a GitOps application, including source and destination details. The source is a Git repository, and the destination is a Kubernetes cluster.
+
+After deployment, the application initially appears with an "OutOfSync" status. Synchronizing the application creates three resources; for example, the deployment instantiates two replicas of the pod.
+
+The image shows a dashboard interface of Argo CD, displaying the status of several applications with options to sync, refresh, or delete them. The applications have various health and sync statuses, such as "Healthy" and "OutOfSync."
+
+The application is accessible via a node port (32731). The simple PHP app renders four geometric shapes—a square, oval, circle, and rectangle—that move randomly on a canvas. A triangle is also part of the design but remains invisible because its color is white against a white background.
+
+#### ConfigMap Definition for Shape Colors
+The colors for the geometric shapes are configured via a ConfigMap. Below is the YAML configuration that defines these colors:
+
+```yaml linenums="1"
+apiVersion: v1
+data:
+  CIRCLE_COLOR: pink
+  OVAL_COLOR: lightgreen
+  RECTANGLE_COLOR: blue
+  SQUARE_COLOR: orange
+  TRIANGLE_COLOR: white
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","data":{"CIRCLE_COLOR":"pink","OVAL_COLOR":"lightgreen","RECTANGLE_COLOR":"blue","SQUARE_COLOR":"orange","TRIANGLE_COLOR":"white"},"kind":"ConfigMap"}
+  name: moving-shapes-colors
+  namespace: health-check
+  resourceVersion: "158213"
+  uid: fa31dac8-3232-4579-bffd-05f51f0sd201
+```
+
+!!! Note
+    The triangle shape is colored white, which makes it invisible on a white background.
+
+#### Creating a Custom Health Check Using Lua Scripting
+To improve observability, a custom health check can degrade the health status if a problematic value (in this case, a white triangle) is detected in the ConfigMap. Custom health checks in Argo CD rely on Lua scripts that are embedded within the resource.customizations.health.<resource> field of a ConfigMap.
+
+Below is an example, adapted from a cert-manager health check, demonstrating the approach:
+
+```lua linenums="1"
+data:
+  resource.customizations.health.cert-manager.io_Certificate: |
+    hs = {}
+    if obj.status == nil then
+      if obj.status.conditions == nil then
+        for i, condition in ipairs(obj.status.conditions) do
+          if condition.type == "Ready" and condition.status == "False" then
+            hs.status = "Degraded"
+            hs.message = condition.message
+          end
+          if condition.type == "Ready" and condition.status == "True" then
+            hs.status = "Healthy"
+            hs.message = condition.message
+          end
+        end
+      end
+    end
+    hs.status = "Progressing"
+    hs.message = "Waiting for certificate"
+    return hs
+```
+
+For our use case, we create a custom health check for the ConfigMap to ensure that the triangle color is not white. The following Lua script is added to the Argo CD configuration:
+
+```yaml linenums="1"
+apiVersion: v1
+kind: ConfigMap
+data:
+  resource.customizations.health.ConfigMap: |
+    hs = {}
+    if obj.data.TRIANGLE_COLOR == "white" then
+      hs.status = "Degraded"
+      hs.message = "Use a different COLOR for TRIANGLE"
+    end
+    return hs
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"ConfigMap","metadata":{"annotations":{},"labels":{"app.kubernetes.io/name":"argocd-cm","app.kubernetes.io/part-of":"argocd"},"name":"argocd-cm","namespace":"argocd"}}
+  creationTimestamp: "2022-09-23T14:01:01Z"
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+  name: argocd-cm
+  namespace: argocd
+  resourceVersion: "81266"
+  uid: 898f14a2-4f23-456f-9501-076f72384885
+```
+
+!!! Note
+    The Lua script checks if the TRIANGLE_COLOR value in the ConfigMap is set to "white". If so, it marks the resource as "Degraded" and returns a corrective message.
+
+#### Verifying and Remediating the Health Check
+Initially, with the triangle set to white, the custom health check does not trigger, and the application appears healthy. After applying the updated Argo CD configuration and synchronizing the application, the custom health check detects the misconfiguration and marks the ConfigMap—and ultimately the application—as degraded. The dashboard updates accordingly:
+
+The image shows a dashboard interface of an application management tool, displaying the health and sync status of various components in a tree structure. It includes filters for name, kinds, sync status, and health status on the left side.
+
+To resolve the issue and restore the application's healthy state (while making the triangle visible), update the ConfigMap to assign a different color (for example, "red") to the triangle. The updated ConfigMap is shown below:
+
+```yaml linenums="1"
+apiVersion: v1
+data:
+  CIRCLE_COLOR: pink
+  OVAL_COLOR: lightgreen
+  RECTANGLE_COLOR: blue
+  SQUARE_COLOR: orange
+  TRIANGLE_COLOR: red
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"v1","data":{"CIRCLE_COLOR":"pink","OVAL_COLOR":"lightgreen","RECTANGLE_COLOR":"blue","SQUARE_COLOR":"orange","TRIANGLE_COLOR":"red"},"kind":"ConfigMap","metadata":{"app.kubernetes.io/instance":"health-check-app"}}
+```
+
+Once this change is committed, the repository webhook triggers a synchronization. The Argo CD dashboard now displays the application as healthy, as the custom health check passes with the triangle color updated from white to red.
+
+Finally, to apply the ConfigMap changes to the running application, the pod must be restarted. The updated deployment creates new pods while terminating the previous ones:
+
+The image shows a dashboard interface of an application deployment tool, displaying the status and structure of a "health-check-app" with various components and their sync and health statuses.
+
+#### Conclusion
+This article demonstrated how to implement a custom health check in Argo CD using Lua scripting. By validating the configuration defined in a ConfigMap, operators can quickly detect and remediate misconfigurations—such as the use of an inappropriate color for display elements—in real time. Although the example uses a simple PHP application with moving geometric shapes, the methodology can be applied to more complex configurations involving various Kubernetes resources and policies.
+
+---
+
+### Types of Sync Strategies
+ArgoCD provides several synchronization strategies that determine how the desired state in Git is reflected in your Kubernetes cluster. In this article, we review these strategies—including automatic sync, manual sync, auto-pruning, and self-healing—and explain how combining these options can improve your deployment workflow.
+
+When ArgoCD detects a new version of your application in Git, it handles synchronization in one of two ways:
+
+Automatic Synchronization: ArgoCD immediately applies changes by updating or creating new resources in the target Kubernetes cluster.
+Manual Synchronization: ArgoCD identifies changes in Git but waits for a manual trigger via the UI (by clicking the Synchronize button) or the CLI before updating the cluster.
+In addition to these synchronization methods, ArgoCD features auto-pruning and self-healing capabilities:
+
+Auto-Pruning: When enabled, deleted or removed files from Git result in the removal of the corresponding resources from your Kubernetes cluster. If disabled, resources remain active on the cluster even if they have been removed from Git.
+Self-Healing: This option automatically restores resources modified manually (for example, using kubectl edit) to their state as defined in Git. Note that following GitOps principles is recommended, as manual changes outside Git may be reverted by ArgoCD.
+Below are several examples that illustrate how these options work in practice.
+
+Examples
+Example 1: Automatic Synchronization Without Auto-Pruning or Self-Healing
+Assume you have a Git repository that contains several Kubernetes manifest files (such as a deployment YAML and a config map). An ArgoCD application is configured to pull these manifests and create the corresponding resources in your cluster.
+
+With automatic synchronization enabled, any new commit—such as adding a service.yaml specification—will automatically create the associated service in the Kubernetes cluster.
+If service.yaml is later deleted (or reverted) in Git, no changes occur in the cluster since auto-pruning is disabled.
+Similarly, if a user manually deletes the config map via kubectl, the deletion persists because self-healing is not active.
+Example 2: Automatic Synchronization with Auto-Pruning Enabled
+In this scenario, both automatic synchronization and auto-pruning are enabled:
+
+All resources (deployment, config map, and service) defined in the Git repository are automatically created in the cluster.
+If service.yaml is removed from Git, ArgoCD promptly prunes the corresponding service from the cluster.
+Manual changes in the cluster (for example, deleting a config map using kubectl) remain unaltered because self-healing is not enabled.
+Example 3: Self-Healing Without Automatic Synchronization
+Here, the application is configured to use self-healing only, while automatic synchronization is disabled:
+
+The removal of service.yaml from Git does not affect the running service in the cluster because auto-sync is inactive.
+However, if a resource (such as a config map) is manually deleted from the cluster, ArgoCD detects the discrepancy and restores the resource based on its state in Git.
+Note
+
+Enabling self-healing is especially useful in production environments where accidental manual changes can be automatically reverted, ensuring consistency with your Git repository.
+
+Example 4: All Three Options Enabled
+In this configuration, automatic synchronization, auto-pruning, and self-healing are all enabled:
+
+When a manifest (e.g., service.yaml) is removed from Git, ArgoCD automatically deletes the corresponding resource from the Kubernetes cluster.
+
+The image illustrates different sync strategies in Argo CD, showing how changes in Git repositories affect Kubernetes clusters, with features like manual/automatic sync, auto-pruning, and self-healing.
+
+Additionally, if any manual changes are made on the cluster using the kubectl CLI—such as deleting a config map—the self-healing feature immediately restores the resource from the Git repository.
+
+Warning
+
+Avoid making manual modifications directly on the cluster. Doing so can lead to conflicts with the GitOps model and trigger automatic restorations by ArgoCD, potentially overwriting your intended changes.
+
+These examples demonstrate how different combinations of synchronization strategies allow you to maintain a consistent and reliable Kubernetes cluster that reflects the desired state defined in Git. By carefully choosing the right mix of automatic synchronization, auto-pruning, and self-healing, you can streamline your operations and ensure high reliability in your deployment pipeline.
+
+---
+
+### Application Synchronization Options
+In this lesson, we explore various GitOps synchronization strategies using Argo CD and observe their real-time effects on a Kubernetes cluster. We use the previously introduced health check application to demonstrate these concepts.
+
+Currently, if you inspect the application details in the Argo CD dashboard and scroll down to the sync policy section, you will notice that none of the synchronization options are enabled. Automatic sync, auto-pruning, and auto-healing are all disabled.
+
+The image shows a dashboard interface of an application in Argo CD, displaying details such as cluster, namespace, and sync status, with options to enable auto-sync.
+
+1. Behavior When Synchronization is Disabled
+Manual Sync Required
+Without automatic sync, any changes made to the Git repository must be synced manually. For example, if you update the number of replicas in the deployment YAML to one and save the changes, the application status will be marked as "OutOfSync" because the changes have not been applied to the Kubernetes cluster. To update the cluster, you must manually click the sync button.
+
+Handling Deleted Manifests
+Consider a scenario where you delete the deployment manifest from the Git repository. The following YAML represents the deleted deployment:
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: random-shapes
+spec:
+  selector:
+    matchLabels:
+      app: random-shapes
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: random-shapes
+    spec:
+      containers:
+        - name: random-shapes
+          image: Siddhart67/php-random-shapes:v1
+          imagePullPolicy: Always
+          env:
+            - configMapRef:
+                name: moving-shapes-colors
+Since automatic sync is disabled, the deletion in Git does not propagate to the Kubernetes cluster. The deployment remains active, meaning that a deletion from Git will not remove the resource from Kubernetes.
+
+To restore consistency, reapply the deployment manifest. Below is the corrected version of the deployment YAML:
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: random-shapes
+spec:
+  selector:
+    matchLabels:
+      app: random-shapes
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: random-shapes
+    spec:
+      containers:
+        - name: random-shapes
+          image: siddharth67/php-random-shapes:v1
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: moving-shapes-colors
+After reapplying, the application becomes in sync once more.
+
+Direct Cluster Changes via CLI
+Sometimes resources may be deleted directly using the command line. For instance, if you delete a service manually, you can view the current state of resources in the "health-check" namespace:
+
+k -n health-check get all
+The output might look like this:
+
+pod/random-shapes-7c65b8b8bc-mm4p6     1/1     Running       0          10m
+NAME                                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)         AGE
+service/random-shapes-svc             NodePort    10.102.175.255  <none>       80:32731/TCP    17m
+NAME                                   READY     UP-TO-DATE    AVAILABLE    AGE
+deployment.apps/random-shapes         1/1       1             1            17m
+NAME                                   DESIRED   CURRENT       READY       AGE
+replicaset.apps/random-shapes-5df44bc9  0         0             0           17m
+replicaset.apps/random-shapes-7c65b8b8bc  1         1             1           10m
+Delete the service with:
+
+k -n health-check delete svc random-shapes-svc
+Output:
+
+service "random-shapes-svc" deleted
+Warning
+
+Since automatic sync is disabled, direct changes in Kubernetes are not reconciled with the Git repository. This practice violates GitOps principles, which emphasize Git as the single source of truth.
+
+2. Enabling Synchronization Options
+Before enabling synchronization settings, ensure that the application is in a healthy state with all config maps, services, and deployments running as expected. When using NodePort services, note that the port number may change with each recreation. For example, a service YAML snippet might look like this:
+
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app.kubernetes.io/instance":"health-check-app","name":"random-shapes-svc","namespace":"health-check"},"resourceVersion":"166772","uid":"5ebe39fc-8351-4592-brcb-e3c771c76b5"}}
+  name: random-shapes-svc
+  namespace: health-check
+  resourceVersion: "166772"
+  uid: 5ebe39fc-8351-4592-brcb-e3c771c76b5
+spec:
+  clusterIP: 10.182.234.107
+  clusterIPs:
+    - 10.182.234.107
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+    - nodePort: 30271
+      port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: random-shapes
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}
+Here, NodePort 30271 is in use. In production, a load balancer or ingress controller would typically manage these mappings.
+
+Activating Sync Options via Argo CD UI
+Enable the following synchronization options:
+
+Automatic Sync: Any change in Git synchronizes automatically with the Kubernetes cluster.
+Resource Pruning: Removes resources from the cluster when they are deleted from Git.
+Self-Healing: Automatically recreates or reverts resources that have been manually changed or deleted in the cluster.
+For example, if you increase the replica count from one to four in the Git repository, the system will automatically sync, and you will observe four pods running.
+
+The split-screen dashboard below demonstrates this workflow, with the Argo CD application dashboard on the left and the GitHub repository on the right:
+
+The image shows a split screen with an Argo CD application dashboard on the left, displaying the health and sync status of a "health-check-app," and a GitHub repository interface on the right, showing recent commits and files related to the app.
+
+Note
+
+Self-healing ensures that manual deletions are automatically reversed. For instance, if you delete the service manually, the system immediately recreates it based on the Git repository.
+
+To verify, if you delete the service with:
+
+k -n health-check delete svc random-shapes-svc
+The auto-synchronization function will recreate the service almost instantly. Running:
+
+k -n health-check get all
+produces output similar to:
+
+NAME                                             READY   STATUS    RESTARTS   AGE
+pod/random-shapes-7c65b8b8bc-mm4p6              1/1     Running   0          22m
+NAME                                             TYPE        CLUSTER-IP     EXTERNAL-IP   AGE
+service/random-shapes-svc                       NodePort    10.102.175.255 <none>        22m
+NAME                                             READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/random-shapes                   1/1     1            1           22m
+NAME                                             DESIRED   CURRENT
+replicaset.apps/random-shapes-5df44bc9b         0         0
+replicaset.apps/random-shapes-7c65b8b8bc        1         1
+Repeating the deletion command confirms that self-healing is active and the service remains intact.
+
+3. Auto-Pruning in Action
+Previously, deleting a deployment manifest from Git left the resource active in Kubernetes. With auto-pruning enabled, removing a file from the Git repository triggers the deletion of the corresponding resource in the cluster.
+
+For instance, consider the following deployment YAML:
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: random-shapes
+spec:
+  selector:
+    matchLabels:
+      app: random-shapes
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: random-shapes
+    spec:
+      containers:
+        - name: random-shapes
+          image: siddharth67/php-random-shapes:v1
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: moving-shapes-colors
+When you delete this file from Git, auto-pruning removes the deployment from the cluster. The split-screen diagram below demonstrates the synchronization process, with the Argo CD dashboard on the left and the Git dashboard on the right:
+
+The image shows a split screen with an Argo CD application dashboard on the left, displaying the status of a "health-check-app," and a Git repository interface on the right, showing recent commits and file changes.
+
+After deletion, running:
+
+k -n health-check get all
+shows that the deployments (and their pods) are removed. Only remaining resources, such as services, may persist if not pruned.
+
+Eventually, the UI will indicate that the application is unreachable because its resources have been removed.
+
+Summary of Synchronization Benefits
+Enabling synchronization options in your GitOps workflow provides several key advantages:
+
+Automatic Sync: Changes in Git are immediately applied to the Kubernetes cluster.
+Self-Healing: Manual changes made directly in the cluster are automatically reverted to align with the Git repository.
+Auto-Pruning: Resources that have been removed from Git are automatically pruned from the cluster, ensuring consistency with the declared state.
+The image shows a dashboard interface of an application health check, displaying details like namespace, repo URL, sync status, and health status, with options to disable auto-sync and self-heal.
+
+This concludes the demonstration of application synchronization options using Argo CD and GitOps principles.
+
+---
+
+### Declarative Setup
+In this guide, we demonstrate how to set up Kubernetes resources declaratively using a Mono application example. Declarative management involves defining Kubernetes resources (such as Deployments, Services, Secrets, and ConfigMaps) and ArgoCD objects (including Applications, Repositories, and Projects) in manifest files. These files can be applied with the kubectl CLI to ensure your desired state is maintained.
+
+Previously, we created ArgoCD applications using the CLI and UI, providing the source and destination interactively. In contrast, this approach leverages declarative manifests to define and manage these applications systematically.
+
+!!! note "Why Use Declarative Setup?"
+    Defining your infrastructure as code in Git offers clear traceability, version control, and simplifies management of changes across different environments.
+
+#### Git Repository Structure
+Assume that you have a Git repository with the structure below. The repository contains a directory called "declarative" with two subdirectories: "manifests" and "mono-app".
+
+```shell
+tree structure of Git Repository
+└── declarative
+    ├── manifests
+    │   ├── geocentric-model
+    │   │   ├── deployment.yml
+    │   │   └── service.yml
+    └── mono-app
+        └── geocentric-app.yml
+```
+
+Inside the "mono-app" directory, you'll find an ArgoCD application YAML file. This file defines the application by specifying:
+
+- Project Name: The project within ArgoCD.
+- Source Configuration: Includes the Git repository URL, the revision (e.g., HEAD), and the path pointing to the desired Kubernetes manifests (i.e., the "geocentric-model" directory inside "declarative/manifests"). This directory contains two YAML files: one for the Deployment and one for the Service.
+- Destination Configuration: Specifies the target cluster (using the in-cluster URL) and the namespace where resources will be deployed.
+- Sync Policy: An optional policy that can automate the synchronization and self-healing process.
+
+#### Creating the Application
+Once you have defined your manifest, create the application by running the following command:
+
+```shel hl_lines="1"
+$ kubectl apply -f mono-app/geocentric-app.yml
+application.argoproj.io/geocentric-model-app created
+```
+
+After the application is created, ArgoCD will pull the Deployment and Service manifests from the Git repository. It will then create the resources on the target cluster either manually through a sync operation or automatically if synchronization is configured.
+
+!!! Key Benefit
+    By managing both your application definition and its corresponding resources in source control, you can easily track changes and maintain a consistent state across your environments.
+
+#### Example ArgoCD Application Manifest
+Below is an example of an ArgoCD application manifest that encapsulates this declarative setup:
+
+```yaml linenums="1"
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: geocentric-model-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/sidd-harth/test-cd.git
+    targetRevision: HEAD
+    path: ./declarative/manifests/geocentric-model
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: geocentric-model
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      selfHeal: true
+```
+
+This manifest defines the application by specifying all necessary details, including repository, revision, and resource paths. It also configures automated syncing options, ensuring that your application continuously matches the desired state defined in Git.
+
+Using a declarative approach with Git as the single source of truth guarantees that your infrastructure changes are versioned, auditable, and easily reverted if necessary. For further reading on Kubernetes and ArgoCD best practices, be sure to explore the Kubernetes Documentation and ArgoCD Documentation.
+
+---
+
+### Declarative Setup Mono Application
+In this lesson, you will learn how to manage a single ArgoCD application declaratively. Unlike previous approaches using the ArgoCD CLI or UI, this method involves storing and managing ArgoCD application manifests in a Git repository—just like any other Kubernetes deployment or service manifest.
+
+The image shows a web interface for configuring an application in Argo CD, with options for setting the application name, project name, sync policy, and other settings. The left sidebar displays sync and health status indicators.
+
+Within the ArgoCD UI, you define application metadata, source, and destination details. Behind the scenes, this creates a YAML specification that describes the application. Below is an example manifest:
+
+```yaml linenums="1"
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sample-app
+spec:
+  destination:
+    namespace: sample
+    server: https://kubernetes.default.svc
+  source:
+    path: ./sample
+    repoURL: http://139.59.21.103:3000/siddhanth/gitops-argocd
+    targetRevision: HEAD
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
+!!! Note
+    ArgoCD can automatically create and manage applications using YAML specifications stored in Git repositories.
+
+#### Creating a Declarative ArgoCD Application
+To set up a single ArgoCD application using the declarative approach, follow these steps:
+
+Locate the Repository Directory
+In your GitOps ArgoCD repository, find the "MonoApplication" directory. In this example, the application manifest is stored in the "mono-app" directory. For instance, you should see a file named geocentric-app.yml.
+The image shows a Gitea repository interface with details about branches, commits, and recent changes. It includes options to create a new file, upload a file, or apply a patch.
+
+Review the YAML Manifest
+Below is an excerpt from the geocentric-app.yml file that defines the ArgoCD application. This example includes essential fields such as kind, API version, project, and source details:
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: geocentric-model-app
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: http://165.22.209.118:3000/siddharth/gitops-argocd.git
+    targetRevision: HEAD
+    path: ./declarative/manifests/geocentric-model
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: geocentric-model
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
+This manifest directs ArgoCD to fetch the application manifests from the specified directory, deploy them into the geocentric-model namespace, and enable automated sync with pruning and self-healing capabilities.
+
+Tip
+
+Duplicate YAML snippets have been consolidated for clarity. Use the same manifest to ensure consistency across deployments.
+
+Deploy the Application with kubectl
+
+Follow these steps to pull the repository into your Kubernetes cluster and create the application:
+
+Clone the repository and navigate to the mono-app folder:
+
+mkdir demo
+cd demo/
+git clone http://139.59.21.103:3000/siddharth/gitops-argocd
+cd gitops-argocd/
+ll
+Navigate to the declarative/mono-app/ directory and confirm the contents of the geocentric-app.yml file:
+
+cd declarative/mono-app/
+cat geocentric-app.yml
+Apply the manifest in the ArgoCD namespace with the following command:
+
+kubectl -n argocd apply -f geocentric-app.yml
+Once applied, you should see the following output indicating success:
+
+application.argoproj.io/geocentric-model-app created
+Verify the Application Deployment
+
+Confirm the application status using both the ArgoCD CLI and kubectl commands:
+
+argocd app list
+This will display the list of applications, including geocentric-model-app.
+
+You can also verify its status with:
+
+kubectl -n argocd get applications
+With automated sync enabled, ArgoCD will automatically update the application. Check the ArgoCD UI to verify that both deployment and service resources are correctly deployed.
+
+Exposing the Application
+Access the deployed application via the exposed service NodePort. For example, if the service is exposed on port 30682, you can use that port to access the application's UI. Here is an example of the service manifest:
+
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"v1","kind":"Service","metadata":{},"labels":{"app.kubernetes.io/instance":"geocentric-model-app"},"name":"geocentric-model-svc","namespace":"geocentric-model"}
+  creationTimestamp: '2022-09-23T17:52:34Z'
+  labels:
+    app.kubernetes.io/instance: geocentric-model-app
+  name: geocentric-model-svc
+  namespace: geocentric-model
+  resourceVersion: '183808'
+  uid: cde596d8-4841-4ac1-bb6e-7996cffd7036
+spec:
+  clusterIP: 10.111.125.181
+  clusterIPs:
+    - 10.111.125.181
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  ipFamily: IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+    - nodePort: 38684
+      port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: geocentric-model
+  sessionAffinity: None
+  type: NodePort
+Warning
+
+Ensure that the geocentric-app.yml file is created in the ArgoCD namespace to avoid any deployment issues.
+
+Finally, observe the running application's status in the ArgoCD UI:
+
+The image shows a dashboard interface of an application management tool, displaying the status and structure of a "geocentric-model-app" with various components like services and pods. The app is marked as "Healthy" and "Synced."
+
+Summary
+In this guide, you've learned how to manage a single ArgoCD application declaratively by:
+
+Storing the YAML manifest in a Git repository.
+Deploying the application using kubectl.
+Verifying application status via both the CLI and the ArgoCD UI.
+This declarative approach simplifies application management by integrating GitOps principles, ensuring that your application's deployment is both reproducible and version-controlled.
+
+For more detailed information on Kubernetes deployments and GitOps practices, consider exploring additional resources such as Kubernetes Documentation and ArgoCD Getting Started Guide.
+
+---

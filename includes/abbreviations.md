@@ -6,3 +6,4 @@
 *[CLI]: Command Line Interface
 *[CRD]: Custom Resource Definition
 *[CVE]: Common Vulnerabilities and Exposures
+*[IDE]: Integrated Development Environment

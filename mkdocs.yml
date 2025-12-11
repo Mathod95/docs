@@ -131,9 +131,9 @@ plugins:
   - tags
   - git-revision-date-localized:  # https://github.com/timvink/mkdocs-git-revision-date-localized-plugin
       enable_creation_date: true
-  #- git-committers:               # https://github.com/byrnereese/mkdocs-git-committers-plugin
-  #    repository: Mathod95/docs
-  #    branch: main
+  - git-committers:               # https://github.com/byrnereese/mkdocs-git-committers-plugin
+      repository: Mathod95/docs
+      branch: main
   #    token:
   #- mkdocs-video:                 # https://github.com/soulless-viewer/mkdocs-video
   #    is_video: True
@@ -161,25 +161,31 @@ plugins:
         ENVIRONMENT:
           placeholder: ex. production
         COMPANY:
-          placeholder: ex. mathod
+          placeholder: ex. mathod.io
         NAMESPACE:
           placeholder: ex. default
         TEAM:
           placeholder: ex. infra
         SERVICE:
           placeholder: ex. api, webui, website, db, cache
-  #- link-embeds:                  # https://github.com/Aetherinox/mkdocs-link-embeds
-  #    enabled: true
-  #    name_default: "Untitled Link"
-  #    desc_default: "No description found"
-  #    image_default: "https://github.com/Aetherinox/mkdocs-link-embeds/assets/118329232/c0298d98-0910-4235-a88f-0c3e2f704ba7"
-  #    image_disabled: false
-  #    favicon_default: "https://github.com/Aetherinox/mkdocs-link-embeds/assets/118329232/b37da9c6-6f17-4c3f-9c94-c346a6f31bfa"
-  #    favicon_disabled: false
-  #    favicon_size: 25
-  #    target: "blank"
-  #    accent: "FFFFFF1A"
-  #    verbose: false
+        GIT_PROVIDER:
+          placeholder: ex. github, gitlab, gitea, ...
+        USER:
+          placeholder: ex. mathod
+        NAMESPACE:
+          placeholder: ex. app01
+  - link-embeds:                  # https://github.com/Aetherinox/mkdocs-link-embeds
+      enabled: true
+      name_default: "Untitled Link"
+      desc_default: "No description found"
+      image_default: "https://github.com/Aetherinox/mkdocs-link-embeds/assets/118329232/c0298d98-0910-4235-a88f-0c3e2f704ba7"
+      image_disabled: false
+      favicon_default: "https://github.com/Aetherinox/mkdocs-link-embeds/assets/118329232/b37da9c6-6f17-4c3f-9c94-c346a6f31bfa"
+      favicon_disabled: false
+      favicon_size: 25
+      target: "blank"
+      accent: "FFFFFF1A"
+      verbose: false
 
 extra:
   analytics:

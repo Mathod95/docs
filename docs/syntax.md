@@ -1,5 +1,6 @@
-!!! example "Header"
-    
+## Header
+!!! example
+
     ```shell 
     ---
     title: "Titre de ton article"
@@ -18,8 +19,8 @@
     ```
 
 ---
-
-!!! example "Code Annotate"
+## Code Annotate
+!!! example
 
     ```yaml title="Visual"
     theme:
@@ -44,14 +45,15 @@
 
 ---
 
-!!! example "Tabbed codeBlocks"
+## Tabbed Admonition
+!!! example
 
-    === "Python"
+    === "Tab1"
 
         !!! note "Note for Python"
             This is a note inside the Python tab.
 
-    === "JavaScript"
+    === "Tab2"
 
         !!! warning "Warning for JavaScript"
             This is a warning inside the JavaScript tab.
@@ -70,12 +72,12 @@
             !!! warning "Warning inside Tab 2"
                 This is the second tab's inner admonition.
     ```
-    === "Python"
+    === "Tab1"
 
         !!! note "Note for Python"
             This is a note inside the Python tab.
 
-    === "JavaScript"
+    === "Tab2"
 
         !!! warning "Warning for JavaScript"
             This is a warning inside the JavaScript tab.
@@ -97,16 +99,27 @@
 
 ---
 
-<div class="admonition note">
-  <p class="admonition-title">Documentation</p>
+## Embed Documentation
+<div class="admonition example">
+  <p class="admonition-title">Example</p>
 
 ```embed
 url: https://docs.crossplane.io/latest
 ```
+    ````
+    <div class="admonition note">
+      <p class="admonition-title">Documentation</p>
+
+    ```embed
+    url: https://docs.crossplane.io/latest
+    ```
+    </div>
+    ````
 </div>
 
 ---
 
+## Embed Documentation Foldable
 <details class="admonition note">
   <summary>Documentation</summary>
 
@@ -119,6 +132,7 @@ url: https://docs.crossplane.io/latest
 
 ---
 
+## Variables
 ```
 ---
 user-defined-values:
@@ -136,13 +150,13 @@ user-defined-values:
 apiVersion: v1 
 kind: Pod 
 metadata: 
-  name: YOUR_APPNAME-pod 
-  namespace: app1
+  name: APPNAME-pod 
+  namespace: NAMESPACE
   labels: 
-    app: YOUR_APPNAME
-    env: YOUR_ENV
+    app: APPNAME
+    env: ENVIRONMENT
   annotations: 
-    aws-account: "2389849082948"
+    aws-account: "ACCOUNT_ID"
     maintainer: "dev@mathod.io"
 spec: 
   containers: 
@@ -152,7 +166,9 @@ spec:
 
 ---
 
-!!! example "ADMONITIONS"
+## Admonitions
+
+!!! example
 
     !!! note
 

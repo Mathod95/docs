@@ -37,6 +37,9 @@ Ce tutoriel complet vous guide pas à pas pour installer Argo CD et intégrer le
 <!-- more -->
 
 !!! Example "VARIABLES"
+
+    **Entrez vos variables ici afin qu'elles soient appliquées à tous les fichiers de configuration de cet article. ** 
+
     {{{user-defined-values}}}
 
 ### Prérequis

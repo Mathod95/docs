@@ -19,6 +19,8 @@ todo:
   - des apply à la main pour metrics-server-deployment.yaml et metrics-server-configmap.yaml alors que Argocd Devrait le faire
   - Changer les helms par des wrapper
   - Verifier les variables utilisateur dans les codeBlocks
+  - Ajouter Reloader ?
+  - Ajouter un schéma de fonctionnement de metrics server
 user-defined-values:
   - GIT_PROVIDER
   - USER
@@ -28,7 +30,7 @@ user-defined-values:
 
 ## Introduction
 
-Ce tutoriel complet vous guide pas à pas pour installer Argo CD et intégrer les métriques Prometheus dans l’interface Argo CD en utilisant une approche GitOps. Après l’installation initiale d’Argo CD, tout le reste sera déployé via des Applications Argo CD.
+Ce tutoriel complet vous guide pas à pas pour installer Argo CD et intégrer les métriques Prometheus dans l’interface Argo CD en utilisant une approche GitOps.  
 
 <!-- more -->
 
@@ -37,38 +39,40 @@ Ce tutoriel complet vous guide pas à pas pour installer Argo CD et intégrer le
 
 ### Prérequis
 
-- **Docker**
-- **kubectl**
-- **helm**
-- **kind**
+Voici la liste des prérequis et leurs versions au moment de la rédaction:
+
+- **Docker:** 28.1.1
+- **kubectl:** v1.34.3
+- **helm:** v4.0.1
+- **kind:** kind v0.30.0 go1.25.4 linux/amd64
 - Connaissances de base des concepts **Kubernetes**
 
-#### Installation des prérequis
+??? Info "Installation des prérequis"
 
-=== "Brew"
+    === "Brew"
 
-    ```bash hl_lines="1"
-    brew install kubectl kind helm
-    ```
+        ```bash hl_lines="1"
+        brew install kubectl kind helm
+        ```
 
-=== "Binary"
+    === "Binary"
 
-    ```shell title="kind" hl_lines="1 2 3"
-    [ $(uname -m) = x86_64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.30.0/kind-linux-amd64
-    chmod +x ./kind
-    sudo mv ./kind /usr/local/bin/kind
-    ```
+        ```shell title="kind" hl_lines="1 2 3"
+        [ $(uname -m) = x86_64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.30.0/kind-linux-amd64
+        chmod +x ./kind
+        sudo mv ./kind /usr/local/bin/kind
+        ```
 
-    ```shell title="kubectl" hl_lines="1 2"
-    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-    ```
+        ```shell title="kubectl" hl_lines="1 2"
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+        ```
 
-    ```shell title="helm"  hl_lines="1 2 3"
-    curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4
-    chmod 700 get_helm.sh
-    ./get_helm.sh
-    ```
+        ```shell title="helm"  hl_lines="1 2 3"
+        curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4
+        chmod 700 get_helm.sh
+        ./get_helm.sh
+        ```
 
 ### Objectif
 
@@ -78,38 +82,69 @@ Ce tutoriel complet vous guide pas à pas pour installer Argo CD et intégrer le
 
 ### Vue d’ensemble
 
-Le tutoriel couvre : création d’un cluster local Kind, installation d’Argo CD, déploiement d’applications via Argo CD, et intégration des métriques Prometheus.
+Le tutoriel couvre: La création d’un cluster local Kind, l'installation d’Argo CD via helm, le déploiement d’applications via Argo CD, et intégration des métriques Prometheus dans l'UI d'Argo CD.
 
-Nous allons réaliser ces étapes en utilisant une approche **GitOps pure** :
+Nous allons réaliser ces étapes en utilisant une approche **GitOps:**
 
 1. **Créer un cluster Kind** (cluster Kubernetes local)
 2. **Installer Argo CD** (bootstrap – seule étape manuelle)
-3. **Déployer tout le reste via Argo CD** :
+3. **Déployer tout le reste via Argo CD:**
+    - Prometheus (via un wrapper Helm)
+    - Argocd-extension-metrics
+    - Podinfo
 
-   * Prometheus (via le wrapper Helm d’Argo CD)
-   * Serveur de métriques Argo CD
-   * Application Podinfo
+---
 
-**Philosophie :** après l’installation initiale d’Argo CD, tout le reste est déployé via des Applications Argo CD – du vrai GitOps ! Plus besoin de `helm install` ou de `kubectl apply` manuels pour les applications.
+## Créer votre dépôt Git
 
-Ce guide vous montre comment structurer votre dépôt Git pour déployer **tout** via Argo CD en utilisant le modèle **App of Apps**.
+Dans cette section, nous allons configurer la structure de votre dépôt Git pour Argo CD.  
+Ce dépôt contiendra tous les fichiers nécessaires pour déployer et gérer vos applications à l'aide de la méthode **GitOps**.  
+Vous organiserez vos applications, les valeurs Helm et les manifests Kubernetes dans une structure de répertoires claire et modulaire.
 
 ```shell title="Structure du dépôt"
 argocd-gitops/
 ├── README.md
 ├── bootstrap/
-│   └── argocd-values.yaml              # Initial Argo CD Helm values
+│   └── argocd-values.yaml              # Valeurs initiales d'Argo CD pour Helm
 ├── apps/
-│   ├── app-of-apps.yaml                # Root application (manages all others)
-│   ├── prometheus.yaml                 # Prometheus Application
-│   ├── metrics-server.yaml             # Metrics Server Application
-│   └── podinfo.yaml                    # Podinfo Application
+│   ├── app-of-apps.yaml                # Root application (gère toutes les autres)
+│   ├── prometheus.yaml                 # Application Prometheus
+│   ├── metrics-server.yaml             # Application Metrics Server
+│   └── podinfo.yaml                    # Application Podinfo
 └── manifests/
     └── metrics-server/
         ├── kustomization.yaml
         ├── configmap.yaml
         └── deployment.yaml
 ```
+
+```bash title="Créer le répertoire du dépôt" hl_lines="1-2"
+mkdir argocd-gitops
+cd argocd-gitops
+```
+
+```bash title="Initialiser Git" hl_lines="1"
+git init
+```
+
+```bash title="Créer la structure de répertoires" hl_lines="1"
+mkdir -p bootstrap apps manifests/metrics-server
+```
+
+```bash title="Initialiser le dépôt Git" hl_lines="1-2"
+git add .
+git commit -m "Initial structure"
+```
+
+```bash title="Push vers votre hébergement Git (GitHub, GitLab, etc.)" hl_lines="1"
+git remote add origin https://github.com/YOUR-USERNAME/argocd-gitops.git
+git push -u origin main
+```
+
+!!! Tip
+
+    Vous pouvez créer votre propre dépôt en suivant ce guide, ou bien télécharger directement le dépôt prêt à l'emploi.
+    [https://github.com/Mathod95/016](https://github.com/Mathod95/016)
 
 ## Créer un cluster Kind
 
@@ -257,6 +292,11 @@ helm install argocd argo/argo-cd \
     ```
 
 ??? info "CHECK"
+
+    ```bash title="Vérifiez si l'extension proxy est activée" hl_lines="1"
+    kubectl get configmap argocd-cmd-params-cm -n argocd -o yaml | grep proxy
+    server.enable.proxy.extension: "true"
+    ```
 
     ```bash hl_lines="1" title="Vérifier les pods d’Argo CD"
     kubectl get pods -n argocd
@@ -423,6 +463,36 @@ spec:
         3. Cliquez dessus pour voir la progression du déploiement
         4. Attendez que l'état soit "Healthy" et "Synced"
 
+!!! Note "NOTE"
+
+    **Accéder à l'interface de Prometheus**
+
+    ```bash hl_lines="1"
+    kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
+    ```
+
+    Ouvrez [http://localhost:9090](http://localhost:9090)
+    et essayez des requêtes comme :
+
+    ```prometheus
+    container_cpu_usage_seconds_total{namespace="podinfo"}
+    ```
+
+    ```prometheus
+    container_memory_usage_bytes{namespace="podinfo"}
+    ```
+
+    **Accéder à l'interface de Grafana**
+    ```bash hl_lines="1"
+    kubectl port-forward -n monitoring svc/kube-prometheus-stack-grafana 3000:80
+    ```
+
+    Ouvrez [http://localhost:3000](http://localhost:3000)
+
+    - **User**: admin
+    - **Pass**: admin (comme configuré dans l'application Prometheus)
+
+    Explorez les tableaux de bord Kubernetes pré-configurés !
 
 ## Argo CD Extension Metrics
 
@@ -878,7 +948,7 @@ data:
 
 ??? info "CHECK"
     
-    Vous pouvez suivre le déploiement de Arocd-Extension-Metrics de deux manières:
+    Vous pouvez suivre le déploiement de argocd-extension-metrics de deux manières:
 
     === "CLI"
 
@@ -906,10 +976,43 @@ data:
     === "UI"
 
         1. Actualisez l'interface utilisateur d'Argo CD [https://localhost:8080](https://localhost:8080)
-        2. Vous verrez l'application **podinfo**
+        2. Vous verrez l'application **argocd-metrics-server**
         3. Cliquez dessus pour voir la progression du déploiement
         4. Attendez que l'état soit "Healthy" et "Synced"
 
+### Ajouter des métriques personnalisées
+
+Les métriques affichées sont configurées dans la **ConfigMap** `argocd-metrics-server-configmap` ci-dessus.
+
+#### Query Variables disponibles
+
+Dans vos requêtes Prometheus, vous pouvez utiliser ces variables de modèle :
+
+* `{{.metadata.name}}` - Nom de la ressource
+* `{{.metadata.namespace}}` - Namespace de la ressource
+* `{{.metadata.labels.KEY}}` - Valeur de n'importe quelle étiquette
+
+!!! Warning "WARNING"
+
+    Après modification, redémarrez le serveur de métriques sauf si vous utiliez Reloader
+
+    ```bash hl_lines="1"
+    kubectl rollout restart deployment argocd-metrics-server -n argocd
+    ```
+
+#### Ajouter des métriques pour d'autres ressources
+Vous pouvez ajouter des métriques pour n'importe quel type de ressource Kubernetes.  
+Par exemple, pour ajouter des métriques pour les **StatefulSets**:
+
+```yaml
+extension.metrics.statefulsets: |
+  - name: "CPU Usage"
+    description: "CPU usage for the statefulset"
+    type: "graph"
+    graphType: "area"
+    yAxisLabel: "CPU Cores"
+    query: 'sum(rate(container_cpu_usage_seconds_total{namespace="{{.metadata.namespace}}", pod=~"{{.metadata.name}}-.*"}[5m])) by (pod)'
+```
 
 ## PodInfo
 Déployons maintenant Podinfo via Argo CD.
@@ -967,714 +1070,208 @@ spec:
         3. Cliquez dessus pour voir la progression du déploiement
         4. Attendez que l'état soit "Healthy" et "Synced"
 
-## Apply App-of-Apps
+!!! Note
 
-### 4. Deploy App of Apps (One Command!)
+     Accéder à l'interface de **PodInfo**
 
-```bash
+    ```bash hl_lines="1"
+    kubectl port-forward -n podinfo svc/podinfo 9898:9898
+    ```
+
+    Ouvrez [http://localhost:9898](http://localhost:9898) pour voir:
+
+    - Informations sur la version
+    - Détails sur l'exécution
+    - Points de terminaison de santé
+    - Point de terminaison des métriques à `/metrics`
+
+## Déployer App-of-Apps
+
+```bash hl_lines="1"
 kubectl apply -f apps/app-of-apps.yaml
 ```
 
-**That's it!** 🎉 Argo CD will now deploy everything:
+**C'est tout !** 🎉 Argo CD déploiera automatiquement:
+
 - Prometheus
-- Metrics Server
+- Serveur de métriques
 - Podinfo
 
+??? info "CHECK"
 
-### 5.2 Generate Traffic to Podinfo
+    ```bash title="Lister toutes les applications" hl_lines="1"
+    kubectl get applications -n argocd
+    NAME                    SYNC STATUS   HEALTH STATUS
+    argocd-metrics-server   Synced        Healthy
+    kube-prometheus-stack   Synced        Healthy
+    podinfo                 Synced        Healthy
+    root-app                Synced        Healthy
+    ```
 
-Let's generate some traffic to see dynamic metrics:
+## Voir les métriques dans l'interface Argo CD
 
-```bash
-# Port forward to podinfo
+1. Dans l'interface Argo CD, cliquez sur l'application **podinfo**
+2. Cliquez sur le **déploiement**
+3. Cherchez l'onglet **"Metrics"**
+4. Cliquez dessus pour voir :
+    - Graphiques de l’utilisation CPU
+    - Graphiques de l’utilisation de la mémoire
+    - Graphiques du réseau (I/O)
+
+### Voir les métriques au niveau du pod
+
+1. Depuis la vue de l'application podinfo, cliquez sur n'importe quel **Pod**
+2. Allez dans l'onglet **Metrics**
+3. Vous verrez les métriques individuelles du pod
+
+🎉 **Bravo !** Vous voyez maintenant les métriques Prometheus directement dans Argo CD !
+
+#### Générer du trafic vers Podinfo
+
+Générons un peu de trafic pour voir les métriques dynamiques:
+
+```bash title="Port forwarding vers podinfo" hl_lines="1"
 kubectl port-forward -n podinfo svc/podinfo 9898:9898 &
+```
 
-# Generate traffic
+```bash title="Générer du trafic" hl_lines="1-5"
 for i in {1..100}; do
   curl -s http://localhost:9898 > /dev/null
-  echo "Request $i completed"
+  echo "Requête $i terminée"
   sleep 0.1
 done
 ```
 
-### 5.3 View Metrics in Argo CD UI
+## Nettoyage
 
-1. In Argo CD UI, click on the **podinfo** application
-2. Click on the **podinfo Deployment**
-3. Look for the **"Metrics"** tab
-4. Click on it to see:
-   - CPU Usage graphs
-   - Memory Usage graphs
-   - Network I/O graphs
+??? failure "Suppression des ressources"
 
-🎉 **Success!** You're now seeing Prometheus metrics directly in Argo CD!
+    ```bash title="Supprimer l'application root-app (cela supprimera toutes les applications enfants)" hl_lines="1"
+    kubectl delete application root-app -n argocd
+    ```
 
-### 5.4 View Pod-Level Metrics
+    ```bash title="Supprimer Argo CD" hl_lines="1"
+    helm uninstall argocd -n argocd
+    ```
 
-1. From the podinfo application view, click on any **Pod**
-2. Go to the **Metrics** tab
-3. You'll see individual pod metrics
+    ```bash title="Supprimer le cluster Kind"  hl_lines="1"
+    kind delete cluster --name argocd-demo
+    ```
 
+## Commandes utiles
 
-### What We Accomplished
+??? Tip "TIPS"
 
-✅ **Single Bootstrap Step:** Only Argo CD was installed manually
-✅ **Everything Else via GitOps:** Prometheus and Podinfo deployed through Argo CD
-✅ **Declarative:** All configuration in YAML files
-✅ **Observable:** Metrics visible directly in Argo CD UI
-✅ **Self-Healing:** Argo CD auto-syncs and heals applications
+    ```bash hl_lines="1" title="Obtenir le mot de passe admin"
+    kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+    ```
 
+    ```bash hl_lines="1" title="Faire du port forwarding vers l'UI"
+    kubectl port-forward svc/argocd-server -n argocd 8080:443
+    ```
 
-✅ Centralized in Argo CD
-✅ Visible in UI
-✅ Auto-sync enabled
-✅ Git as source of truth (if you commit these YAMLs)
+    ```bash hl_lines="1" title="Lister les applications"
+    kubectl get applications -n argocd
+    ```
 
+    ```bash title="Vérifiez si l'extension est chargée" hl_lines="1"
+    kubectl logs -n argocd deployment/argocd-server | grep extension
+    ```
 
-### Architecture Overview
+    ```bash hl_lines="1" title="Obtenir les détails d'une application"
+    kubectl get application podinfo -n argocd -o yaml
+    ```
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                         Argo CD                             │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
-│  │  Prometheus  │  │    Metrics   │  │   Podinfo    │       │
-│  │  Application │  │    Server    │  │  Application │       │
-│  └──────────────┘  └──────────────┘  └──────────────┘       │
-│         │                  │                 │              │
-│         ▼                  │                 ▼              │
-│  ┌──────────────┐          │         ┌──────────────┐       │
-│  │  Prometheus  │◄─────────┘         │   Podinfo    │       │
-│  │   (Helm)     │                    │     Pods     │       │
-│  └──────────────┘                    └──────────────┘       │
-│         │                                     │             │
-│         │  (scrapes metrics)                  │             │
-│         └─────────────────────────────────────┘             │
-└─────────────────────────────────────────────────────────────┘
+    ```bash title="Vérifiez que le serveur de métriques fonctionne" hl_lines="1"
+    kubectl get pods -n argocd | grep metrics-server
+    ```
 
-Argo CD UI Extension reads metrics from Metrics Server
-Metrics Server queries Prometheus
-Prometheus scrapes metrics from Podinfo pods
+    ```bash hl_lines="1" title="Forcer la synchronisation"
+    kubectl patch application podinfo -n argocd --type merge -p '{"operation":{"initiatedBy":{"username":"admin"},"sync":{"revision":"HEAD"}}}'
+    ```
 
+    ```bash hl_lines="1" title="Voir le statut de la synchronisation"
+    kubectl get applications -n argocd -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.health.status}{"\t"}{.status.sync.status}{"\n"}{end}'
+    ```
 
-## Step 8: Explore Additional Features
+    ```bash hl_lines="1" title="Surveiller tous les pods dans tous les namespaces"
+    kubectl get pods -A -w
+    ```
+    
+    ```bash hl_lines="1" title="Vérifier l'état de synchronisation de l'application"
+    kubectl get applications -n argocd -w
+    ```
+    
+    ```bash hl_lines="1" title="Voir les logs du serveur Argo CD"
+    kubectl logs -n argocd deployment/argocd-server -f
+    ```
+    
+    ```bash hl_lines="1" title="Voir les logs du argocd-metrics"
+    kubectl logs -n argocd deployment/argocd-metrics-server -f
+    ```
+    
+    ```bash hl_lines="1" title="Voir les détails de l'application"
+    kubectl describe application <app-name> -n argocd
+    ```
 
-### 8.1 Access Podinfo UI
+    ```bash hl_lines="1" title="Root app logs"
+    kubectl logs -n argocd deployment/argocd-application-controller -f
+    ```
 
-```bash
-kubectl port-forward -n podinfo svc/podinfo 9898:9898
-```
+    ```bash hl_lines="1" title="Metrics server logs"
+    kubectl logs -n argocd -l app=argocd-metrics-server -f
+    ```
 
-Open http://localhost:9898 to see:
-- Version information
-- Runtime details
-- Health endpoints
-- Metrics endpoint at /metrics
+    ```bash title="Kill existing port forwards" hl_lines="1"
+    pkill -f "port-forward"
+    ```
 
-### 8.2 Access Prometheus UI
+## En résumé
 
-```bash
-kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090
-```
+Vous avez maintenant:
 
-Open http://localhost:9090 and try queries like:
-- `container_cpu_usage_seconds_total{namespace="podinfo"}`
-- `container_memory_usage_bytes{namespace="podinfo"}`
+- ✅ **Single Source of Truth:** Tout dans votre dépôt Git
+- ✅ **Configuration declarative:** Toute la configuration est déclarée dans des fichiers YAML.
+- ✅ **Rollback:** Facile à annuler via Git.
+- ✅ **Pas de dépendances externes:** Ne sera pas affecté si les dépôts externes changent.
+- ✅ **App of Apps pattern:** Structure plusieurs applications sous une racine, simplifiant leur gestion et déploiement.
+- ✅ **Sources officielles:** Utilisation des manifests, images et charts officiels
+- ✅ **Intégration des métriques:** Métriques Prometheus dans l'interface Argo CD
+- ✅ **Prêt pour la production:** Structure adaptée pour les déploiements réels
+- ✅ **Self-Healing:** Argo CD et configurer pour auto-syncs et heals les applications
+- ✅ **Contrôle de version et traçabilité complète:** Toutes les modifications sont suivies, avec une trace d'audit complète.
+- ✅ **Déploiement en une commande:** `kubectl apply -f apps/app-of-apps.yaml` par la suite Argo CD surveille votre dépôt pour détecter les changements.
 
-### 8.3 Access Grafana
+## Conclusion
 
-```bash
-kubectl port-forward -n monitoring svc/kube-prometheus-stack-grafana 3000:80
-```
-
-Open http://localhost:3000
-- **Username:** admin
-- **Password:** admin (as configured in the Prometheus Application)
-
-Explore pre-configured Kubernetes dashboards!
-
-### 8.4 View All Applications
-
-```bash
-# List all applications
-kubectl get applications -n argocd
-
-# View application details
-kubectl describe application podinfo -n argocd
-
-# View sync status
-kubectl get applications -n argocd -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.health.status}{"\t"}{.status.sync.status}{"\n"}{end}'
-```
-
-
-
----
-
-## Customizing Metrics
-
-The metrics displayed are configured in the `argocd-metrics-server-configmap` ConfigMap.
-
-### Edit Metrics Configuration
-
-```bash
-kubectl edit configmap argocd-metrics-server-configmap -n argocd
-```
-
-After editing, restart the metrics server:
-
-```bash
-kubectl rollout restart deployment argocd-metrics-server -n argocd
-```
-
-### Adding Metrics for Other Resources
-
-You can add metrics for any Kubernetes resource type. For example, to add metrics for StatefulSets:
-
-```yaml
-extension.metrics.statefulsets: |
-  - name: "CPU Usage"
-    description: "CPU usage for the statefulset"
-    type: "graph"
-    graphType: "area"
-    yAxisLabel: "CPU Cores"
-    query: 'sum(rate(container_cpu_usage_seconds_total{namespace="{{.metadata.namespace}}", pod=~"{{.metadata.name}}-.*"}[5m])) by (pod)'
-```
-
-### Available Query Variables
-
-In your Prometheus queries, you can use these template variables:
-- `{{.metadata.name}}` - Resource name
-- `{{.metadata.namespace}}` - Resource namespace
-- `{{.metadata.labels.KEY}}` - Any label value
-
-### Example: Custom Application Metrics
-
-If your application exposes custom metrics:
-
-```yaml
-extension.metrics.deployments: |
-  - name: "Request Rate"
-    description: "HTTP requests per second"
-    type: "graph"
-    graphType: "line"
-    yAxisLabel: "req/s"
-    query: 'rate(http_requests_total{namespace="{{.metadata.namespace}}", pod=~"{{.metadata.name}}-.*"}[5m])'
-```
+### Prochaines étapes
+1. Personnalisez les configurations selon vos besoins
+2. Ajoutez d'autres applications
+3. Configurez le CI/CD pour mettre à jour votre dépôt
+4. Ajoutez la surveillance et les alertes
+5. Implémentez la gestion multi-environnements
+6. Ajoutez vos requêtes Prometheus personnalisées
+7. Ajouter de nouvelles applications
 
 ---
 
-## Troubleshooting
+## Documentation
 
-### Metrics Tab Not Appearing
+<div class="admonition abstract">
+  <p class="admonition-title">Documentation</p>
 
-**Check if the extension is loaded:**
-```bash
-kubectl logs -n argocd deployment/argocd-server | grep extension
+```embed
+url: https://github.com/argoproj-labs/argocd-extension-metrics
 ```
 
-**Verify the proxy extension is enabled:**
-```bash
-kubectl get configmap argocd-cmd-params-cm -n argocd -o yaml | grep proxy
+```embed
+url: https://prometheus.io/docs/introduction/overview/
+image: https://raw.githubusercontent.com/cncf/artwork/9e203aa38643bbf0fcb081dbaa80abbd0f6f0698/projects/prometheus/icon/color/prometheus-icon-color.svg
 ```
 
-Should show: `server.enable.proxy.extension: "true"`
-
-### No Metrics Data Displayed
-
-**Verify metrics server is running:**
-```bash
-kubectl get pods -n argocd | grep metrics-server
+```embed
+url: https://argo-cd.readthedocs.io/en/stable/
+image: https://raw.githubusercontent.com/cncf/artwork/9e203aa38643bbf0fcb081dbaa80abbd0f6f0698/projects/argo/icon/color/argo-icon-color.svg
 ```
 
-**Check metrics server logs:**
-```bash
-kubectl logs -n argocd deployment/argocd-metrics-server
-```
-
-**Test Prometheus connectivity:**
-```bash
-kubectl exec -n argocd deployment/argocd-metrics-server -- wget -O- http://prometheus-kube-prometheus-prometheus.monitoring.svc:9090/api/v1/query?query=up
-```
-
-### Prometheus Application Not Syncing
-
-**Check application status:**
-```bash
-kubectl describe application kube-prometheus-stack -n argocd
-```
-
-**View sync logs in Argo CD UI:**
-1. Click on the application
-2. View the sync status
-3. Check for error messages
-
-### Kind Cluster Issues
-
-**Cluster won't start:**
-```bash
-# Check Docker is running
-docker ps
-
-# Delete and recreate
-kind delete cluster --name argocd-demo
-kind create cluster --config kind-config.yaml
-```
-
-**Can't access services:**
-```bash
-# Check port forwards
-lsof -i :8080
-lsof -i :9898
-
-# Kill existing port forwards
-pkill -f "port-forward"
-```
-
----
-
-## Clean Up
-
-### Clean Up Specific Resources
-
-To remove individual applications via Argo CD:
-
-```bash
-# Delete applications (Argo CD will clean up resources)
-kubectl delete application podinfo -n argocd
-kubectl delete application kube-prometheus-stack -n argocd
-
-# Delete metrics server (not managed by Argo CD)
-kubectl delete deployment argocd-metrics-server -n argocd
-kubectl delete service argocd-metrics-server -n argocd
-kubectl delete configmap argocd-metrics-server-configmap -n argocd
-
-# Delete Argo CD
-helm uninstall argocd -n argocd
-
-# Delete namespaces
-kubectl delete namespace argocd
-kubectl delete namespace monitoring
-kubectl delete namespace podinfo
-```
-
-### Delete the Entire Kind Cluster
-
-To completely remove the cluster:
-
-```bash
-kind delete cluster --name argocd-demo
-```
-
-### Verify Cleanup
-
-```bash
-# Check no clusters remain
-kind get clusters
-
-# Verify context is removed
-kubectl config get-contexts
-```
-
----
-
-## Quick Reference: Useful Commands
-
-### Kind Cluster Management
-
-```bash
-# Create cluster
-kind create cluster --config kind-config.yaml
-
-# List clusters
-kind get clusters
-
-# Delete cluster
-kind delete cluster --name argocd-demo
-
-# Load local Docker image into Kind
-kind load docker-image my-image:tag --name argocd-demo
-```
-
-### Argo CD Operations
-
-```bash
-# Get admin password
-kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
-
-# Port forward to UI
-kubectl port-forward svc/argocd-server -n argocd 8080:443
-
-# List applications
-kubectl get applications -n argocd
-
-# Get application details
-kubectl get application podinfo -n argocd -o yaml
-
-# Force sync
-kubectl patch application podinfo -n argocd --type merge -p '{"operation":{"initiatedBy":{"username":"admin"},"sync":{"revision":"HEAD"}}}'
-```
-
-### Monitoring
-
-```bash
-# Watch all pods across namespaces
-kubectl get pods -A -w
-
-# Check application sync status
-kubectl get applications -n argocd -w
-
-# View Argo CD server logs
-kubectl logs -n argocd deployment/argocd-server -f
-
-# View metrics server logs
-kubectl logs -n argocd deployment/argocd-metrics-server -f
-```
-
-
-### Step 1: Create Your Git Repository
-
-```bash
-# Create repository directory
-mkdir argocd-gitops
-cd argocd-gitops
-
-# Initialize Git
-git init
-
-# Create directory structure
-mkdir -p bootstrap apps manifests/metrics-server
-
-# Initialize Git repository
-git add .
-git commit -m "Initial structure"
-
-# Push to your Git hosting (GitHub, GitLab, etc.)
-git remote add origin https://github.com/YOUR-USERNAME/argocd-gitops.git
-git push -u origin main
-```
-
-
----
-
-## How It Works
-
-### The App of Apps Pattern
-
-```
-┌─────────────────────────────────────────────────────┐
-│                   Root App                          │
-│            (apps/app-of-apps.yaml)                  │
-└────────────────┬────────────────────────────────────┘
-                 │
-                 ├─── Manages ───► Prometheus App
-                 │                 (apps/prometheus.yaml)
-                 │
-                 ├─── Manages ───► Metrics Server App
-                 │                 (apps/metrics-server.yaml)
-                 │
-                 └─── Manages ───► Podinfo App
-                                   (apps/podinfo.yaml)
-```
-
-**One application (root-app) manages all other applications!**
-
-### Benefits
-
-✅ **Single Source of Truth:** Everything in your Git repo
-✅ **Version Control:** All changes tracked
-✅ **Rollback:** Easy to revert via Git
-✅ **No External Dependencies:** Won't break if external repos change
-✅ **One Command Deployment:** `kubectl apply -f apps/app-of-apps.yaml`
-✅ **GitOps Native:** Argo CD watches your repo for changes
-
----
-
-## Making Changes
-
-### Update Prometheus Configuration
-
-1. Edit `apps/prometheus.yaml`
-2. Commit and push:
-   ```bash
-   git add apps/prometheus.yaml
-   git commit -m "Increase Prometheus retention to 24h"
-   git push
-   ```
-3. Argo CD automatically syncs the changes!
-
-### Add New Application
-
-1. Create `apps/my-new-app.yaml`
-2. Commit and push
-3. The root-app will automatically deploy it!
-
-### Update Metrics Configuration
-
-1. Edit `manifests/metrics-server/configmap.yaml`
-2. Commit and push
-3. Argo CD syncs automatically
-
----
-
-## Monitoring the Deployment
-
-### Watch All Applications
-
-```bash
-# List all applications
-kubectl get applications -n argocd
-
-# Watch sync status
-watch kubectl get applications -n argocd
-```
-
-### Check Specific Application
-
-```bash
-# View application details
-kubectl describe application kube-prometheus-stack -n argocd
-
-# View sync status in UI
-# Click on the application in https://localhost:8080
-```
-
-### View Logs
-
-```bash
-# Root app logs
-kubectl logs -n argocd deployment/argocd-application-controller -f
-
-# Metrics server logs
-kubectl logs -n argocd -l app=argocd-metrics-server -f
-```
-
----
-
-## Clean Up
-
-### Remove Everything
-
-```bash
-# Delete root app (will delete all child apps)
-kubectl delete application root-app -n argocd
-
-# Delete Argo CD
-helm uninstall argocd -n argocd
-
-# Delete Kind cluster
-kind delete cluster --name argocd-demo
-```
-
----
-
-## Advanced: Multi-Environment
-
-You can extend this structure for multiple environments:
-
-```
-argocd-gitops/
-├── apps/
-│   ├── dev/
-│   │   ├── app-of-apps.yaml
-│   │   ├── prometheus.yaml
-│   │   └── podinfo.yaml
-│   ├── staging/
-│   │   └── ...
-│   └── prod/
-│       └── ...
-└── manifests/
-    ├── base/
-    │   └── metrics-server/
-    └── overlays/
-        ├── dev/
-        ├── staging/
-        └── prod/
-```
-
----
-
-## Summary
-
-You now have:
-✅ **Pure GitOps:** Everything in your own Git repository
-✅ **App of Apps:** One command deploys everything
-✅ **Official Sources:** Using official images and charts
-✅ **Version Control:** All changes tracked
-✅ **No Manual kubectl apply:** Argo CD handles everything
-✅ **Production Ready:** Structure suitable for real deployments
-
-**Next Steps:**
-1. Customize the configurations for your needs
-2. Add more applications
-3. Set up CI/CD to update your repo
-4. Add monitoring and alerting
-5. Implement multi-environment support
-
-
-## Deployment Steps
-
-### 1. Create Your Git Repository
-
-```bash
-mkdir argocd-gitops
-cd argocd-gitops
-git init
-
-# Create all directories
-mkdir -p bootstrap apps manifests/metrics-server
-
-# Create all files (copy content from above)
-# Then commit and push
-git add .
-git commit -m "Initial GitOps structure"
-git remote add origin https://github.com/YOUR-USERNAME/argocd-gitops.git
-git push -u origin main
-```
-
-
-## Verification
-
-### Check All Applications
-
-```bash
-# List all applications
-kubectl get applications -n argocd
-
-# Expected output:
-# NAME                     SYNC STATUS   HEALTH STATUS
-# root-app                 Synced        Healthy
-# kube-prometheus-stack    Synced        Healthy
-# argocd-metrics-server    Synced        Healthy
-# podinfo                  Synced        Healthy
-```
-
-### View in Argo CD UI
-
-In the UI, you should see 4 applications:
-1. **root-app** - The App of Apps
-2. **kube-prometheus-stack** - Monitoring stack
-3. **argocd-metrics-server** - Metrics backend
-4. **podinfo** - Demo application
-
-### Test Metrics
-
-1. Click on **podinfo** application
-2. Click on the **podinfo Deployment**
-3. Click on the **Metrics** tab
-4. You should see CPU, Memory, and Network graphs
-
----
-
-## Making Changes
-
-### Update Prometheus Configuration
-
-1. Edit `apps/prometheus.yaml` in your repo
-2. Change retention or resources
-3. Commit and push:
-   ```bash
-   git add apps/prometheus.yaml
-   git commit -m "Update Prometheus retention to 24h"
-   git push
-   ```
-4. Argo CD auto-syncs the changes!
-
-### Add Custom Metrics
-
-1. Edit `manifests/metrics-server/configmap.yaml`
-2. Add your custom Prometheus queries
-3. Commit and push
-4. Metrics server automatically reloads
-
-### Add New Application
-
-1. Create `apps/my-app.yaml`
-2. Commit and push
-3. The root-app automatically deploys it!
-
-## Troubleshooting
-
-### Metrics Tab Not Showing
-
-**Check extension is loaded:**
-```bash
-kubectl logs -n argocd deployment/argocd-server | grep extension
-```
-
-**Verify proxy extension enabled:**
-```bash
-kubectl get configmap argocd-cm -n argocd -o yaml | grep proxy
-```
-
-### Metrics Server Issues
-
-**Check logs:**
-```bash
-kubectl logs -n argocd -l app.kubernetes.io/name=argocd-metrics-server
-```
-
-**Verify ConfigMap:**
-```bash
-kubectl get configmap argocd-metrics-server -n argocd -o yaml
-```
-
-**Test Prometheus connectivity:**
-```bash
-kubectl exec -n argocd deployment/argocd-metrics-server -- \
-  wget -O- http://prometheus-kube-prometheus-prometheus.monitoring.svc:9090/api/v1/query?query=up
-```
-
-### Application Not Syncing
-
-**Check application status:**
-```bash
-kubectl describe application <app-name> -n argocd
-```
-
-**Force sync:**
-```bash
-kubectl patch application <app-name> -n argocd \
-  --type merge -p '{"operation":{"sync":{}}}'
-```
-
-
-## Clean Up
-
-### Delete Everything
-
-```bash
-# Delete root app (removes all child apps)
-kubectl delete application root-app -n argocd
-
-# Delete Argo CD
-helm uninstall argocd -n argocd
-
-# Delete Kind cluster
-kind delete cluster --name argocd-demo
-```
-
----
-
-## Summary
-
-You now have:
-- ✅ **Pure GitOps:** Everything in your Git repository
-- ✅ **App of Apps:** One command deploys everything
-- ✅ **Official Sources:** Using official manifests and images
-- ✅ **Metrics Integration:** Prometheus metrics in Argo CD UI
-- ✅ **Production Ready:** Suitable for real deployments
-
-**Key Benefits:**
-- All changes tracked in Git
-- Easy rollback via `git revert`
-- No manual `kubectl apply` needed
-- Argo CD handles everything automatically
-- Complete audit trail
-
-**Changes from official:**
-- ✅ Added Service definition (needed for Argo CD to reach the server)
-- ✅ Pinned image version to `v1.0.3` (instead of `:latest` for reproducibility)
-- ✅ Added serviceAccountName: `argocd-server`
-- ✅ Added security context (runAsUser: 999, readOnlyRootFilesystem, etc.)
-- ✅ Added resource limits
-- ✅ Added proper labels for Argo CD
-- ✅ Kept the official volume mount: `/app/config.json` with `subPath`
+</div>

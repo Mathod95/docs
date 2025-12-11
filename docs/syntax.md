@@ -1,3 +1,7 @@
+## Emote
+!!! example
+    ✅
+
 ## Header
 !!! example
 

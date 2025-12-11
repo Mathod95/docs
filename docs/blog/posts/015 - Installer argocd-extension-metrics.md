@@ -21,6 +21,8 @@ todo:
   - Verifier les variables utilisateur dans les codeBlocks
   - Ajouter Reloader ?
   - Ajouter un schéma de fonctionnement de metrics server
+  - le repo utiliser 016 et pas 015
+  - Rework des noms de fichiers
 user-defined-values:
   - GIT_PROVIDER
   - USER

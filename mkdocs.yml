@@ -124,71 +124,65 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
 
-#plugins:
-#  - open-in-new-tab               # https://github.com/JakubAndrysek/mkdocs-open-in-new-tab
-#  - search:
-#      lang: fr
-#  - social                        # https://squidfunk.github.io/mkdocs-material/setup/setting-up-social-cards/
-#  - blog
-#  - tags
-#  - git-revision-date-localized:  # https://github.com/timvink/mkdocs-git-revision-date-localized-plugin
-#      enable_creation_date: true
-#      enable_git_follow: true
-#  #- git-committers:               # https://github.com/byrnereese/mkdocs-git-committers-plugin
-#  #    repository: Mathod95/docs
-#  #    branch: main
-#  #    token: !ENV ["MKDOCS_GIT_COMMITTERS_TOKEN"]
-#  #- mkdocs-video:                 # https://github.com/soulless-viewer/mkdocs-video
-#  #    is_video: True
-#  #    video_muted: True
-#  #    video_controls: True
-#  #    css_style:
-#  #      width: "50%"
-#  #- drawio-exporter              # https://github.com/LukeCarrier/mkdocs-drawio-exporter
-#  - include-markdown              # https://github.com/mondeja/mkdocs-include-markdown-plugin
-#  - glightbox                     # https://github.com/blueswen/mkdocs-glightbox
-#  - toggle-sidebar:               # https://github.com/six-two/mkdocs-toggle-sidebar-plugin
-#      enabled: True
-#      show_navigation_by_default: true
-#      show_toc_by_default: true
-#      theme: material
-#      toggle_button: all
-#  - user-defined-values:
-#      keywords:
-#        REGION:
-#          placeholder: ex. eu-west-3
-#        ACCOUNT_ID:
-#          placeholder: ex. 12355224536
-#        APPNAME:
-#          placeholder: ex. app01
-#        ENVIRONMENT:
-#          placeholder: ex. production
-#        COMPANY:
-#          placeholder: ex. mathod.io
-#        NAMESPACE:
-#          placeholder: ex. default
-#        TEAM:
-#          placeholder: ex. infra
-#        SERVICE:
-#          placeholder: ex. api, webui, website, db, cache
-#        GIT_PROVIDER:
-#          placeholder: ex. github, gitlab, gitea, ...
-#        USER:
-#          placeholder: ex. mathod
-#        NAMESPACE:
-#          placeholder: ex. app01
-#  #- link-embeds:                  # https://github.com/Aetherinox/mkdocs-link-embeds
-#  #    enabled: true
-#  #    name_default: "Untitled Link"
-#  #    desc_default: "No description found"
-#  #    image_default: "https://github.com/Aetherinox/mkdocs-link-embeds/assets/118329232/c0298d98-0910-4235-a88f-0c3e2f704ba7"
-#  #    image_disabled: false
-#  #    favicon_default: "https://github.com/Aetherinox/mkdocs-link-embeds/assets/118329232/b37da9c6-6f17-4c3f-9c94-c346a6f31bfa"
-#  #    favicon_disabled: false
-#  #    favicon_size: 25
-#  #    target: "blank"
-#  #    accent: "FFFFFF1A"
-#  #    verbose: false
+plugins:
+  - open-in-new-tab               # https://github.com/JakubAndrysek/mkdocs-open-in-new-tab
+  - search:
+      lang: fr
+  #- social                        # https://squidfunk.github.io/mkdocs-material/setup/setting-up-social-cards/
+  - blog
+  - tags
+  - git-revision-date-localized:  # https://github.com/timvink/mkdocs-git-revision-date-localized-plugin
+      enable_creation_date: true
+      enable_git_follow: true
+  - git-committers:               # https://github.com/byrnereese/mkdocs-git-committers-plugin
+      repository: Mathod95/docs
+      branch: main
+  #    token: !ENV ["MKDOCS_GIT_COMMITTERS_TOKEN"]
+  #- drawio-exporter              # https://github.com/LukeCarrier/mkdocs-drawio-exporter
+  - include-markdown              # https://github.com/mondeja/mkdocs-include-markdown-plugin
+  - glightbox                     # https://github.com/blueswen/mkdocs-glightbox
+  - toggle-sidebar:               # https://github.com/six-two/mkdocs-toggle-sidebar-plugin
+      enabled: True
+      show_navigation_by_default: true
+      show_toc_by_default: true
+      theme: material
+      toggle_button: all
+  - user-defined-values:
+      keywords:
+        REGION:
+          placeholder: ex. eu-west-3
+        ACCOUNT_ID:
+          placeholder: ex. 12355224536
+        APPNAME:
+          placeholder: ex. app01
+        ENVIRONMENT:
+          placeholder: ex. production
+        COMPANY:
+          placeholder: ex. mathod.io
+        NAMESPACE:
+          placeholder: ex. default
+        TEAM:
+          placeholder: ex. infra
+        SERVICE:
+          placeholder: ex. api, webui, website, db, cache
+        GIT_PROVIDER:
+          placeholder: ex. github, gitlab, gitea, ...
+        USER:
+          placeholder: ex. mathod
+        NAMESPACE:
+          placeholder: ex. app01
+  #- link-embeds:                  # https://github.com/Aetherinox/mkdocs-link-embeds
+  #    enabled: true
+  #    name_default: "Untitled Link"
+  #    desc_default: "No description found"
+  #    image_default: "https://github.com/Aetherinox/mkdocs-link-embeds/assets/118329232/c0298d98-0910-4235-a88f-0c3e2f704ba7"
+  #    image_disabled: false
+  #    favicon_default: "https://github.com/Aetherinox/mkdocs-link-embeds/assets/118329232/b37da9c6-6f17-4c3f-9c94-c346a6f31bfa"
+  #    favicon_disabled: false
+  #    favicon_size: 25
+  #    target: "blank"
+  #    accent: "FFFFFF1A"
+  #    verbose: false
 
 extra:
   analytics:
@@ -207,3 +201,12 @@ extra_css:
 
 watch:
   - includes
+
+
+# pip install mkdocs-git-committers-plugin
+# pip install mkdocs-git-revision-date-localized-plugin
+# pip install mkdocs-include-markdown-plugin
+# pip install mkdocs-glightbox
+# pip install mkdocs-toggle-sidebar-plugin
+# pip install mkdocs-open-in-new-tab
+# pip install -e plugins/

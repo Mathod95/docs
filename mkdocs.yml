@@ -133,10 +133,11 @@ plugins:
   - tags
   - git-revision-date-localized:  # https://github.com/timvink/mkdocs-git-revision-date-localized-plugin
       enable_creation_date: true
-  - git-committers:               # https://github.com/byrnereese/mkdocs-git-committers-plugin
-      repository: Mathod95/docs
-      branch: main
-      token: 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
+      enable_git_follow: true
+  #- git-committers:               # https://github.com/byrnereese/mkdocs-git-committers-plugin
+  #    repository: Mathod95/docs
+  #    branch: main
+  #    token:
   #- mkdocs-video:                 # https://github.com/soulless-viewer/mkdocs-video
   #    is_video: True
   #    video_muted: True

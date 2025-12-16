@@ -136,7 +136,8 @@ plugins:
   - git-committers:               # https://github.com/byrnereese/mkdocs-git-committers-plugin
       repository: Mathod95/docs
       branch: main
-      token: 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
+      token: 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
+      enable_git_follow: false
   #- mkdocs-video:                 # https://github.com/soulless-viewer/mkdocs-video
   #    is_video: True
   #    video_muted: True

@@ -10,8 +10,6 @@ tags:
 todo: add ![](../../assets/images/kyverno/kyverno.svg)
   - https://playground.kyverno.io/#/ | https://kyverno.io/blog/2023/06/04/lets-play-kyverno/
 ---
- 
-banane
 
 ## Introduction
 

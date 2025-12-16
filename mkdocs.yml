@@ -26,6 +26,8 @@ nav:
       - Cheatsheet: apps/helm/helm-cheatsheet.md
     - Kind:
       - Cheatsheet: apps/kind/kind-cheatsheet.md
+  - INFRA:
+    - infra.md
   - LINUX:
     - Debian:
       - Packages: 
@@ -84,7 +86,7 @@ theme:
     - search.share
     - header.autohide
     - navigation.footer
-    - content.action.view
+    #- content.action.view
     - content.code.copy
     - content.code.select
     - content.code.annotate
@@ -143,37 +145,37 @@ plugins:
   #      width: "50%"
   #- drawio-exporter              # https://github.com/LukeCarrier/mkdocs-drawio-exporter
   - include-markdown              # https://github.com/mondeja/mkdocs-include-markdown-plugin
-  - glightbox                     # https://github.com/blueswen/mkdocs-glightbox
+  #- glightbox                     # https://github.com/blueswen/mkdocs-glightbox
   - toggle-sidebar:               # https://github.com/six-two/mkdocs-toggle-sidebar-plugin
       enabled: True
       show_navigation_by_default: true
       show_toc_by_default: true
       theme: material
       toggle_button: all
-  - user-defined-values:
-      keywords:
-        REGION:
-          placeholder: ex. eu-west-3
-        ACCOUNT_ID:
-          placeholder: ex. 12355224536
-        APPNAME:
-          placeholder: ex. app01
-        ENVIRONMENT:
-          placeholder: ex. production
-        COMPANY:
-          placeholder: ex. mathod.io
-        NAMESPACE:
-          placeholder: ex. default
-        TEAM:
-          placeholder: ex. infra
-        SERVICE:
-          placeholder: ex. api, webui, website, db, cache
-        GIT_PROVIDER:
-          placeholder: ex. github, gitlab, gitea, ...
-        USER:
-          placeholder: ex. mathod
-        NAMESPACE:
-          placeholder: ex. app01
+  #- user-defined-values:
+  #    keywords:
+  #      REGION:
+  #        placeholder: ex. eu-west-3
+  #      ACCOUNT_ID:
+  #        placeholder: ex. 12355224536
+  #      APPNAME:
+  #        placeholder: ex. app01
+  #      ENVIRONMENT:
+  #        placeholder: ex. production
+  #      COMPANY:
+  #        placeholder: ex. mathod.io
+  #      NAMESPACE:
+  #        placeholder: ex. default
+  #      TEAM:
+  #        placeholder: ex. infra
+  #      SERVICE:
+  #        placeholder: ex. api, webui, website, db, cache
+  #      GIT_PROVIDER:
+  #        placeholder: ex. github, gitlab, gitea, ...
+  #      USER:
+  #        placeholder: ex. mathod
+  #      NAMESPACE:
+  #        placeholder: ex. app01
   #- link-embeds:                  # https://github.com/Aetherinox/mkdocs-link-embeds
   #    enabled: true
   #    name_default: "Untitled Link"

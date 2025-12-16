@@ -1131,6 +1131,12 @@ kubectl apply -f apps/app-of-apps.yaml
 
 🎉 **Bravo !** Vous voyez maintenant les métriques Prometheus directement dans Argo CD !
 
+![](../../assets/images/argo/argocd/015/Capture d'écran 2025-12-12 101351.png)
+![](../../assets/images/argo/argocd/015/Capture d'écran 2025-12-12 101402.png)
+![](../../assets/images/argo/argocd/015/Capture d'écran 2025-12-12 101406.png)
+![](../../assets/images/argo/argocd/015/Capture d'écran 2025-12-12 101410.png)
+
+
 #### Générer du trafic vers Podinfo
 
 Générons un peu de trafic pour voir les métriques dynamiques:

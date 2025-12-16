@@ -1,16 +1,209 @@
 ---
-title: Hardening Kubernetes with Kyverno
+title: Kyverno
 date: 2025-12-03
 draft: true
 categories:
   - Kyverno
 tags:
   - Kyverno
+  - Lab
+todo: add ![](../../assets/images/kyverno/kyverno.svg)
+  - https://playground.kyverno.io/#/ | https://kyverno.io/blog/2023/06/04/lets-play-kyverno/
 ---
 
-![](../../assets/images/kyverno/kyverno.svg)
+## Introduction
+
+Versions déployées lors de la rédaction de cet article:
+
+- Chart Helm : 3.6.1
+- Application Kyverno : v1.16.1
+- Repository : https://github.com/kyverno/kyverno
 
 <!-- more -->
+
+```bash title="Structure de base du wrapper"
+kyverno/
+├── Chart.yaml
+├── values.yaml
+├── README.md
+└── templates/
+    ├── _helpers.tpl
+    ├── service.yaml
+    ├── servicemonitor.yaml
+    ├── network-policy.yaml
+    ├── pod-disruption-budget.yaml
+    └── priority-class.yaml
+```
+
+```shell hl_lines="1" title="Ajouter le repository Helm"
+helm repo add kyverno https://kyverno.github.io/kyverno/
+"kyverno" has been added to your repositories
+```
+
+```bash hl_lines="1" title="Mettre à jour les repositories"
+helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "kyverno" chart repository
+Update Complete. ⎈Happy Helming!⎈
+```
+
+!!! Tip "VERSION"
+
+    ```bash hl_lines="1" title="Voir la dernière version"
+    helm search repo kyverno/kyverno
+    NAME                            CHART VERSION   APP VERSION     DESCRIPTION
+    kyverno/kyverno                 3.6.1           v1.16.1         Kubernetes Native Policy Management
+    ```
+
+    ??? tip "USEFUL COMMANDS"
+
+        ```bash hl_lines="1" title="Lister toutes les versions disponibles"
+        helm search repo kyverno/kyverno --versions
+        NAME                            CHART VERSION   APP VERSION     DESCRIPTION
+        kyverno/kyverno                 3.6.1           v1.16.1         Kubernetes Native Policy Management
+        kyverno/kyverno                 3.6.0           v1.16.0         Kubernetes Native Policy Management
+        kyverno/kyverno                 3.5.2           v1.15.2         Kubernetes Native Policy Management
+        ... Omis par souci de brièveté
+        ```
+
+!!! info "CHART"
+
+    ```bash hl_lines="1" title="Voir la Chart"
+    helm show chart kyverno/kyverno
+    ```
+
+    ??? quote "OUTPUT"
+
+        ```yaml linenums="1" title="Chart.yaml"
+        annotations:
+          artifacthub.io/changes: |
+            - kind: fixed
+              description: Ensure spec.template.metadata isn't null
+            - kind: removed
+              description: Remove the `delete` permission for policyexceptions in the admission controller
+            - kind: changed
+              description: Enable the flag `--generateValidatingAdmissionPolicy` by default in the admission controller.
+            - kind: changed
+              description: Enable the flag `--validatingAdmissionPolicyReports` by default in the reports controller.
+          artifacthub.io/links: |
+            - name: Documentation
+              url: https://kyverno.io/docs
+          artifacthub.io/operator: "false"
+          artifacthub.io/prerelease: "false"
+        apiVersion: v2
+        appVersion: v1.16.1
+        dependencies:
+        - condition: grafana.enabled
+          name: grafana
+          repository: ""
+          version: 3.6.1
+        - condition: crds.install
+          name: crds
+          repository: ""
+          version: 3.6.1
+        - condition: openreports.installCrds
+          name: openreports
+          repository: https://openreports.github.io/reports-api
+          version: 0.1.0
+        description: Kubernetes Native Policy Management
+        home: https://kyverno.io/
+        icon: https://github.com/kyverno/kyverno/raw/main/img/logo.png
+        keywords:
+        - kubernetes
+        - nirmata
+        - policy agent
+        - policy
+        - validating webhook
+        - admission controller
+        - mutation
+        - mutate
+        - validate
+        - generate
+        - supply chain
+        - security
+        kubeVersion: '>=1.25.0-0'
+        maintainers:
+        - name: Nirmata
+          url: https://kyverno.io/
+        name: kyverno
+        sources:
+        - https://github.com/kyverno/kyverno
+        type: application
+        version: 3.6.1
+        ```
+
+!!! info "VALUES"
+
+    ```bash hl_lines="1" title="Voir les values par défaut"
+    helm show values kyverno/kyverno
+    ```
+
+    ??? tip "USEFUL COMMANDS"
+
+        ```bash hl_lines="1" title="Lister toutes les versions disponibles"
+        helm show values kyverno/kyverno > values.yaml
+        ```
+
+    !!! Warning 
+
+        Si pour la création de votre `wrapper` vous fournisser un manifest **values.yaml** vide alors helm appliqueras la values ci dessus par défaut
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
 
 ```ad-missing
 Modifier les exemples de ce que peut faire Kyverno

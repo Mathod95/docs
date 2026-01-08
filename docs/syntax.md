@@ -245,3 +245,32 @@ spec:
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et
         euismod nulla. Curabitur feugiat, tortor non consequat finibus, justo
         purus auctor massa, nec semper lorem quam in massa.
+
+📋 Liste utile pour DevOps/Terminal
+yaml# Status
+✅ Succès/OK
+❌ Erreur/Échec
+⚠️ Attention
+ℹ️ Information
+⏭️ Ignoré/Skip
+🔄 En cours
+⏸️ Pause
+▶️ Play/Start
+
+# Actions
+➕ Ajouter
+➖ Retirer
+🔧 Configuration
+🔨 Build
+🚀 Déployer
+📦 Package
+🗑️ Supprimer
+📝 Documenter
+
+# Indicateurs
+📊 Stats
+📈 Augmentation
+📉 Diminution
+🎯 Objectif
+💡 Idée
+🔍 Recherche

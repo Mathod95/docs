@@ -274,3 +274,35 @@ yaml# Status
 🎯 Objectif
 💡 Idée
 🔍 Recherche
+
+
+=== "File Path on Saltbox Host"
+
+    !!! warning inline end "Never Edit These Files"
+    
+        Updates will overwrite your changes. Use the inventory system instead.
+
+    ```shell
+    /srv/git/saltbox/roles/<role_name>/defaults/main.yml
+    ```
+
+    ```shell
+    /opt/sandbox/roles/<role_name>/defaults/main.yml
+    ```
+
+    ```shell
+    /srv/git/saltbox/inventories/group_vars/all.yml
+    ```
+
+!!! warning inline end "Never Edit These Files"
+
+    Updates will banane your changes. Use the inventory system instead.
+
+
+
+!!! tip ""
+    To determine which apps are included in Authelia by default, you can run this command or a similar one:
+
+    ```shell
+    grep -Ril '_traefik_sso_middleware: "{{ traefik_default_sso_middleware }}"' /srv/git/saltbox/roles /opt/sandbox/roles | awk 'BEGIN{RS="roles/"; FS="/defaults"}NF>1{print $1}' | sort -u
+    ```

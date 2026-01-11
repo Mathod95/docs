@@ -1,3 +1,14 @@
+---
+hide:
+  - navigation
+title: Argo Events
+date: 2026-01-08
+categories:
+  - Argo Events
+tags:
+  - Argo Events
+---
+
 # ARGO EVENTS
 
 Event driven workflow automation framework for kubernetes

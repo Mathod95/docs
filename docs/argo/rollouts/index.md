@@ -1755,3 +1755,117 @@ server:
 ```
 
 Une fois tout installé, tu devrais voir l'onglet Rollout dans l'interface ArgoCD quand tu visualises une ressource de type Rollout !
+
+## Blue/Green - Initial Version
+
+BG est une stratégie de publication d'application qui utilise deux environnement de production identiques
+
+Blue qui est celui en ligne et Green qui est l'options de secours.
+
+### Specification
+
+Deployer une nouvelle version green au cotés de la version blue stable et ensuite rediriger le trafic en direct vers elle seulement après qu'elle ait été entièrement vérifié
+
+```yaml linenums="1"
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: web-api-rollout
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: web-api
+  spec:
+    container:
+    - name: web-api-container
+      image: my-repo/web-api:v1
+      ports:
+      - containerPort: 8080
+  strategy:
+    blueGreen:
+      activeService: web-api-active-svc
+      previewService: web-api-preview-svc
+      previewReplicaCount: 1
+      autoPromotionEnables: false
+      postPromotionAnalysis:
+        templates:
+        - templateName: check-error-rate
+      scaleDownDelaySeconds: 30
+      abortScaleDownDelaySeconds: 10
+```
+
+activeService: est le service kubernetes principal pour le traffic de production en direct
+previewService: est un service interne séparer qui pointe toujours cers la nouvelle version Green cela fournit un point de terminaison stable pour les test automatisées et le QA manual avant que le trafic utilisateur ne soit affecté
+
+previewReplicaCount: Cela va essentiellement déployer un nombre spécificié plus petit de réplicas pour la version Green durant la phase de prévisualisation afin de conserver les ressources du cluster tout en permettant des tests complets
+autoPromotionEnabled: Comme un interrupteur de sécurité critique. Le rollout déploie la version Green, mais ensuite il fait une pause et attend une approbation manuelle en utilisant kubectl ou une UI avant de charger le traffic. Par défaut si vous ne mentionnez pas cela, l'auto-promotion activées est toujorus vraie!
+
+```bash hl_lines="1"
+kubectl argo rollouts promote
+```
+
+postPromotionAnalysis: configurer pour exécuter une vérification de santé d'analyse automatisé comme interroger Prometheus après que la nouvelle version prenne 100% du traffic en direct pour s'assurer que les SLOs sont toujours respecter.
+
+scaleDownDelaySecondes: C'est comme une fenêtres de rollback rapide. Après avoir redirige le traffic vers la nouvelle version Green, le controleur attend ce nombre de secondes avant de terminer les anciens pods bleus ce qui permet un rollback instantané si un problèmes est détecter.
+
+abortScaleDownDelaySeconds: Pour annuler la reduction d'échèlle. Donc si le rollout est annulé manuellement, le controlleur attend ce nombre de secondes avant de terminer les pods vers défectueux.
+Ce bref délai permet au développeurs de collecter des logs ou des dumps de mémoire à des fin de débogage.
+
+### Demo blue green deployment
+
+<p align="center">
+   <img src="../../assets/images/argo/rollouts/bluegreenspec.svg" width="700">
+</p>
+
+### Canary
+
+```
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: web-api-rollout
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: web-api
+  template:
+    metadata:
+      labels:
+        app: web-api
+  spec:
+    container:
+    - name: web-api-container
+      image: my-repo/web-api:v1
+      ports:
+      - containerPort: 8080
+  strategy:
+    canary:
+      steps:
+      - setWeight: 10
+      - pause: {}
+      - setWeight: 25
+      - analysis:
+          templates:
+          - templateName: check-api-error-rate
+          args:
+          - name: service-name
+            value: web-api-canary-svc
+      - setWeight: 50
+      - pause: { duration: 5m }
+      canaryService: web-api-canary-svc # pointe 1.1
+      stableService: web-api-stable-svc # pointe 1.0
+```
+
+| Feature        | Blue/Green                                                                     | Canary Deployment                                                            |
+| -------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| Primary Goal   | Zero Downtime full environment switch, rapid rollback                          | Reduce risk by gradual exposure. Real-user feedback                          |
+| Environment    | Two complete, identical environments (Blue & Green)                            | Single environment, with a small subset of new instances                     |
+| Traffic Split  | All-or-nothing (or very rapid) switch of all traffic                           | Gradual, weighted routing of portion of traffic                              |
+| Rollback       | Instantaneous switch back to the old "Blue" Environment                        | Revert traffic weight to 0% for the new version                              |
+| Complexity     | Can be simpler to set up initially, but resource-heavy (two full environments) | More complex to set up due to traffic routing (service mesh)                 |
+| Feedback Loop  | Feedback mostly gathered before the full traffic switch in Green               | Continious, real-time feedback from a small user segment during rollout      |
+| Risk Reduction | Reduces risk of downtime, high confidence after green validation               | Reduces "blast radius" of issues to a small subset of users                  |
+| Resource Usage | Higher ( two full environments running simultaneously)                         | Lower (only a small percentage of new resources initially)                   |
+| Best for       | Applications sensitive to downtime, quick "go/no-go" decisions                 | Risk-averse releases, A/B testing, user behavior monitoring, unknown impatcs |

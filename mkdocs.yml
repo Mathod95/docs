@@ -33,6 +33,8 @@ nav:
       - Packages: 
           - linux/packages/index.md
           - ZSH: linux/packages/zsh/zsh.md
+  - RUST:
+    - rust/index.md
   - AWESOME: awesome.md
   - BLOG: # https://squidfunk.github.io/mkdocs-material/plugins/blog/#config.blog_dir-documentation--blog
     - blog/index.md
@@ -139,6 +141,7 @@ plugins:
       branch: main
   #    token: !ENV ["MKDOCS_GIT_COMMITTERS_TOKEN"]
   #- drawio-exporter              # https://github.com/LukeCarrier/mkdocs-drawio-exporter
+  - excalidraw                    # https://github.com/qdeli187/mkdocs-excalidraw | https://qdeli187.github.io/mkdocs-excalidraw/
   - include-markdown              # https://github.com/mondeja/mkdocs-include-markdown-plugin
   - glightbox                     # https://github.com/blueswen/mkdocs-glightbox
   - toggle-sidebar:               # https://github.com/six-two/mkdocs-toggle-sidebar-plugin

@@ -38,6 +38,8 @@ nav:
   - AWESOME: awesome.md
   - BLOG: # https://squidfunk.github.io/mkdocs-material/plugins/blog/#config.blog_dir-documentation--blog
     - blog/index.md
+  - BOOKMARKS:
+    - bookmarks/index.md
   - TAGS: tags.md
   - GLOSSAIRE: glosarry.md
   - CONTACT: aboutme/index.md
@@ -131,7 +133,11 @@ plugins:
   - search:
       lang: fr
   #- social                        # https://squidfunk.github.io/mkdocs-material/setup/setting-up-social-cards/
-  - blog
+  #- blog
+  - blog:
+      blog_dir: blog
+  - blog:
+      blog_dir: bookmarks
   - tags
   - git-revision-date-localized:  # https://github.com/timvink/mkdocs-git-revision-date-localized-plugin
       enable_creation_date: true

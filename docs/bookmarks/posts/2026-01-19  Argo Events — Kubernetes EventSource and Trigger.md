@@ -2,13 +2,16 @@
 title: "Argo Events — Kubernetes EventSource and Trigger"
 date: 2026-01-19
 categories:
-  - "uncategorized"
+  - Argo Events
 tags:
-  - "untagged"
+  - Argo Events
+  - EventSource
+  - Trigger
 source: "https://medium.chuklee.com/argo-events-kubernetes-eventsource-and-trigger-0dd6a2459b1d"
 author:
   - "[[Chuk Lee]]"
 ---
+
 <!-- more -->
 
 [Sitemap](https://medium.chuklee.com/sitemap/sitemap.xml)

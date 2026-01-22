@@ -2,9 +2,13 @@
 title: "Argo Events — S3 EventSource and Argo Workflow Trigger"
 date: 2026-01-19
 categories:
-  - "uncategorized"
+  - Argo Events
 tags:
-  - "untagged"
+  - Argo Events
+  - Argo Workflow
+  - EventSource
+  - Workflow
+  - S3
 source: "https://medium.chuklee.com/argo-events-s3-eventsource-and-argo-workflow-trigger-4b236092ff4c"
 author:
   - "[[Chuk Lee]]"

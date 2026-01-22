@@ -12,4 +12,8 @@ Dernière phase fin de phase au tours de l’adversaire
 
 ![Rules](../../assets/images/rust/dcb.excalidraw)
 
+
+![](../../assets/images/rust/Board.svg)
+![Rules](../../assets/images/rust/board.excalidraw)
+
 ![](../../assets/images/rust/Collection.svg)

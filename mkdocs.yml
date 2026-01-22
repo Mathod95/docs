@@ -142,9 +142,9 @@ plugins:
   - git-revision-date-localized:  # https://github.com/timvink/mkdocs-git-revision-date-localized-plugin
       enable_creation_date: true
       enable_git_follow: true
-  - git-committers:               # https://github.com/byrnereese/mkdocs-git-committers-plugin
-      repository: Mathod95/docs
-      branch: main
+  #- git-committers:               # https://github.com/byrnereese/mkdocs-git-committers-plugin
+  #    repository: Mathod95/docs
+  #    branch: main
   #    token: !ENV ["MKDOCS_GIT_COMMITTERS_TOKEN"]
   #- drawio-exporter              # https://github.com/LukeCarrier/mkdocs-drawio-exporter
   - excalidraw                    # https://github.com/qdeli187/mkdocs-excalidraw | https://qdeli187.github.io/mkdocs-excalidraw/

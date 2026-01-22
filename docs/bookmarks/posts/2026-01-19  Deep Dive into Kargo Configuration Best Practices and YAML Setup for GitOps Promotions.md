@@ -2,9 +2,9 @@
 title: "Deep Dive into Kargo Configuration: Best Practices and YAML Setup for GitOps Promotions"
 date: 2026-01-19
 categories:
-  - "uncategorized"
+  - Kargo
 tags:
-  - "untagged"
+  - Kargo
 source: "https://medium.com/@DynamoDevOps/deep-dive-into-kargo-configuration-best-practices-and-yaml-setup-for-gitops-promotions-b8afce83811a"
 author:
   - "[[DevOpsDynamo]]"

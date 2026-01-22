@@ -2,9 +2,11 @@
 title: "Argo Events — Event Bus and Webhook"
 date: 2026-01-19
 categories:
-  - "uncategorized"
+  - Argo Events
 tags:
-  - "untagged"
+  - Argo Events
+  - EventBus
+  - Webhook
 source: "https://medium.chuklee.com/argo-events-event-bus-and-webhook-ac34e5714209"
 author:
   - "[[Chuk Lee]]"

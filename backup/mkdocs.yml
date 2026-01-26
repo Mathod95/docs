@@ -1,0 +1,221 @@
+site_name: Mathod
+site_url: https://blog.mathod.fr
+repo_url: https://github.com/Mathod95/docs
+repo_name: Mathod95/docs
+edit_uri: edit/main/docs/
+
+nav:
+  - HOME: index.md
+  - KUBERNETES: kubernetes/index.md
+  - ARGO: 
+    - argo/index.md
+    - CD: 
+      - argo/cd/index.md
+      - AutoPilot: argo/cd/argo-cd-autopilot.md
+    - WORKFLOWS: argo/workflows/index.md
+    - ROLLOUTS: argo/rollouts/index.md
+    - EVENTS: argo/events/index.md
+  - CROSSPLANE: 
+    - crossplane/index.md
+    - AWS:
+      - S3: crossplane/aws/s3.md
+      - Organization: crossplane/aws/organization.md
+  - APPS:
+    - Helm:
+      - Wrapper: apps/helm/wrapper.md
+      - Cheatsheet: apps/helm/helm-cheatsheet.md
+    - Kind:
+      - Cheatsheet: apps/kind/kind-cheatsheet.md
+  - INFRA:
+    - infra.md
+  - LINUX:
+    - Debian:
+      - Packages: 
+          - linux/packages/index.md
+          - ZSH: linux/packages/zsh/zsh.md
+  - RUST:
+    - rust/index.md
+  - AWESOME: awesome.md
+  - BLOG: # https://squidfunk.github.io/mkdocs-material/plugins/blog/#config.blog_dir-documentation--blog
+    - blog/index.md
+  - BOOKMARKS:
+    - bookmarks/index.md
+  - TAGS: tags.md
+  - GLOSSAIRE: glosarry.md
+  - CONTACT: aboutme/index.md
+  - syntax: syntax.md
+
+theme:
+  icon:
+    repo: fontawesome/brands/github
+  #font:
+  #  text: JetBrains Sans
+  #  code: JetBrains Code
+  name: material
+  language: fr
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/link
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off
+        name: Switch to system preference
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+    - navigation.instant.preview
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.indexes
+    - toc.follow
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - search.share
+    - header.autohide
+    - navigation.footer
+    #- content.action.view
+    - content.code.copy
+    - content.code.select
+    - content.code.annotate
+    - content.tooltips
+
+markdown_extensions:
+  - abbr # https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown/#abbreviations
+  - admonition
+  - attr_list
+  - def_list
+  - md_in_html
+  - toc:
+      toc_depth: 6
+      permalink: true
+  - meta
+  - tables
+  - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: embed
+          class: embed
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets: # https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown-extensions/#snippets
+      auto_append:
+        - includes/abbreviations.md
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+plugins:
+  - open-in-new-tab               # https://github.com/JakubAndrysek/mkdocs-open-in-new-tab
+  - search:
+      lang: fr
+  #- social                        # https://squidfunk.github.io/mkdocs-material/setup/setting-up-social-cards/
+  #- blog
+  - blog:
+      blog_dir: blog
+  - blog:
+      blog_dir: bookmarks
+  - tags
+  - git-revision-date-localized:  # https://github.com/timvink/mkdocs-git-revision-date-localized-plugin
+      enable_creation_date: true
+      enable_git_follow: true
+  #- git-committers:               # https://github.com/byrnereese/mkdocs-git-committers-plugin
+  #    repository: Mathod95/docs
+  #    branch: main
+  #    token: !ENV ["MKDOCS_GIT_COMMITTERS_TOKEN"]
+  #- drawio-exporter              # https://github.com/LukeCarrier/mkdocs-drawio-exporter
+  - excalidraw                    # https://github.com/qdeli187/mkdocs-excalidraw | https://qdeli187.github.io/mkdocs-excalidraw/
+  - include-markdown              # https://github.com/mondeja/mkdocs-include-markdown-plugin
+  - glightbox                     # https://github.com/blueswen/mkdocs-glightbox
+  - toggle-sidebar:               # https://github.com/six-two/mkdocs-toggle-sidebar-plugin
+      enabled: True
+      show_navigation_by_default: true
+      show_toc_by_default: true
+      theme: material
+      toggle_button: all
+  - user-defined-values:
+      keywords:
+        REGION:
+          placeholder: ex. eu-west-3
+        ACCOUNT_ID:
+          placeholder: ex. 12355224536
+        APPNAME:
+          placeholder: ex. app01
+        ENVIRONMENT:
+          placeholder: ex. production
+        COMPANY:
+          placeholder: ex. mathod.io
+        NAMESPACE:
+          placeholder: ex. default
+        TEAM:
+          placeholder: ex. infra
+        SERVICE:
+          placeholder: ex. api, webui, website, db, cache
+        GIT_PROVIDER:
+          placeholder: ex. github, gitlab, gitea, ...
+        USER:
+          placeholder: ex. mathod
+        NAMESPACE:
+          placeholder: ex. app01
+  #- link-embeds:                  # https://github.com/Aetherinox/mkdocs-link-embeds
+  #    enabled: true
+  #    name_default: "Untitled Link"
+  #    desc_default: "No description found"
+  #    image_default: "https://github.com/Aetherinox/mkdocs-link-embeds/assets/118329232/c0298d98-0910-4235-a88f-0c3e2f704ba7"
+  #    image_disabled: false
+  #    favicon_default: "https://github.com/Aetherinox/mkdocs-link-embeds/assets/118329232/b37da9c6-6f17-4c3f-9c94-c346a6f31bfa"
+  #    favicon_disabled: false
+  #    favicon_size: 25
+  #    target: "blank"
+  #    accent: "FFFFFF1A"
+  #    verbose: false
+
+extra:
+  analytics:
+    provider: google
+    property: G-FY4MN6NVXN
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Mathod95
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/mathod/
+
+extra_css:
+  - stylesheets/link-embeds.css
+  - stylesheets/style.css
+
+watch:
+  - includes
+
+
+# pip install mkdocs-git-committers-plugin
+# pip install mkdocs-git-revision-date-localized-plugin
+# pip install mkdocs-include-markdown-plugin
+# pip install mkdocs-glightbox
+# pip install mkdocs-toggle-sidebar-plugin
+# pip install mkdocs-open-in-new-tab
+# pip install -e plugins/

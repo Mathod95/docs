@@ -1,0 +1,279 @@
+# Project information
+site_name: Mathod
+site_url: https://zensical.mathod.fr
+site_author: Mathias FELIX
+site_description: DevOps Journey
+
+# Repository
+#repo_name: zensical/zensical
+#repo_url: https://github.com/zensical/zensical
+#edit_uri: https://github.com/zensical/docs/edit/master/docs/
+#docs_dir = "docs"
+#site_dir = "site"
+
+# Copyright
+copyright: "&copy; 2026 Mathias FELIX"
+
+# Page tree
+nav:
+  - HOME: index.md
+  - KUBERNETES:
+    - HOME: kubernetes/home.md
+    - CORE:
+      - Kube-Scheduler: kubernetes/kube-scheduler.md
+      - Kube-Proxy: kubernetes/kube-proxy.md
+    - RESOURCES:
+      - Namespaces:
+        - kubernetes/resources/namespaces/index.md
+      - Pods: 
+        - kubernetes/resources/pods/index.md
+        - Probes: kubernetes/resources/pods/probes.md
+        - Pod Disruption Budgets: kubernetes/podDisruptionBudgets.md
+        - Resources Limits: kubernetes/resourceLimits.md
+      - Services: 
+        - kubernetes/resources/services/index.md
+        - ClusterIP: kubernetes/resources/services/clusterIP.md
+      - Affinity: kubernetes/affinity.md
+      - PV & PVC: kubernetes/pv-pvc.md
+      - Deployments: kubernetes/deployments.md
+    - YAML:
+        - Annotations: kubernetes/yaml/annotations.md
+    - CheatSheet: kubernetes/cheatsheet.md
+      #- CHEATSHEET: kubernetes/cheatsheet.md
+    - LABS:
+        - LABS:
+            - index.md
+  - ARGO:
+    - HOME: argo/index.md
+    - ARGO CD: argo/argo_cd/index.md
+    - ARGO WORKFLOWS: argo/argo_workflows/index.md
+    - ARGO ROLLOUTS: argo/argo_rollouts/index.md
+    - ARGO EVENTS: argo/argo_events/index.md
+  - CROSSPLANE: crossplane/index.md
+  - AWS: 
+    - aws/index.md
+    - VPC:
+        - aws/VPC/index.md
+        - Networking Services:
+          - VPC Overview: aws/VPC/coreNetworkingServices/VPC_Overview.md
+          - Custom VPC Demo: aws/VPC/coreNetworkingServices/Custom_VPC_Demo.md
+          - Default VPC Demo: aws/VPC/coreNetworkingServices/Default VPC Demo.md
+          - Subnets: aws/VPC/coreNetworkingServices/Subnets.md
+          - Subnets Demo: aws/VPC/coreNetworkingServices/Subnets_Demo.md
+          - Routing in VPC: aws/VPC/coreNetworkingServices/Routing_in_VPC.md
+          - Route Table Demo: aws/VPC/coreNetworkingServices/Route_Table_Demo.md
+          - Internet Gateways VPC: aws/VPC/coreNetworkingServices/Internet_Gateways_VPC.md
+          - Internet Gateway Demo: aws/VPC/coreNetworkingServices/Internet_Gateway_Demo.md
+          - NAT Gateways VPC: aws/VPC/coreNetworkingServices/NAT_Gateways_VPC.md
+          - NAT Gateways VPC Demo: aws/VPC/coreNetworkingServices/NAT_Gateways_VPC_Demo.md
+          - Public vs Private Subnets: aws/VPC/coreNetworkingServices/Public_vs_Private_Subnets.md
+          - DNS VPC: aws/VPC/coreNetworkingServices/DNS_VPC.md
+          - DNS VPC Demo: aws/VPC/coreNetworkingServices/DNS_VPC_Demo.md
+          - Elastic IP: aws/VPC/coreNetworkingServices/Elastic_IP.md
+          - Elastic IP Demo: aws/VPC/coreNetworkingServices/Elastic_IP_Demo.md
+          - Security Groups NACLs: aws/VPC/coreNetworkingServices/Security_Groups_NACLs.md
+          - Security Groups Demo: aws/VPC/coreNetworkingServices/Security_Groups_Demo.md
+          - NACLs Demo: aws/VPC/coreNetworkingServices/NACLs_Demo.md
+          - Load Balancers: aws/VPC/coreNetworkingServices/Load_Balancers.md
+          - Load Balancers Demo: aws/VPC/coreNetworkingServices/Load_Balancers_Demo.md
+          - Route 53: aws/VPC/coreNetworkingServices/Route_53.md
+          - Route 53 Demo: aws/VPC/coreNetworkingServices/Route_53_Demo.md
+        - Transit Networks:
+          - VPN: aws/VPC/transitNetworks/VPN.md
+          - Direct Connect: aws/VPC/transitNetworks/Direct_Connect.md
+          - VPC Peering: aws/VPC/transitNetworks/VPC_Peering.md
+          - VPC Peering Demo: aws/VPC/transitNetworks/VPC_Peering_Demo.md
+          - Transit Gateway: aws/VPC/transitNetworks/Transit_Gateway.md
+          - Privatelink: aws/VPC/transitNetworks/Privatelink.md
+        - Edge Networks:
+          - CloudFront: aws/VPC/edgeNetworks/CloudFront.md
+          - CloudFront Demo: aws/VPC/edgeNetworks/CloudFront_Demo.md
+          - Cloudfront and LambdaEdge: aws/VPC/edgeNetworks/Cloudfront_and_LambdaEdge.md
+          - Global Accelerator: aws/VPC/edgeNetworks/Global_Accelerator.md
+    - IAM:
+        - aws/IAM/index.md
+    - EKS:
+      - aws/EKS/index.md
+      - EKS Fundamentals: 
+        - aws/EKS/index.md
+        - What is EKS: index.md
+        - Common Use Cases: index.md
+        - Architecture: index.md
+        - Deployment Options: index.md
+        - Tools needed for EKS: index.md
+        - Networking: index.md
+        - Authentication: index.md
+      - EKS Networking: 
+        - aws/EKS/index.md
+      - EKS Storage: 
+        - aws/EKS/index.md
+  - APPS: index.md
+  - INFRA: index.md
+  - LINUX: index.md
+  - RUST: rust/index.md
+  - AWESOME: awesome.md
+#  - BLOG: index.md
+  - TAGS: index.md
+  - GLOSSAIRE: /others/contact.md
+  - CONTACT: contact.md
+  - SYNTAX: /others/syntax.md
+
+# Configuration
+theme:
+  variant: modern #classic/modern
+#  name: modern            # material sur l'ancien site
+  name: material
+#  custom_dir: overrides
+  language: fr
+  #font:
+  #  text: JetBrains Sans
+  #  code: JetBrains Code
+  features:
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+    - navigation.tracking
+    - navigation.tabs
+    #- navigation.tabs.sticky
+    - navigation.sections  # Activer sur Materials
+    #- navigation.expand    # Activer sur Materials
+    #- navigation.path      # Activer sur Materials
+    - toc.follow
+    #- toc.integrate # https://zensical.org/docs/setup/navigation/#navigation-integration | Add ToC inside the navigation menu
+    - search.highlight
+#    - announce.dismiss
+#    - content.action.edit
+    - content.code.annotate
+    - content.code.copy
+#    - content.code.select
+#    - content.footnote.tooltips
+#    - content.tabs.link
+#    - navigation.instant.preview
+    - navigation.indexes
+#    - navigation.top
+#    - search.suggest
+#    - search.share
+#    - header.autohide
+#    - navigation.footer
+#    - content.action.view
+    - content.tooltips
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/link
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/toggle-switch-off
+        name: Switch to system preference
+#  favicon: assets/zensical.png
+#  logo: assets/zensical.svg
+  icon:
+    repo: fontawesome/brands/github
+    tag:
+      default: lucide/hash
+      html: fontawesome/brands/html5
+      js: fontawesome/brands/js
+
+# extra
+extra:
+  tags:
+    HTML5: html
+    JavaScript: js
+  status:
+    draft: Draft
+    new: Recently added
+    deprecated: Deprecated
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Mathod95
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/mathod/
+
+extra_css:
+  - assets/stylesheets/link-embeds.css
+  - assets/stylesheets/style.css
+
+#plugins:
+#  - open-in-new-tab               # https://github.com/JakubAndrysek/mkdocs-open-in-new-tab
+#  - search:
+#      lang: fr
+#  - social                        # https://squidfunk.github.io/mkdocs-material/setup/setting-up-social-cards/
+#  - blog
+#  - blog:
+#      blog_dir: blog
+#  - blog:
+#      blog_dir: bookmarks
+#  - tags
+#  - git-revision-date-localized:  # https://github.com/timvink/mkdocs-git-revision-date-localized-plugin
+#  - git-committers:               # https://github.com/byrnereese/mkdocs-git-committers-plugin
+#  - drawio-exporter              # https://github.com/LukeCarrier/mkdocs-drawio-exporter
+#  - excalidraw                    # https://github.com/qdeli187/mkdocs-excalidraw | https://qdeli187.github.io/mkdocs-excalidraw/
+#  - include-markdown              # https://github.com/mondeja/mkdocs-include-markdown-plugin
+#  - glightbox                     # https://github.com/blueswen/mkdocs-glightbox
+#  - toggle-sidebar:               # https://github.com/six-two/mkdocs-toggle-sidebar-plugin
+#  - user-defined-values:
+#  - link-embeds:                  # https://github.com/Aetherinox/mkdocs-link-embeds
+
+# Extensions
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      toc_depth: 6
+      permalink: ⚓︎
+  - tables
+  - pymdownx.blocks.caption
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.details
+#  - pymdownx.emoji:
+#      emoji_index: !!python/name:zensical.extensions.emoji.twemoji 
+#      emoji_generator: !!python/name:zensical.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  #- pymdownx.keys
+  #- pymdownx.smartsymbols
+  - pymdownx.snippets:
+      auto_append:
+        - includes/abbreviations.md
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+# ---
+# https://zensical.org/docs/setup/navigation/#instant-previews | Check how does it works!
+# https://zensical.org/docs/setup/navigation/#navigation-integration-without | Most of the configuration is here!
+# Announcement bar
+
+# pip install mkdocs-git-committers-plugin
+# pip install mkdocs-git-revision-date-localized-plugin
+# pip install mkdocs-include-markdown-plugin
+# pip install mkdocs-glightbox
+# pip install mkdocs-toggle-sidebar-plugin
+# pip install mkdocs-open-in-new-tab
+# pip install -e plugins/

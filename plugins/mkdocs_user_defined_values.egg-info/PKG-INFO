@@ -1,5 +1,0 @@
-Metadata-Version: 2.4
-Name: mkdocs-user-defined-values
-Version: 0.1.0
-Requires-Dist: mkdocs>=1.4
-Dynamic: requires-dist

@@ -1,4 +1,5 @@
 *[HTML]: Hyper Text Markup Language
+*[YAML]: Yet Another Markup Language
 *[KIND]: Kubernetes IN Docker
 *[W3C]: World Wide Web Consortium
 *[K8S]: Shortened Kubernetes 

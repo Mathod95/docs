@@ -1,0 +1,130 @@
+site_name: Mathod
+site_url: https://docs.mathod.fr
+site_author: Mathias FELIX
+site_description: DevOps Journey
+copyright: "&copy; 2026 Mathias FELIX"
+
+repo_name: Mathod95/docs
+repo_url: https://github.com/Mathod95/docs
+#edit_uri: https://github.com/zensical/docs/edit/master/docs/
+docs_dir: docs
+site_dir: site
+
+nav:
+  - HOME: index.md
+  - APPLICATIONS:
+#    - index.md
+    - Backstage: index.md
+    - Cilium: index.md
+    - Crossplane: index.md
+    - Headlamp: index.md
+    - Helm: index.md
+    - Karpenter: index.md
+    - Keda: index.md
+    - Kyverno: index.md
+    - Metrics Servers: index.md
+    - OpenTelemetry: index.md
+    - Prometheus: index.md
+    - Reloader: index.md
+    - SealedSecrets: index.md
+  - OTHERS:
+    - AWESOME: others/awesome.md
+    - GLOSSAIRE: others/glossaire.md
+    - CONTACT: others/contact.md
+
+theme:
+  variant: modern #classic
+  #font:
+  #  text: JetBrains Sans
+  #  code: JetBrains Code
+  icon:
+      repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/link
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/toggle-switch-off
+        name: Switch to system preference
+  features:
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+    - navigation.tracking
+#    - navigation.tabs
+#    - navigation.tabs.sticky
+    - navigation.sections
+#    - navigation.expand
+#    - navigation.path
+    - navigation.prune
+    - navigation.indexes
+    - toc.follow
+#    - toc.integrate
+    - navigation.top
+    - search.highlight
+    - header.autohide
+#    - navigation.footer
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Mathod95
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/mathod/
+
+#extra_css:
+# - assets/stylesheets/extra.css
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+      toc_depth: 6
+  - tables
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.blocks.caption
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      pygments_lang_class: true
+      auto_title: true
+      line_spans: __span
+  - pymdownx.snippets:
+      auto_append:
+        - includes/abbreviations.md
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  

@@ -12,7 +12,26 @@ site_dir: site
 
 nav:
   - HOME: index.md
-  - KUBERNETES: index.md
+  - KUBERNETES: 
+    - kubernetes/index.md
+    - HELM: 
+      - kubernetes/helm/index.md
+      - Basics:
+        - kubernetes/helm/basics/01-What_is_Helm.md
+        - kubernetes/helm/basics/02-Installation_and_Configuration.md
+        - kubernetes/helm/basics/03-A_quick_note_about_Helm2_vs_Helm3.md
+        - kubernetes/helm/basics/04-Helm_Components.md
+        - kubernetes/helm/basics/05-Helm_charts.md
+        - kubernetes/helm/basics/06-Working_with_Helm_basics.md
+        - kubernetes/helm/basics/07-Customizing_chart_parameters.md
+        - kubernetes/helm/basics/08-Lifecycle_management_with_Helm.md
+    - KUSTOMIZE: kubernetes/kustomize/index.md
+  - ARGO:
+    - index.md
+    - Argo CD: index.md
+    - Argo Rollouts: index.md
+    - Argo Workflows: index.md
+    - Argo Events: index.md
   - CLOUD PROVIDERS: index.md
   - APPLICATIONS:
     - index.md
@@ -20,7 +39,6 @@ nav:
     - Cilium: applications/cilium/index.md
     - Crossplane: applications/crossplane/index.md
     - Headlamp: applications/headlamp/index.md
-    - Helm: applications/helm/index.md
     - Karpenter: applications/karpenter/index.md
     - Keda: applications/keda/index.md
     - Kyverno: applications/kyverno/index.md
@@ -29,6 +47,8 @@ nav:
     - Prometheus: applications/prometheus/index.md
     - Reloader: applications/reloader/index.md
     - SealedSecrets: applications/sealedSecrets/index.md
+  - DEVOPS:
+    - CostOptimization: index.md
   - OTHERS:
     - AWESOME: others/awesome.md
     - GLOSSAIRE: others/glossaire.md

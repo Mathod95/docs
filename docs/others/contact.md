@@ -1,6 +1,6 @@
 ---
 icon: lucide/contact
-title: ABOUT ME
+title: CONTACT
 hide:
   - toc
 #  - navigation

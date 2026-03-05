@@ -1,5 +1,6 @@
 ---
 icon: lucide/github
+title: AWESOME
 hide:
   - tags
   - toc

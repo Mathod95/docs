@@ -1,5 +1,6 @@
 ---
 icon: lucide/book-a
+title: GLOSSAIRE
 ---
 
 ## A

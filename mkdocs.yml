@@ -12,21 +12,23 @@ site_dir: site
 
 nav:
   - HOME: index.md
+  - KUBERNETES: index.md
+  - CLOUD PROVIDERS: index.md
   - APPLICATIONS:
-#    - index.md
-    - Backstage: index.md
+    - index.md
+    - Backstage: applications/backstage/index.md
     - Cilium: applications/cilium/index.md
-    - Crossplane: index.md
-    - Headlamp: index.md
-    - Helm: index.md
-    - Karpenter: index.md
-    - Keda: index.md
-    - Kyverno: index.md
-    - Metrics Servers: index.md
-    - OpenTelemetry: index.md
-    - Prometheus: index.md
-    - Reloader: index.md
-    - SealedSecrets: index.md
+    - Crossplane: applications/crossplane/index.md
+    - Headlamp: applications/headlamp/index.md
+    - Helm: applications/helm/index.md
+    - Karpenter: applications/karpenter/index.md
+    - Keda: applications/keda/index.md
+    - Kyverno: applications/kyverno/index.md
+    - Metrics Servers: applications/metrics-servers/index.md
+    - OpenTelemetry: applications/openTelemetry/index.md
+    - Prometheus: applications/prometheus/index.md
+    - Reloader: applications/reloader/index.md
+    - SealedSecrets: applications/sealedSecrets/index.md
   - OTHERS:
     - AWESOME: others/awesome.md
     - GLOSSAIRE: others/glossaire.md
@@ -76,6 +78,7 @@ theme:
     - search.highlight
     - header.autohide
 #    - navigation.footer
+    - content.tooltips
 
 extra:
   generator: false
@@ -122,7 +125,11 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.keys
   - pymdownx.smartsymbols
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.tasklist:

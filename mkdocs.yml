@@ -15,7 +15,7 @@ nav:
   - APPLICATIONS:
 #    - index.md
     - Backstage: index.md
-    - Cilium: index.md
+    - Cilium: applications/cilium/index.md
     - Crossplane: index.md
     - Headlamp: index.md
     - Helm: index.md

@@ -1,6 +1,6 @@
 ---
 title: Crossplane
-status: draft
+#status: draft
 hide:
   - toc
 ---

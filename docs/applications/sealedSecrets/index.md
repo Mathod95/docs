@@ -1,6 +1,6 @@
 ---
 title: Sealed Secrets
-status: draft
+#status: draft
 hide:
   - toc
 ---

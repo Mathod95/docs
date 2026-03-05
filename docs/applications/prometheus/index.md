@@ -1,6 +1,6 @@
 ---
 title: Prometheus
-status: draft
+#status: draft
 hide:
   - toc
 ---

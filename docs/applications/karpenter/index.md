@@ -1,6 +1,6 @@
 ---
 title: Karpenter
-status: draft
+#status: draft
 hide:
   - toc
 ---
@@ -14,3 +14,4 @@ hide:
 ---
 !!! abstract "Links and References"
     - https://github.com/kubernetes-sigs/karpenter
+    - https://docs.aws.amazon.com/eks/latest/best-practices/karpenter.html

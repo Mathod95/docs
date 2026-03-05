@@ -1,6 +1,6 @@
 ---
 title: HeadLamp
-status: draft
+#status: draft
 hide:
   - toc
 ---

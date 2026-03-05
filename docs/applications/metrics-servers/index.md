@@ -1,6 +1,6 @@
 ---
 title: Metrics Server
-status: draft
+#status: draft
 hide:
   - toc
 ---

@@ -1,6 +1,6 @@
 ---
 title: Cilium
-status: draft
+#status: draft
 hide:
   - toc
 ---

@@ -1,6 +1,6 @@
 ---
 title: Kyverno
-status: draft
+#status: draft
 hide:
   - toc
 ---

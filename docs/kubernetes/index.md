@@ -1,8 +1,8 @@
 ---
 title: Kubernetes
 #status: draft
-hide:
-  - toc
+#hide:
+#  - toc
 ---
 
 <p align="center">
@@ -19,36 +19,80 @@ hide:
     ### Introduction
     - [ ] Course Introduction
     - [ ] Certification
+
+    ### Core Concepts
+    - [ ] Core Concepts Section Introduction
+    - [ ] Cluster Architecture
+    - [ ] Docker vs ContainerD
+    - [ ] A note on Docker Deprecation
+    - [ ] ETCD for Beginners
+    - [ ] ETCD in Kubernetes
+    - [ ] Kube API Server
+    - [ ] Kube Controller Manager
+    - [ ] Kube Scheduler
+    - [ ] Kubelet
+    - [ ] Kube Proxy
+    - [x] Pods
+    - [x] Pods with YAML
+    - [x] Demo Pods with YAML (useless)
+    - [x] Practice Test Introduction (useless)
+    - [x] Solution Pods optional (useless)
+    - [ ] ReplicaSets
+    - [ ] Deployments
+    - [ ] Services
+    - [ ] Services Cluster IP
+    - [ ] Services Loadbalancer
+
+
+
+    - [ ] A Quick Reminder
+    - [ ] Imperative vs Declarative
+    - [ ] Kubectl Apply Command
     
-    !!! note "HELM"
-        ### 2025 Updates Helm Basics
-        - [ ] 01 What is Helm
-        - [ ] 02 Installation and configuration
-        - [ ] 03 A quick note about Helm2 vs Helm3
-        - [ ] 04 Helm Components
-        - [ ] 05 Helm charts
-        - [ ] 06 Working with Helm basics
-        - [ ] 07 Customizing chart parameters
-        - [ ] 08 Lifecycle management with Helm
-    
-    ### 2025 Updates Kustomize Basics
-    - [ ] Common Transformers
-    - [ ] Components
-    - [ ] Different Types of Patches
-    - [ ] Image Transformers
-    - [ ] Page
-    - [ ] Kustomize ApiVersion Kind
-    - [ ] Kustomize Output
-    - [ ] Kustomize Problem Statement idealogy
-    - [ ] Kustomize vs Helm
-    - [ ] Managing Directories
-    - [ ] Managing Directories Demo
-    - [ ] Overlays
-    - [ ] Patches Dictionary
-    - [ ] Patches Intro
-    - [ ] Patches list
-    - [ ] Transformers Demo
-    - [ ] kustomization
+    - [ ] Namespaces
+    - [ ] Solution Deploymentoptional
+    - [ ] Solution Imperative Commands optional
+    - [ ] Solution Namespaces optional
+    - [ ] Solution ReplicaSets optional
+    - [ ] Solution Services optional
+
+    ### Scheduling
+    - [ ] 2025 Updates Admission Controllers
+    - [ ] 2025 Updates Solution Admission Controllers
+    - [ ] 2025 Updates Solution Validating and Mutating Admission Controllers
+    - [ ] 2025 Updates Validating and Mutating Admission Controllers
+    - [ ] Admission Controllers 2025 Updates
+    - [ ] Configuring Scheduler Profiles
+    - [ ] DaemonSets
+    - [ ] Labels and Selectors
+    - [ ] Manual Scheduling
+    - [ ] Multiple Schedulers
+    - [ ] Node Affinity
+    - [ ] Node Selectors
+    - [ ] Priority Classes
+    - [ ] Resource Limits
+    - [ ] Scheduling Section Introduction
+    - [ ] Solution Admission Controllers 2025 Updates
+    - [ ] Solution DaemonSets optional
+    - [ ] Solution Labels and Selectors
+    - [ ] Solution Manual Scheduling optional
+    - [ ] Solution Multiple Scheduler
+    - [ ] Solution Node Affinity Optional
+    - [ ] Solution Resource Limits
+    - [ ] Solution Static Pods Optional
+    - [ ] Solution Taints and Toleration Optional
+    - [ ] Solution Validating and Mutating Admission Controllers 2025 Updates
+    - [ ] Static Pods
+    - [ ] Taints and Tolerations
+    - [ ] Taints and Tolerations vs Node Affinity
+    - [ ] Validating and Mutating Admission Controllers 2025 Updates
+
+    ### Logging Monitoring
+    - [ ] Logging and Monitoring Section Introduction (Useless)
+    - [ ] Monitor Cluster Components
+    - [ ] Managing Application Logs
+    - [ ] Solution Logging Optional (Useless)
+    - [ ] Solution Monitor Cluster Components (Useless)
 
     ### Application Lifecycle Management
     - [ ] 2025 Updates Horizontal Pod Autoscaler HPA
@@ -87,37 +131,7 @@ hide:
     - [ ] Solution Cluster Upgrade Process
     - [ ] Solution OS Upgrades optional
 
-    ### Core Concepts
-    - [ ] A Quick Reminder
-    - [ ] A note on Docker Deprecation
-    - [ ] Cluster Architecture
-    - [ ] Core Concepts Section Introduction
-    - [ ] Demo Pods with YAML
-    - [ ] Deployments
-    - [ ] Docker vs ContainerD
-    - [ ] ETCD for Beginners
-    - [ ] ETCD in Kubernetes
-    - [ ] Imperative vs Declarative
-    - [ ] Kube API Server
-    - [ ] Kube Controller Manager
-    - [ ] Kube Proxy
-    - [ ] Kube Scheduler
-    - [ ] Kubectl Apply Command
-    - [ ] Kubelet
-    - [ ] Namespaces
-    - [ ] Pods
-    - [ ] Pods with YAML
-    - [ ] Practice Test Introduction
-    - [ ] ReplicaSets
-    - [ ] Services
-    - [ ] Services Cluster IP
-    - [ ] Services Loadbalancer
-    - [ ] Solution Deploymentoptional
-    - [ ] Solution Imperative Commands optional
-    - [ ] Solution Namespaces optional
-    - [ ] Solution Pods optional
-    - [ ] Solution ReplicaSets optional
-    - [ ] Solution Services optional
+
 
     ### Design and Install a Kubernetes Cluster
     - [ ] Choosing Kubernetes Infrastructure
@@ -159,12 +173,7 @@ hide:
     - [ ] Transformers Demo
     - [ ] kustomization
 
-    ### Logging Monitoring
-    - [ ] Logging and Monitoring Section Introduction
-    - [ ] Managing Application Logs
-    - [ ] Monitor Cluster Components
-    - [ ] Solution Logging Optional
-    - [ ] Solution Monitor Cluster Components
+
 
     ### Mock Exams
     - [ ] Mock Exam 1 Step by Step Solutions
@@ -205,36 +214,7 @@ hide:
     ### Other Topics
     - [ ] Advanced Kubectl Commands
 
-    ### Scheduling
-    - [ ] 2025 Updates Admission Controllers
-    - [ ] 2025 Updates Solution Admission Controllers
-    - [ ] 2025 Updates Solution Validating and Mutating Admission Controllers
-    - [ ] 2025 Updates Validating and Mutating Admission Controllers
-    - [ ] Admission Controllers 2025 Updates
-    - [ ] Configuring Scheduler Profiles
-    - [ ] DaemonSets
-    - [ ] Labels and Selectors
-    - [ ] Manual Scheduling
-    - [ ] Multiple Schedulers
-    - [ ] Node Affinity
-    - [ ] Node Selectors
-    - [ ] Priority Classes
-    - [ ] Resource Limits
-    - [ ] Scheduling Section Introduction
-    - [ ] Solution Admission Controllers 2025 Updates
-    - [ ] Solution DaemonSets optional
-    - [ ] Solution Labels and Selectors
-    - [ ] Solution Manual Scheduling optional
-    - [ ] Solution Multiple Scheduler
-    - [ ] Solution Node Affinity Optional
-    - [ ] Solution Resource Limits
-    - [ ] Solution Static Pods Optional
-    - [ ] Solution Taints and Toleration Optional
-    - [ ] Solution Validating and Mutating Admission Controllers 2025 Updates
-    - [ ] Static Pods
-    - [ ] Taints and Tolerations
-    - [ ] Taints and Tolerations vs Node Affinity
-    - [ ] Validating and Mutating Admission Controllers 2025 Updates
+
 
     ### Security
     - [ ] 2025 Updates Custom Controllers
@@ -294,6 +274,37 @@ hide:
     - [ ] Solutions Worker Node Failure
     - [ ] Troubleshooting Section Introduction
     - [ ] Worker Node Failure
+
+    !!! note "Helm"
+        ### 2025 Updates Helm Basics
+        - [ ] 01 What is Helm
+        - [ ] 02 Installation and configuration
+        - [ ] 03 A quick note about Helm2 vs Helm3
+        - [ ] 04 Helm Components
+        - [ ] 05 Helm charts
+        - [ ] 06 Working with Helm basics
+        - [ ] 07 Customizing chart parameters
+        - [ ] 08 Lifecycle management with Helm
+
+    !!! note "Kustomize"
+        ### 2025 Updates Kustomize Basics
+        - [ ] Common Transformers
+        - [ ] Components
+        - [ ] Different Types of Patches
+        - [ ] Image Transformers
+        - [ ] Page
+        - [ ] Kustomize ApiVersion Kind
+        - [ ] Kustomize Output
+        - [ ] Kustomize Problem Statement idealogy
+        - [ ] Kustomize vs Helm
+        - [ ] Managing Directories
+        - [ ] Managing Directories Demo
+        - [ ] Overlays
+        - [ ] Patches Dictionary
+        - [ ] Patches Intro
+        - [ ] Patches list
+        - [ ] Transformers Demo
+        - [ ] kustomization
 
 ---
 !!! abstract "Links and References"

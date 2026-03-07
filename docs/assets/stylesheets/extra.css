@@ -1,0 +1,23 @@
+/* Listes plus compactes */
+.md-typeset ul li,
+.md-typeset ol li {
+  margin-bottom: 0 !important;
+}
+
+/* NAVIGATION */
+
+/* Réduit l’espace entre les éléments du menu */
+.md-nav__item {
+  margin: 0 !important;
+}
+
+/* Réduit l’espace des sous-éléments dans la navigation */
+.md-nav__list .md-nav__list .md-nav__link {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+/* Si c’est la liste qui crée l’espace */
+.md-nav__list {
+  gap: 20 !important;
+}

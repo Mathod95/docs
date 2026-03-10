@@ -20,6 +20,8 @@ nav:
         - kubernetes/cka/01-CoreConcepts/xx_Pods.md
         - kubernetes/cka/01-CoreConcepts/xx_PodsinYAML.md
         - kubernetes/cka/01-CoreConcepts/xx_ReplicaSets.md
+        - kubernetes/cka/01-CoreConcepts/xx_Deployments.md
+        - kubernetes/cka/01-CoreConcepts/xx_Services.md
       - Logging & Monitoring:
         - kubernetes/cka/03-LoggingMonitoring/01_MonitorClusterComponents.md
         - kubernetes/cka/03-LoggingMonitoring/02_ManagingApplicationLogs.md
@@ -62,14 +64,25 @@ nav:
     - Argo Rollouts: index.md
     - Argo Workflows: index.md
     - Argo Events: index.md
-  - CLOUD PROVIDERS:
-    - AWS:
-      - cloudProviders/aws/index.md
-      - Services:
-        - EKS: 
-          - cloudProviders/aws/services/eks/index.md
-          - Fundamentals: index.md
-          - Networking: index.md
+#  - CLOUD PROVIDERS:
+#    - AWS:
+#      - cloudProviders/aws/index.md
+#      - Services:
+  - AWS Services:
+    - VPC:
+      - cloudProviders/aws/services/vpc/index.md
+      - Fundamentals:
+        - cloudProviders/aws/services/vpc/CoreNetworkingServices/01-vpc.md
+        - cloudProviders/aws/services/vpc/CoreNetworkingServices/02-subnet.md
+        - cloudProviders/aws/services/vpc/CoreNetworkingServices/03-routeTable.md
+        - cloudProviders/aws/services/vpc/CoreNetworkingServices/04-internetGateway.md
+        - cloudProviders/aws/services/vpc/CoreNetworkingServices/05-natGateway.md
+        - cloudProviders/aws/services/vpc/CoreNetworkingServices/06-eip.md
+        - cloudProviders/aws/services/vpc/CoreNetworkingServices/07-securityGroups&NACLs.md
+    - EKS: 
+      - cloudProviders/aws/services/eks/index.md
+      - Fundamentals: index.md
+      - Networking: index.md
   - APPLICATIONS:
     - index.md
     - Backstage: applications/backstage/index.md

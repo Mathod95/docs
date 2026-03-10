@@ -37,8 +37,8 @@ title: Kubernetes
     - [x] Demo Pods with YAML (useless)
     - [x] Practice Test Introduction (useless)
     - [x] Solution Pods optional (useless)
-    - [ ] ReplicaSets
-    - [ ] Deployments
+    - [x] ReplicaSets
+    - [x] Deployments
     - [ ] Services
     - [ ] Services Cluster IP
     - [ ] Services Loadbalancer

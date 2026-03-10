@@ -1,10 +1,9 @@
 ---
+title: HOME
 #icon: lucide/house
 hide:
   - toc
 ---
-
-# HOME
 
 <div class="grid cards" markdown>
 
@@ -12,7 +11,7 @@ hide:
 
     ---
 
-    ![](https://github.com/cncf/artwork/blob/main/projects/kubernetes/icon/color/kubernetes-icon-color.png?raw=true){ align=left width="50" }
+    ![](https://raw.githubusercontent.com/cncf/artwork/3e09078b447395d14093989e8718bf3b115b5101/projects/kubernetes/icon/color/kubernetes-icon-color.svg){ align=left width="50" }
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
@@ -32,7 +31,7 @@ hide:
 
     ---
 
-    ![](https://github.com/cncf/artwork/blob/main/projects/crossplane/icon/color/crossplane-icon-color.png?raw=true){ align=left width="50" }
+    ![](https://github.com/cncf/artwork/raw/main/projects/crossplane/icon/color/crossplane-icon-color.svg){ align=left width="50" }
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
@@ -42,7 +41,7 @@ hide:
 
     ---
 
-    ![](https://github.com/cncf/artwork/blob/main/projects/cilium/icon/color/cilium_icon-color.png?raw=true){ align=left width="50" }
+    ![](https://github.com/cncf/artwork/raw/main/projects/cilium/icon/color/cilium_icon-color.svg){ align=left width="50" }
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
@@ -62,7 +61,7 @@ hide:
 
     ---
 
-    ![](https://github.com/cncf/artwork/blob/main/projects/keda/icon/color/keda-icon-color.png?raw=true){ align=left width="50" }
+    ![](https://github.com/cncf/artwork/raw/main/projects/keda/icon/color/keda-icon-color.svg){ align=left width="50" }
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
@@ -92,7 +91,7 @@ hide:
 
     ---
 
-    ![](https://github.com/cncf/artwork/blob/main/projects/prometheus/icon/color/prometheus-icon-color.png?raw=true){ align=left width="50" }
+    ![](https://github.com/cncf/artwork/raw/main/projects/prometheus/icon/color/prometheus-icon-color.svg){ align=left width="50" }
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
@@ -122,7 +121,7 @@ hide:
 
     ---
 
-    ![](https://github.com/cncf/artwork/blob/main/projects/backstage/icon/color/backstage-icon-color.png?raw=true){ align=left width="50" }
+    ![](https://github.com/cncf/artwork/blob/main/projects/istio/icon/color/istio-icon-color.svg){ align=left width="50" }
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
@@ -132,8 +131,13 @@ hide:
 
     ---
 
-    ![](https://github.com/cncf/artwork/blob/main/projects/istio/icon/color/istio-icon-color.png?raw=true){ align=left width="50" }
+    ![](https://github.com/cncf/artwork/blob/main/projects/istio/icon/color/istio-icon-color.svg){ align=left width="50" }
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
     [:octicons-arrow-right-24: Getting started](#)
+</div>
+
+## Todo
+
+- [ ] Chaos Mesh

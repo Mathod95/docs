@@ -42,8 +42,12 @@ https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/
 ## Tags
 
 - **Name**: sample-vpc
+- **AppName:** app01
+- **Service**: Service
 - **Environment**: dev
 - **Project**: app01
+- **Kind**: bucket
+- **Account:**
 - **Owner**: your-name
 - **ManagedBy**: crossplane
 - **Company**: mathod
@@ -65,6 +69,8 @@ https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/
 - **Service**: networking
 - **Alerting**: critical
 - **TraceEnabled**: true
+- **createdBy:** mathod
+- **createdAt:** 2026-06-01
 
 ---
 

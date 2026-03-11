@@ -86,13 +86,13 @@ Let’s get started!
 - [ ] VPN
 - [ ] Direct Connect
 - [ ] VPC Peering
-- [ ] VPC Peering Demo
+    - [ ] VPC Peering Demo
 - [ ] Transit Gateway
 - [ ] Privatelink
 
 ## Edge Networks
 - [ ] CloudFront
-- [ ] CloudFront Demo
+    - [ ] CloudFront Demo
 - [ ] Cloudfront and LambdaEdge
 - [ ] Global Accelerator
 

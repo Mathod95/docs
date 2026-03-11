@@ -68,19 +68,27 @@ nav:
 #    - AWS:
 #      - cloudProviders/aws/index.md
 #      - Services:
-  - AWS Services:
-    - VPC:
-      - cloudProviders/aws/services/vpc/index.md
-      - Fundamentals:
-        - cloudProviders/aws/services/vpc/CoreNetworkingServices/01-vpc.md
-        - cloudProviders/aws/services/vpc/CoreNetworkingServices/02-subnet.md
-        - cloudProviders/aws/services/vpc/CoreNetworkingServices/03-routeTable.md
-        - cloudProviders/aws/services/vpc/CoreNetworkingServices/04-internetGateway.md
-        - cloudProviders/aws/services/vpc/CoreNetworkingServices/05-natGateway.md
-        - cloudProviders/aws/services/vpc/CoreNetworkingServices/06-eip.md
-        - cloudProviders/aws/services/vpc/CoreNetworkingServices/07-securityGroups&NACLs.md
-        - cloudProviders/aws/services/vpc/CoreNetworkingServices/08-loadbalancer.md
-        - cloudProviders/aws/services/vpc/CoreNetworkingServices/09-route53.md
+#  - AWS Services:
+#    - VPC:
+#      - cloudProviders/aws/services/vpc/index.md
+#      - Fundamentals:
+#        - cloudProviders/aws/services/vpc/01-fundamentals/01-vpc.md
+#        - cloudProviders/aws/services/vpc/01-fundamentals/02-subnet.md
+#        - cloudProviders/aws/services/vpc/01-fundamentals/03-routeTable.md
+#        - cloudProviders/aws/services/vpc/01-fundamentals/04-internetGateway.md
+#        - cloudProviders/aws/services/vpc/01-fundamentals/05-natGateway.md
+#        - cloudProviders/aws/services/vpc/01-fundamentals/06-eip.md
+#        - cloudProviders/aws/services/vpc/01-fundamentals/07-securityGroups&NACLs.md
+#        - cloudProviders/aws/services/vpc/01-fundamentals/08-loadbalancer.md
+#        - cloudProviders/aws/services/vpc/01-fundamentals/09-route53.md
+#      - Transit Networks:
+#        - cloudProviders/aws/services/vpc/02-transitNetworks/01-vpn.md
+#        - cloudProviders/aws/services/vpc/02-transitNetworks/02-directConnect.md
+#        - cloudProviders/aws/services/vpc/02-transitNetworks/03-vpcPeering.md
+#        - cloudProviders/aws/services/vpc/02-transitNetworks/04-transitGateway.md
+#        - cloudProviders/aws/services/vpc/02-transitNetworks/05-privateLink.md
+#      - Edge Networks:
+#        - cloudProviders/aws/services/vpc/03-edgeNetworks/01-cloudFront.md
     - EKS: 
       - cloudProviders/aws/services/eks/index.md
       - Fundamentals: index.md
@@ -89,7 +97,11 @@ nav:
     - index.md
     - Backstage: applications/backstage/index.md
     - Cilium: applications/cilium/index.md
-    - Crossplane: applications/crossplane/index.md
+    - Crossplane: 
+      - applications/crossplane/index.md
+      - Managed Resources: applications/crossplane/managedResources.md
+      - Crossview: applications/crossplane/crossview.md
+      - Crossplane Diff: applications/crossplane/crossplaneDiff.md
     - Headlamp: applications/headlamp/index.md
     - Karpenter: applications/karpenter/index.md
     - Keda: applications/keda/index.md
@@ -155,6 +167,7 @@ theme:
     - header.autohide
 #    - navigation.footer
     - content.tooltips
+    - content.code.annotate
 
 extra:
   generator: false

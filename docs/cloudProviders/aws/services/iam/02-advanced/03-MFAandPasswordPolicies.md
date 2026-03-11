@@ -1,5 +1,5 @@
 ---
-title:
+title: MFA and Password Policies
 status: draft
 sources: 
   - https://notes.kodekloud.com/docs/AWS-IAM/IAM-Policies-Federation-STS-and-MFA/MFA-and-Password-Policies/page
@@ -8,12 +8,6 @@ sourcesVideos:
   - https://learn.kodekloud.com/user/courses/aws-iam/module/8ffebc04-c194-403a-ac2e-2a2f0a6221ce/lesson/0d0f7d82-9b0f-46d9-a426-7ae39b8a597c
   - https://learn.kodekloud.com/user/courses/aws-iam/module/8ffebc04-c194-403a-ac2e-2a2f0a6221ce/lesson/375879f4-c1ae-4165-837d-69d3892ce0cd
 ---
-
-> ## Documentation Index
-> Fetch the complete documentation index at: https://notes.kodekloud.com/llms.txt
-> Use this file to discover all available pages before exploring further.
-
-# MFA and Password Policies
 
 > This guide explains enabling MFA and strong password policies in AWS IAM to enhance account security.
 

@@ -71,6 +71,26 @@ nav:
   - AWS Services:
     - IAM:
       - cloudProviders/aws/services/iam/index.md
+      - Fundamentals:
+        - cloudProviders/aws/services/iam/01-fundamentals/01-overview.md
+        - cloudProviders/aws/services/iam/01-fundamentals/02-account.md
+        - cloudProviders/aws/services/iam/01-fundamentals/03-user.md
+        - cloudProviders/aws/services/iam/01-fundamentals/xx-cli.md
+        - cloudProviders/aws/services/iam/01-fundamentals/04-group.md
+        - cloudProviders/aws/services/iam/01-fundamentals/05-policiesPermissions.md
+        - cloudProviders/aws/services/iam/01-fundamentals/06-resourceBasedPolicy.md
+        - cloudProviders/aws/services/iam/01-fundamentals/07-permissionBoundaries.md
+        - cloudProviders/aws/services/iam/01-fundamentals/08-role.md
+        - cloudProviders/aws/services/iam/01-fundamentals/09-sessionPolicies.md
+        - cloudProviders/aws/services/iam/01-fundamentals/10-cloudTrail.md
+      - Advanceds:
+        - cloudProviders/aws/services/iam/02-advanced/01-InlinevsManagedPolicy.md
+        - cloudProviders/aws/services/iam/02-advanced/02-IAMPolicyBuildingBlocks.md
+        - cloudProviders/aws/services/iam/02-advanced/03-MFAandPasswordPolicies.md
+        - cloudProviders/aws/services/iam/02-advanced/07-SecurityTokenServiceSTS.md
+        - cloudProviders/aws/services/iam/02-advanced/08-AWSResourceAccessManager.md
+        - cloudProviders/aws/services/iam/02-advanced/09-IdentityFederation.md
+        - cloudProviders/aws/services/iam/02-advanced/10-AWSPrivateLink.md
     - VPC:
       - cloudProviders/aws/services/vpc/index.md
       - Fundamentals:

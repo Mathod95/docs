@@ -79,6 +79,8 @@ nav:
         - cloudProviders/aws/services/vpc/CoreNetworkingServices/05-natGateway.md
         - cloudProviders/aws/services/vpc/CoreNetworkingServices/06-eip.md
         - cloudProviders/aws/services/vpc/CoreNetworkingServices/07-securityGroups&NACLs.md
+        - cloudProviders/aws/services/vpc/CoreNetworkingServices/08-loadbalancer.md
+        - cloudProviders/aws/services/vpc/CoreNetworkingServices/09-route53.md
     - EKS: 
       - cloudProviders/aws/services/eks/index.md
       - Fundamentals: index.md

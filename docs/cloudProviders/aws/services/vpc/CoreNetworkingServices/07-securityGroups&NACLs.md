@@ -10,8 +10,6 @@ sourcesVIdeos:
   - https://learn.kodekloud.com/user/courses/aws-networking-fundamentals/module/406e4440-01a6-45f6-ab45-e14485d333c3/lesson/2bde7f3d-33aa-440a-969f-48a5cbb571e4
 ---
 
-# 
-
 > This article explains the differences between AWS Security Groups and Network ACLs, including their configurations, behaviors, and best practices for securing a VPC.
 
 In this lesson, we’ll cover how firewalls work, then explore AWS implementations: Network ACLs (NACLs) and Security Groups. You’ll learn the differences between stateless and stateful filtering, how to configure rules, and best practices for securing your VPC.
@@ -107,7 +105,7 @@ Security Groups act as **stateful** firewalls for individual resources (EC2, RDS
 
 In the AWS Console, you define **Inbound** and **Outbound** rules separately. The fields are identical but apply in opposite directions.
 
-```plaintext  theme={null}
+```plaintext
 Inbound rules
 ┌─────────┬─────────┬───────────┬──────────────┬────────────┐
 │ Type    │ Protocol│ Port Range│ Source       │ Description│
@@ -267,7 +265,7 @@ Once **server-one** is in the **running** state, select it and open the **Securi
 
 Connect via SSH to confirm:
 
-```bash  theme={null}
+```bash
 ssh -i main.pem ec2-user@<Public-IP>
 ```
 
@@ -291,9 +289,9 @@ To illustrate rule enforcement, remove SSH access:
 
 Now SSH attempts will time out:
 
-```bash  theme={null}
+```bash
 ssh -i main.pem ec2-user@<Public-IP>
-# (connection times out)
+#(connection times out)
 ```
 
 ## Creating a Web Server Security Group
@@ -335,14 +333,14 @@ Now SSH will succeed again.
 
 SSH into **server-one** and run:
 
-```bash  theme={null}
+```bash
 sudo yum install nginx -y
 sudo systemctl start nginx
 ```
 
 Verify locally:
 
-```bash  theme={null}
+```bash
 curl localhost
 ```
 
@@ -376,14 +374,14 @@ Security Groups are stateful: return traffic is automatically allowed, even if o
 2. Refresh the Nginx page in your browser—it still loads.
 3. From the instance, try an outbound ping:
 
-```bash  theme={null}
+```bash
 ping 8.8.8.8
 # 100% packet loss
 ```
 
 4. Re-add “All traffic” outbound rule and retry:
 
-```bash  theme={null}
+```bash
 ping 8.8.8.8
 64 bytes from 8.8.8.8: icmp_seq=1 ttl=53 time=1.58 ms
 ```

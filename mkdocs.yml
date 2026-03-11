@@ -68,27 +68,31 @@ nav:
 #    - AWS:
 #      - cloudProviders/aws/index.md
 #      - Services:
-#  - AWS Services:
-#    - VPC:
-#      - cloudProviders/aws/services/vpc/index.md
-#      - Fundamentals:
-#        - cloudProviders/aws/services/vpc/01-fundamentals/01-vpc.md
-#        - cloudProviders/aws/services/vpc/01-fundamentals/02-subnet.md
-#        - cloudProviders/aws/services/vpc/01-fundamentals/03-routeTable.md
-#        - cloudProviders/aws/services/vpc/01-fundamentals/04-internetGateway.md
-#        - cloudProviders/aws/services/vpc/01-fundamentals/05-natGateway.md
-#        - cloudProviders/aws/services/vpc/01-fundamentals/06-eip.md
-#        - cloudProviders/aws/services/vpc/01-fundamentals/07-securityGroups&NACLs.md
-#        - cloudProviders/aws/services/vpc/01-fundamentals/08-loadbalancer.md
-#        - cloudProviders/aws/services/vpc/01-fundamentals/09-route53.md
-#      - Transit Networks:
-#        - cloudProviders/aws/services/vpc/02-transitNetworks/01-vpn.md
-#        - cloudProviders/aws/services/vpc/02-transitNetworks/02-directConnect.md
-#        - cloudProviders/aws/services/vpc/02-transitNetworks/03-vpcPeering.md
-#        - cloudProviders/aws/services/vpc/02-transitNetworks/04-transitGateway.md
-#        - cloudProviders/aws/services/vpc/02-transitNetworks/05-privateLink.md
-#      - Edge Networks:
-#        - cloudProviders/aws/services/vpc/03-edgeNetworks/01-cloudFront.md
+  - AWS Services:
+    - IAM:
+      - cloudProviders/aws/services/iam/index.md
+    - VPC:
+      - cloudProviders/aws/services/vpc/index.md
+      - Fundamentals:
+        - cloudProviders/aws/services/vpc/01-fundamentals/01-vpc.md
+        - cloudProviders/aws/services/vpc/01-fundamentals/02-subnet.md
+        - cloudProviders/aws/services/vpc/01-fundamentals/03-routeTable.md
+        - cloudProviders/aws/services/vpc/01-fundamentals/04-internetGateway.md
+        - cloudProviders/aws/services/vpc/01-fundamentals/05-natGateway.md
+        - cloudProviders/aws/services/vpc/01-fundamentals/06-eip.md
+        - cloudProviders/aws/services/vpc/01-fundamentals/07-securityGroups&NACLs.md
+        - cloudProviders/aws/services/vpc/01-fundamentals/08-loadbalancer.md
+        - cloudProviders/aws/services/vpc/01-fundamentals/09-route53.md
+      - Transit Networks:
+        - cloudProviders/aws/services/vpc/02-transitNetworks/01-vpn.md
+        - cloudProviders/aws/services/vpc/02-transitNetworks/02-directConnect.md
+        - cloudProviders/aws/services/vpc/02-transitNetworks/03-vpcPeering.md
+        - cloudProviders/aws/services/vpc/02-transitNetworks/04-transitGateway.md
+        - cloudProviders/aws/services/vpc/02-transitNetworks/05-privateLink.md
+      - Edge Networks:
+        - cloudProviders/aws/services/vpc/03-edgeNetworks/01-cloudFront.md
+        - cloudProviders/aws/services/vpc/03-edgeNetworks/02-lambdaEdge.md
+        - cloudProviders/aws/services/vpc/03-edgeNetworks/03-globalAccelerator.md
     - EKS: 
       - cloudProviders/aws/services/eks/index.md
       - Fundamentals: index.md

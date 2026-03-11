@@ -4,7 +4,7 @@ status: draft
 sources:
   - https://notes.kodekloud.com/docs/AWS-Networking-Fundamentals/Transit-Networks/VPC-Peering/page
 sourcesVideos:
-  -
+  - https://learn.kodekloud.com/user/courses/aws-networking-fundamentals/module/056227a0-6523-43a5-942e-4082adfaadf7/lesson/d389e18e-3934-4fa9-b14e-eabf8f1ca6af
 ---
 
 > VPC Peering establishes a private network connection between two VPCs, enabling communication as if on the same network.

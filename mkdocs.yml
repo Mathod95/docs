@@ -37,6 +37,11 @@ nav:
       - kubernetes/networkAdvanced/08.md
       - kubernetes/networkAdvanced/09.md
       - kubernetes/networkAdvanced/10.md
+    - Kubectl:
+      - kubernetes/kubectl/index.md
+      - Fundamentals: 
+        - kubernetes/kubectl/fundamentals/01-kubectlIntroduction.md
+        - kubernetes/kubectl/fundamentals/02-kubectlGet.md
     - Helm: 
       - kubernetes/helm/index.md
       - Basics:
@@ -70,9 +75,21 @@ nav:
       - Secret Config Generator: index.md
       - Other Commands: index.md
   - ARGO:
-    - index.md
-    - GitOps: index.md
-    - Argo CD: index.md
+    - argo/index.md
+    - GitOps: argo/gitops/index.md
+    - Argo CD: 
+      - argo/argocd/index.md
+      - Fundamentals:
+        - argo/argocd/01-fundamentals/01-whatWhyHowArgoCD.md
+        - argo/argocd/01-fundamentals/02-conceptsTerminology.md
+        - argo/argocd/01-fundamentals/03-features.md
+        - argo/argocd/01-fundamentals/04-architecture.md
+        - argo/argocd/01-fundamentals/05-installationOptions.md
+        - argo/argocd/01-fundamentals/06-argoCDInstallation.md
+        - argo/argocd/01-fundamentals/07-argoCDAppprojects.md
+        - argo/argocd/01-fundamentals/08-createApplicationusingUI.md
+        - argo/argocd/01-fundamentals/09-createApplicationusingCLI.md
+        - argo/argocd/01-fundamentals/10-createArgoCDProject.md
     - Argo Rollouts: index.md
     - Argo Workflows: index.md
     - Argo Events: index.md
@@ -149,6 +166,8 @@ nav:
     - SealedSecrets: applications/sealedSecrets/index.md
   - LINUX:
     - index.md
+    - Packages:
+      - linux/packages/k9s.md
     - Abbreviations: linux/abbreviations.md
   - DEVOPS:
     - CostOptimization: index.md

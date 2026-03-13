@@ -15,7 +15,7 @@ hide:
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
-    [:octicons-arrow-right-24: Getting started](#)
+    [:octicons-arrow-right-24: Getting started](../kubernetes/index.md)
 
 -   :material-apps:{ .lg .middle } __Argo__
 

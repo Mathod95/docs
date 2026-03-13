@@ -37,6 +37,16 @@ hide:
 
     [:octicons-arrow-right-24: Getting started](#)
 
+-   :material-apps:{ .lg .middle } __AWS__
+
+    ---
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/3840px-Amazon_Web_Services_Logo.svg.png){ align=left width="50" }
+
+    Lorem ipsum dolor sit amet, consectetur adipiscing
+
+    [:octicons-arrow-right-24: Getting started](#)
+
 -   :material-apps:{ .lg .middle } __Cilium__
 
     ---
@@ -141,3 +151,7 @@ hide:
 ## Todo
 
 - [ ] Chaos Mesh
+
+
+
+

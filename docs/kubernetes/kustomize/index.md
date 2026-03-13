@@ -1,5 +1,5 @@
 ---
-title: KUSTOMIZE
+title: Kustomize
 #status: draft
 hide:
   - toc

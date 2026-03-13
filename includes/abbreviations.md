@@ -1,3 +1,4 @@
+*[eBPF]: Extended Berkeley Packet Filter
 *[HTML]: Hyper Text Markup Language
 *[YAML]: Yet Another Markup Language
 *[KIND]: Kubernetes IN Docker
@@ -13,3 +14,4 @@
 *[API]: Application Programming Interface
 *[UI]: User Interface
 *[S3]: Simple Storage Service
+

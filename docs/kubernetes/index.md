@@ -254,17 +254,17 @@ title: Kubernetes
     - [ ] View Certificate Details
 
     ### Storage
-    - [ ] Container Storage Interface
-    - [ ] Introduction to Docker Storage
-    - [ ] Persistent Volume Claims
-    - [ ] Persistent Volumes
-    - [ ] Solution Persistent Volumes and Persistent Volume Claims optional
-    - [ ] Solution Storage Class
-    - [ ] Storage Class
     - [ ] Storage Section Introduction
+    - [ ] Introduction to Docker Storage
     - [ ] Storage in Docker
     - [ ] Volume Driver Plugins in Docker
+    - [ ] Container Storage Interface
     - [ ] Volumes
+    - [ ] Persistent Volumes
+    - [ ] Persistent Volume Claims
+          - [ ] Solution Persistent Volumes and Persistent Volume Claims optional
+    - [ ] Storage Class
+          - [ ] Solution Storage Class
 
     ### Troubleshooting
     - [ ] Application Failure
@@ -309,3 +309,4 @@ title: Kubernetes
 ---
 !!! abstract "Links and References"
     - https://github.com/kubernetes/kubernetes
+    - https://kubernetes.io/docs/home/

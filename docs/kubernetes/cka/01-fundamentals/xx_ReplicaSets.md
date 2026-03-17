@@ -130,7 +130,7 @@ apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
   name: app01-replicaset
-  labels:
+  labels: #(1)!
     app: app01
     type: front-end
 spec:
@@ -142,7 +142,7 @@ spec:
   template:
     metadata:
       name: app01-pod
-      labels:
+      labels: #(2)!
         app: app01
         type: front-end
     spec:
@@ -150,6 +150,9 @@ spec:
       - name: podinfo-container
         image: ghcr.io/stefanprodan/podinfo:latest
 ```
+
+1. Labels du replicaSet
+2. Labels des pods
 
 Create the ReplicaSet with:
 

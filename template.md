@@ -1,5 +1,6 @@
 ---
 title:
+#date:
 status:
 categories:
   -
@@ -11,6 +12,58 @@ source:
 
 > Helm is a package manager for Kubernetes that simplifies application deployment and management by treating related resources as a single application package.
 
+## Introduction
+Contexte + intérêt du sujet.  
+Phrase contenant ton mot-clé principal.
+
+### Objectifs
+  - découvrir comment organiser un article dans MkDocs Material
+  - utiliser une structure claire et hiérarchique
+  - faciliter la lecture grâce à des sections adaptées
+
+### Prérequis
+  - connaître les bases du Markdown
+  - utiliser MkDocs et le thème Material
+  - savoir lancer `mkdocs serve`
+
+### Ma configuration
+  - **OS :** Ubuntu 22.04  
+  - **MkDocs :** 1.6.x  
+  - **Theme Material :** 9.x  
+  - **Plugins :** blog, search  
+
+
+---
+
+## Title1
+
+### Title2
+
+#### Title3
+
+##### Title4
+
+###### Title5
+
+---
+
+## Résumé
+Utilisé pour récapituler les points principaux ou pour donner un aperçu rapide d'un sujet. Si tu veux simplement rappeler les informations essentielles.
+
+## Conclusion
+Utilisé pour tirer une conclusion finale, souvent après une réflexion ou une argumentation. Cela sert à clore un sujet et à donner une impression finale.
+
+### En rapport avec cet article
+
+!!! abstract ""
+
+    ## Links and References
+
+    - []()
+
+
+---
+
 ---
 title:
 status: draft
@@ -19,27 +72,3 @@ sources:
 sourcesVideos:
   - 
 ---
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-!!! abstract ""
-
-    ## Links and References
-
-    - []()

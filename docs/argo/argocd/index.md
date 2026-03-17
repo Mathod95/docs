@@ -140,4 +140,8 @@ We will discuss each concept with a demo followed by practical hands-on exercise
 
 ---
 !!! abstract "Links and References"
-    - https://github.com/argoproj/argo-cd
+    - [ArgoCD Official Repository](https://github.com/argoproj/argo-cd)
+    - [ArgoCD Official Docs](https://argo-cd.readthedocs.io/en/stable/)
+
+    - [Kubernetes Documentation](https://kubernetes.io/docs/)
+    - [GitOps Resources](https://www.weave.works/technologies/gitops/)

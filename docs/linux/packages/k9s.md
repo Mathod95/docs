@@ -6,7 +6,7 @@ hide:
 ---
 
 <p align="center">
-  <a href="https://github.com/derailed/k9sr">
+  <a href="https://github.com/derailed/k9s">
     <img src="https://opengraph.githubassets.com/Mathod/derailed/k9s" />
   </a>
 </p>

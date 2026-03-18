@@ -14,3 +14,4 @@ hide:
 ---
 !!! abstract "Links and References"
     - https://github.com/prometheus/prometheus
+    - [Prometheus Documentation](https://prometheus.io/docs/){target=_blank}

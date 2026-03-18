@@ -101,7 +101,7 @@ nav:
     - Argo Rollouts: index.md
     - Argo Workflows: index.md
     - Argo Events: index.md
-  - AWS Services:
+  - AWS SERVICES:
     - IAM:
       - cloudProviders/aws/services/iam/index.md
       - Fundamentals:
@@ -178,7 +178,12 @@ nav:
     - Kyverno: applications/kyverno/index.md
     - Metrics Servers: applications/metrics-servers/index.md
     - OpenTelemetry: applications/openTelemetry/index.md
-    - Prometheus: applications/prometheus/index.md
+    - Prometheus: 
+      - applications/prometheus/index.md
+      - Kubernetes Monitoring:
+        - applications/prometheus/monitoringKubernetes/02-installingHelmChart.md
+        - applications/prometheus/monitoringKubernetes/03-chartOverview.md
+        - applications/prometheus/monitoringKubernetes/04-conntectingToPrometheus.md
     - Reloader: applications/reloader/index.md
     - SealedSecrets: applications/sealedSecrets/index.md
   - LINUX:

@@ -1,4 +1,5 @@
 *[eBPF]: Extended Berkeley Packet Filter
+*[CIDR]: Classless Inter-Domain Routing
 *[HTML]: Hyper Text Markup Language
 *[YAML]: Yet Another Markup Language
 *[KIND]: Kubernetes IN Docker

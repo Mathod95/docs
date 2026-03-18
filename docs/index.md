@@ -15,7 +15,7 @@ hide:
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
-    [:octicons-arrow-right-24: Getting started](../kubernetes/index.md)
+    [:octicons-chevron-right-24: Learning Path](../kubernetes/index.md)
 
 -   :material-apps:{ .lg .middle } __Argo__
 
@@ -25,7 +25,7 @@ hide:
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
-    [:octicons-arrow-right-24: Getting started](#)
+    [:octicons-chevron-right-24: Learning Path](#)
 
 -   :material-apps:{ .lg .middle } __Crossplane__
 
@@ -35,7 +35,7 @@ hide:
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
-    [:octicons-arrow-right-24: Getting started](#)
+    [:octicons-chevron-right-24: Learning Path](#)
 
 -   :material-apps:{ .lg .middle } __AWS__
 
@@ -45,7 +45,7 @@ hide:
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
-    [:octicons-arrow-right-24: Getting started](#)
+    [:octicons-chevron-right-24: Learning Path](#)
 
 -   :material-apps:{ .lg .middle } __Cilium__
 
@@ -55,7 +55,7 @@ hide:
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
-    [:octicons-arrow-right-24: Getting started](#)
+    [:octicons-chevron-right-24: Learning Path](#)
 
 -   :material-apps:{ .lg .middle } __Karpenter__
 
@@ -65,7 +65,7 @@ hide:
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
-    [:octicons-arrow-right-24: Getting started](#)
+    [:octicons-chevron-right-24: Learning Path](#)
 
 -   :material-apps:{ .lg .middle } __Keda__
 
@@ -75,7 +75,7 @@ hide:
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
-    [:octicons-arrow-right-24: Getting started](#)
+    [:octicons-chevron-right-24: Learning Path](#)
 
 -   :material-apps:{ .lg .middle } __OpenTelemetry__
 
@@ -85,7 +85,7 @@ hide:
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
-    [:octicons-arrow-right-24: Getting started](#)
+    [:octicons-chevron-right-24: Learning Path](#)
 
 -   :material-apps:{ .lg .middle } __Helm__
 
@@ -95,7 +95,7 @@ hide:
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
-    [:octicons-arrow-right-24: Getting started](#)
+    [:octicons-chevron-right-24: Learning Path](#)
 
 -   :material-apps:{ .lg .middle } __Prometheus__
 
@@ -105,7 +105,7 @@ hide:
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
-    [:octicons-arrow-right-24: Getting started](#)
+    [:octicons-chevron-right-24: Learning Path](#)
 
 -   :material-apps:{ .lg .middle } __KubeScape__
 
@@ -115,7 +115,7 @@ hide:
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
-    [:octicons-arrow-right-24: Getting started](#)
+    [:octicons-chevron-right-24: Learning Path](#)
 
 -   :material-apps:{ .lg .middle } __Kyverno__
 
@@ -125,7 +125,7 @@ hide:
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
-    [:octicons-arrow-right-24: Getting started](#)
+    [:octicons-chevron-right-24: Learning Path](#)
 
 -   :material-apps:{ .lg .middle } __Backstage__
 
@@ -135,7 +135,7 @@ hide:
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
-    [:octicons-arrow-right-24: Getting started](#)
+    [:octicons-chevron-right-24: Learning Path](#)
 
 -   :material-apps:{ .lg .middle } __Istio__
 
@@ -145,7 +145,7 @@ hide:
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
-    [:octicons-arrow-right-24: Getting started](#)
+    [:octicons-chevron-right-24: Learning Path](#)
 </div>
 
 ## Todo

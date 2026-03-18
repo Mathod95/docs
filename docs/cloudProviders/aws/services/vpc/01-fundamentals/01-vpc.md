@@ -1,42 +1,49 @@
 ---
-title: VPC
+title: VPC Overview
 status: draft
 sources:
   - https://notes.kodekloud.com/docs/AWS-Networking-Fundamentals/Core-Networking-Services/VPC-Overview/page
+  - https://notes.kodekloud.com/docs/AWS-Solutions-Architect-Associate-Certification/Services-Networking/VPC-Overview/page#regional-isolation-and-vpc-deployment
 sourcesVideos:
   - https://learn.kodekloud.com/user/courses/aws-networking-fundamentals/module/406e4440-01a6-45f6-ab45-e14485d333c3/lesson/19a57528-02b5-4093-8418-feb2b8cb3dfd
+  - https://learn.kodekloud.com/user/courses/aws-solutions-architect-associate-certification/module/e03ffb87-3345-4fbb-9576-cb53d21d7a6a/lesson/a734115c-7980-4ff4-a86c-bda9435d7f2e
 todo: 
   - https://notes.kodekloud.com/docs/AWS-Networking-Fundamentals/Core-Networking-Services/Custom-VPC-Demo/page
   - https://notes.kodekloud.com/docs/AWS-Networking-Fundamentals/Core-Networking-Services/Default-VPC-Demo/page
 ---
 
-> A Virtual Private Cloud (VPC) is an isolated network segment within AWS for launching resources in a logically separated environment.
+> Cette page présente un aperçu de AWS Virtual Private Cloud (VPC) et explique ses fonctionnalités, ses configurations et ses différents types pour sécuriser le cloud networking.
 
-A Virtual Private Cloud (VPC) is your isolated network segment within AWS. It lets you launch AWS resources in a logically separated environment, complete with custom IP ranges, subnets, routing rules, and security controls—just like running your own data center without the physical infrastructure.
+Dans cette page, nous explorons en détail le concept de AWS Virtual Private Cloud (VPC), une pierre angulaire du networking sécurisé et isolé dans le cloud. Comprendre les VPCs est essentiel pour quiconque souhaite maîtriser le networking sur AWS, que ce soit pour préparer l’examen Solutions Architect ou gérer des services cloud en production.
 
-## What Is a VPC?
+## Qu'est-ce qu'un VPC ?
+Un VPC est une section isolée et sécurisée d'AWS qui vous permet de lancer des ressources (instances EC2, bases de données, etc.) dans un réseau virtuel entièrement défini par vos soins. Il garantit que les données d'un compte restent séparées des autres, même au sein d'une même infrastructure AWS, et permet de segmenter efficacement différentes applications.
+Au sein d'un VPC, vous contrôlez intégralement votre environnement réseau.
 
-A VPC is an isolated virtual network in AWS where you can launch resources such as EC2 instances. Within each VPC, you configure:
+**Vous pouvez configurer:**
 
-- IP address ranges using CIDR blocks
-- Subnets for grouping resources across Availability Zones
-- Route tables to control traffic flow
-- Security Groups (instance-level, stateful firewalls)
-- Network ACLs (subnet-level, stateless firewalls)
-- Gateways for Internet, VPC-to-VPC, or on-premises connectivity
+- Les plages d'adresses IP via des blocs CIDR
+- Les subnets pour regrouper vos ressources à travers plusieurs Availability Zones
+- Les route tables pour maîtriser le flux du trafic entre vos ressources
+- Les Security Groups — stateful firewalls appliqués au niveau des instances
+- Les Network ACLs — stateless firewalls appliqués au niveau des subnets
+- Les Gateways — pour les connexions Internet, les communications inter-VPC ou les connexions vers des infrastructures on-premises
 
-<Frame>
-  ![The image explains what a Virtual Private Cloud (VPC) is, highlighting components like subnetting, routing, and firewalls. It includes a network diagram and a list of features related to VPCs.](https://kodekloud.com/kk-media/image/upload/v1752863374/notes-assets/images/AWS-Networking-Fundamentals-VPC-Overview/vpc-network-diagram-subnetting-routing-firewalls.jpg)
-</Frame>
+![The image explains what a Virtual Private Cloud (VPC) is, highlighting components like subnetting, routing, and firewalls. It includes a network diagram and a list of features related to VPCs.](../../../../../assets/images/vpc/vpcOverview01.svg){ width="1000" }
 
-## Regional Isolation
+!!! note
+    La gestion de votre VPC dans AWS est similaire à celle d’un data center traditionnel avec des routers et des switches, mais la Console AWS simplifie et rationalise le processus.
 
-Each VPC exists entirely within a single AWS Region and cannot span multiple regions. By default, resources in VPC A (us-east-1) are isolated from resources in VPC B (us-east-2) unless you establish explicit connectivity.
+---
 
-<Frame>
-  ![The image illustrates AWS Cloud regions "us-east-1" and "us-east-2," each containing a separate VPC (Virtual Private Cloud). It highlights that a VPC is specific to a single region.](https://kodekloud.com/kk-media/image/upload/v1752863378/notes-assets/images/AWS-Networking-Fundamentals-VPC-Overview/aws-cloud-regions-vpc-illustration.jpg)
-</Frame>
+## Isolation régionale
 
+Chaque VPC est limité à une seule AWS Region et ne peut pas s’étendre sur plusieurs régions. Par défaut, les ressources de `vpc-1` (us-east-1) sont isolées de celles de `vpc-2` (eu-west-1), sauf si une connectivité explicite est configurée. Lors de la création d’un VPC, il faut spécifier sa AWS region, ce qui empêche toute communication inter-régions sans configuration spécifique.
+
+![The image illustrates AWS Cloud regions "us-east-1" and "eu-west-1" each containing a separate VPC (Virtual Private Cloud). It highlights that a VPC is specific to a single region.](../../../../../assets/images/vpc/vpcOverview02.svg){ width="1000" }
+
+---
+<!--
 ## VPC as a Network Boundary
 
 Out of the box, VPCs are completely isolated:
@@ -49,7 +56,9 @@ Out of the box, VPCs are completely isolated:
   You can attach an Internet Gateway to multiple public subnets, but each VPC supports only one Internet Gateway.
 </Callout>
 
-## IP Addressing: CIDR Blocks
+---
+-->
+## CIDR Blocks
 
 When creating a VPC, assign a primary IPv4 CIDR block between `/16` and `/28`:
 

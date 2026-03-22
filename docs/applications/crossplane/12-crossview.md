@@ -1,5 +1,5 @@
 ---
-icon: material/package
+icon: lucide/package
 title: Crossview
 status: draft
 hide:

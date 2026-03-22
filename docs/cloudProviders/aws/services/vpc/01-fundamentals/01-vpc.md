@@ -60,87 +60,92 @@ Out of the box, VPCs are completely isolated:
 -->
 ## CIDR Blocks
 
-When creating a VPC, assign a primary IPv4 CIDR block between `/16` and `/28`:
+Chaque VPC se voit attribuer une plage d’adresses IP via son CIDR block. Par exemple, un VPC avec un CIDR block 10.0.0.0/16 peut assigner n’importe quelle adresse IP de cette plage à ses ressources. Les tailles de bloc autorisées varient de /16 à /28.
 
-- Example: `192.168.0.0/16` (65,536 addresses)
-- Add secondary IPv4 CIDR blocks as needed
-- Enable IPv6 using a `/56` block (up to five per VPC, adjustable on request)
+En plus du primary CIDR block, vous pouvez activer un secondary IPv4 CIDR blocks ou ajouter jusqu’à cinq IPv6 CIDR blocks par VPC (chacun offrant un bloc /56), ce qui augmente la flexibilité et la scalabilité de votre configuration réseau.
 
-<Frame>
-  ![The image is a diagram explaining a Virtual Private Cloud (VPC) with a CIDR block of 192.168.0.0/16, including options for secondary IPv4 and IPv6 CIDR blocks.](https://kodekloud.com/kk-media/image/upload/v1752863379/notes-assets/images/AWS-Networking-Fundamentals-VPC-Overview/vpc-diagram-cidr-blocks-ipv4-ipv6.jpg)
-</Frame>
+![The image is a diagram explaining a Virtual Private Cloud (VPC) with a CIDR block of 10.0.0.0/16, including options for secondary IPv4 and IPv6 CIDR blocks.](../../../../../assets/images/vpc/vpcOverview03.svg){ width="1000" }
 
-<Callout icon="triangle-alert" color="#FF6B6B">
-  Plan your CIDR ranges carefully to avoid overlap with other VPCs or on-premises networks.
-</Callout>
+!!! warning
+    Planifiez vos CIDR ranges avec soin pour éviter tout overlapping avec d’autres VPCs ou les réseaux on-premises.
+
+---
+
+## Types de VPC
+
+Lorsque vous travaillez avec des VPCs, vous rencontrez généralement deux types:
+
+- Default VPC
+- Custom VPC
+
+### Default VPC
+
+Un default VPC est automatiquement créé par AWS lors de la création d’un nouveau compte. Chaque région dispose d’un default VPC, préconfiguré pour permettre une connectivité Internet immédiate pour vos instances. Cette configuration prête à l’emploi vous permet de déployer des serveurs sans avoir à gérer des configurations réseau complexes.
+
+### Custom VPC
+
+Les Custom VPCs sont créés et entièrement configurés par vous. Lors de leur mise en place, vous définissez:
+
+- le CIDR block
+- les subnets et leur adressage IP
+- les configurations de routing
+- les règles d’accès réseau via les security groups et les NACLs
+
+![The image is a diagram showing two types of Virtual Private Clouds (VPCs) within a region: a default VPC and a custom VPC, both represented in separate boxes.](../../../../../assets/images/vpc/vpcOverview04.svg){ width="1000" }
+
+---
 
 ## Default vs. Custom VPCs
 
 AWS offers two VPC types:
 
-| Feature           | Default VPC                                      | Custom VPC                             |
-| ----------------- | ------------------------------------------------ | -------------------------------------- |
-| Creation          | Automatically created in every region            | Manually created by you                |
-| CIDR block        | `172.31.0.0/16`                                  | You choose (`/16`–`/28` for IPv4)      |
-| Subnets           | One public `/20` subnet per AZ                   | Public/private subnets per your design |
-| Internet Gateway  | Attached with a 0.0.0.0/0 route by default       | Requires manual attachment & routing   |
-| Security Controls | Default SG and NACL allow all traffic by default | Configure SGs & NACLs from scratch     |
+| Feature               | Default VPC                                      | Custom VPC                             | Description                                                              |
+|-----------------------| ------------------------------------------------ | -------------------------------------- | ------------------------------------------------------------------------ |
+| **Creation**          | Automatically created in every region            | Manually created by you                |                                                                          |
+| **CIDR block**        | `172.31.0.0/16`                                  | You choose (`/16`–`/28` for IPv4)      | Provides 65,536 IP addresses                                             |
+| **Subnets**           | One public subnet `/20` subnet per AZ            | Public/private subnets per your design | For example, one zone may have 172.31.16.0/20 and another 172.31.32.0/20 |
+| **Internet Gateway**  | Attached with a 0.0.0.0/0 route by default       | Requires manual attachment & routing   | Enables internet connectivity for instances                              |
+| **Security Groups**   | Configured to allow outbound traffic             | Configure SGs from scratch             | Protects instances by default                                            |
+| **NACL**              | Allows both inbound and outbound traffic         | Configure NACLs from scratch           | Provides an additional layer of security                                 |
 
-<Frame>
-  ![The image is a diagram illustrating multiple regions, each containing a Virtual Private Cloud (VPC) labeled as "Default."](https://kodekloud.com/kk-media/image/upload/v1752863380/notes-assets/images/AWS-Networking-Fundamentals-VPC-Overview/vpc-default-regions-diagram.jpg)
-</Frame>
+!!! info
+    AWS configure un default VPC dans chaque région. Cette configuration est conçue pour vous permettre de démarrer rapidement, mais pour des environnements de production, il est recommandé de créer des custom VPCs adaptés à vos besoins spécifiques en matière de sécurité et de performance.
 
-<Frame>
-  ![The image is a diagram showing two types of Virtual Private Clouds (VPCs) within a region: a default VPC and a custom VPC, both represented in separate boxes.](https://kodekloud.com/kk-media/image/upload/v1752863381/notes-assets/images/AWS-Networking-Fundamentals-VPC-Overview/vpc-diagram-default-custom-boxes.jpg)
-</Frame>
-
-<Frame>
-  ![The image illustrates a comparison between a default and a custom Virtual Private Cloud (VPC) within a region, featuring icons and labels for each type.](https://kodekloud.com/kk-media/image/upload/v1752863383/notes-assets/images/AWS-Networking-Fundamentals-VPC-Overview/vpc-comparison-default-custom-illustration.jpg)
-</Frame>
-
-## Default VPC Configuration
-
-Every AWS Region includes one Default VPC with these built-in settings:
-
-* **CIDR block**: `172.31.0.0/16` (65,536 IPs)
-* **Subnets**: One default `/20` subnet per AZ
-  * e.g., `172.31.16.0/20`, `172.31.32.0/20`, etc.
-* **Internet Gateway**: Attached by default with a `0.0.0.0/0` route
-* **Security Group**: Default SG allowing all outbound traffic
-* **Network ACL**: Default NACL allowing all inbound and outbound traffic
-
-<Frame>
-  ![The image illustrates a default VPC setup, showing an internet gateway attached to the VPC, routes directing all traffic to the gateway, and public subnets in two availability zones accessible from the internet.](https://kodekloud.com/kk-media/image/upload/v1752863384/notes-assets/images/AWS-Networking-Fundamentals-VPC-Overview/default-vpc-setup-internet-gateway.jpg)
-</Frame>
-
-
-## Summary
-
-* VPCs isolate your AWS resources within a single Region.
-* Define IP ranges with CIDR blocks (IPv4 `/16`–`/28`, optional IPv6 `/56`).
-* Default VPCs are pre-configured for fast deployment; Custom VPCs give you full control.
-* Default VPCs use `172.31.0.0/16`, provide one `/20` subnet per AZ, and include Internet access by default.
-* Security Groups and NACLs enforce instance- and subnet-level traffic rules, respectively.
-
-## Links and References
-
-* [AWS VPC Documentation](https://docs.aws.amazon.com/vpc/)
-* [AWS Networking Services](https://aws.amazon.com/products/networking/)
+![The image illustrates a default VPC setup, showing an internet gateway attached to the VPC, routes directing all traffic to the gateway, and public subnets in two availability zones accessible from the internet.](../../../../../assets/images/vpc/vpcOverview05.svg){ width="1000" }
 
 ---
 
-## Key Takeaways
+## Résumé
 
-- VPC isolate computing resources from other computing resources available in the cloud.
-- VPC are isolated to region.
-- VPCs isolate your AWS resources within a single Region.
-- VPC CIDR block defines the IP addresses a VPC can use. Define IP rangesN with CIDR blocks (IPv4 `/16`–`/28`, optional IPv6 `/56`).
-- VPC can have optional secondary IPV4 CIDR block as well as IPV6 CIDR block.
-- Every region has a Default VPC with default subnetsN, Security Group and NACLs
-    - Default CIDR block is 172.31.0.0/16
-    - VPC and its subnets have outbound access to the internet by default
-    - 1 default subnet in each Availability Zone
-    - The Security Groups in default VPC allow outbound traffic and the NACLs are open in both inbound and outbound direction
-- Default VPCs are pre-configured for fast deployment; Custom VPCs give you full control.
-- Default VPCs use `172.31.0.0/16`, provide one `/20` subnet per AZ, and include Internet access by default.
-- Security Groups and NACLs enforce instance- and subnet-level traffic rules, respectively.
+- Les **VPCs** sont un élément fondamental du **networking** sur AWS, offrant des environnements isolés pour déployer vos ressources dans une seule **AWS Region**, ce qui renforce la sécurité et la segmentation réseau.
+- Chaque **VPC** est défini par son **CIDR block**, qui délimite la plage d’adresses IP assignables (IPv4 `/16–/28`, IPv6 optionnel `/56`).
+- AWS fournit un **default VPC** par région, préconfiguré avec des **subnets**, un **Internet Gateway**, un **Security Group** et des **NACLs**, permettant un déploiement rapide.
+- Pour des besoins spécifiques de production, vous pouvez créer des **custom VPCs**, qui offrent un contrôle total sur le **CIDR block**, les **subnets**, le **routing** et les règles d’accès via **Security Groups** et **NACLs**.
+
+---
+
+## Points clés
+
+- Les **VPCs** isolent vos ressources de calcul des autres ressources disponibles dans le cloud.
+- Chaque **VPC** est limité à une seule **AWS Region**.
+- Le **CIDR block** d’un VPC définit les adresses IP qu’il peut utiliser.
+- Un VPC peut avoir :
+    - un **CIDR block IPv4 secondaire**
+    - jusqu’à cinq **CIDR blocks IPv6**
+- Chaque région dispose d’un **default VPC** préconfiguré :
+    - **CIDR block** : `172.31.0.0/16`
+    - **Subnets** : un `/20` par **Availability Zone**
+    - **Accès Internet** : activé par défaut pour le VPC et ses subnets
+    - **Security Groups** : trafic sortant autorisé
+    - **NACLs** : ouvertes pour le trafic entrant et sortant
+- Les **Security Groups** et **NACLs** permettent de contrôler le trafic aux niveaux des instances et des subnets.
+- Les **default VPCs** sont prêts à l’emploi pour un déploiement rapide, tandis que les **custom VPCs** offrent un contrôle total sur la configuration réseau.
+
+---
+
+!!! abstract ""
+
+    ## Links and References
+
+    - [AWS VPC Documentation](https://docs.aws.amazon.com/vpc/)
+    - [AWS Networking Services](https://aws.amazon.com/products/networking/)

@@ -1,4 +1,4 @@
 ---
-title: Applications
+title: Observability
 status: draft
 ---

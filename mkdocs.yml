@@ -14,6 +14,8 @@ nav:
   - HOME: index.md
   - KUBERNETES: 
     - kubernetes/index.md
+    - Bazar:
+      - kubernetes/autoscaling/whyAutoscaling.md
     - Fundamentals:
       - kubernetes/cka/01-fundamentals/01_ClusterArchitecture.md
       - kubernetes/cka/01-fundamentals/xx_Pods.md
@@ -157,8 +159,26 @@ nav:
         - cloudProviders/aws/services/eks/01-fundamentals/06-Networking.md
         - cloudProviders/aws/services/eks/01-fundamentals/07-Authentication.md
       - Networking: index.md
+  - OBSERVABILITY:
+#    - observability/index.md
+    - Prometheus: 
+      - applications/prometheus/index.md
+      - Kubernetes Monitoring:
+        - applications/prometheus/monitoringKubernetes/02-installingHelmChart.md
+        - applications/prometheus/monitoringKubernetes/03-chartOverview.md
+        - applications/prometheus/monitoringKubernetes/04-conntectingToPrometheus.md
+    - Grafana:
+      - observability/grafana/index.md
+    - Loki:
+      - observability/loki/index.md
+      - Fundamentals: 
+        - observability/loki/fundamentals/01-whatIsLoki.md
+        - observability/loki/fundamentals/02-architectureOfLoki.md
+        - observability/loki/fundamentals/03-lokiInstallation.md
+        - observability/loki/lab/01.md
+        - observability/loki/lab/02.md
   - APPLICATIONS:
-    - index.md
+    - applications/index.md
     - Backstage: 
       - applications/backstage/index.md
       - Fundamentals:
@@ -169,23 +189,36 @@ nav:
     - Cilium: applications/cilium/index.md
     - Crossplane: 
       - applications/crossplane/index.md
-      - Managed Resources: applications/crossplane/managedResources.md
-      - Crossview: applications/crossplane/crossview.md
-      - Crossplane Diff: applications/crossplane/crossplaneDiff.md
+      - Fundamentals:
+        - Introduction: applications/crossplane/01-introduction.md
+        - Provider: applications/crossplane/provider.md
+        - ProviderConfig: applications/crossplane/providerConfig.md
+        - Install Crossplane: applications/crossplane/installCrossplane.md
+      - MRs Store: applications/crossplane/managedResources.md
+      - Crossplane Diff: applications/crossplane/11-crossplaneDiff.md
+      - Crossview: applications/crossplane/12-crossview.md
+      #- Fundamentals:
+      #  - applications/crossplane/crossplane.md
+      #  - applications/crossplane/01-Crossplane_Fundamentals.md
+      #  - applications/crossplane/02-providers.md
+      #  - applications/crossplane/0x-managedResources.md
+      #  - applications/crossplane/03-Compositions.md
+      #  - applications/crossplane/04-Composition_Functions:_Patch_and_Transform.md
+      #- Workshop:
+      #  - applications/crossplane/labs/lab01.md
+      #  - applications/crossplane/labs/lab02.md
+      #  - applications/crossplane/labs/lab03.md
+      #  - applications/crossplane/labs/lab04.md
+      #  - applications/crossplane/labs/managedResourceActivationPolicy.md
     - Headlamp: applications/headlamp/index.md
     - Karpenter: applications/karpenter/index.md
     - Keda: applications/keda/index.md
     - Kyverno: applications/kyverno/index.md
     - Metrics Servers: applications/metrics-servers/index.md
     - OpenTelemetry: applications/openTelemetry/index.md
-    - Prometheus: 
-      - applications/prometheus/index.md
-      - Kubernetes Monitoring:
-        - applications/prometheus/monitoringKubernetes/02-installingHelmChart.md
-        - applications/prometheus/monitoringKubernetes/03-chartOverview.md
-        - applications/prometheus/monitoringKubernetes/04-conntectingToPrometheus.md
     - Reloader: applications/reloader/index.md
     - SealedSecrets: applications/sealedSecrets/index.md
+    - Telepresence: applications/telepresence/index.md
   - LINUX:
     - index.md
     - Packages:
@@ -204,12 +237,13 @@ nav:
     - CONTACT: others/contact.md
 
 theme:
-  variant: modern #classic
+  variant: modern
   #font:
-  #  text: JetBrains Sans
-  #  code: JetBrains Code
+  #  text: Fira Sans
+  #  code: Fira Code
   icon:
-      repo: fontawesome/brands/github
+    repo: fontawesome/brands/github
+    logo: lucide/terminal
   palette:
     - media: "(prefers-color-scheme)"
       toggle:

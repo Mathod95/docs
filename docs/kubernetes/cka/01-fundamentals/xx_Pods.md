@@ -87,10 +87,7 @@ At this stage, note that external access to the nginx web server has not been co
   After mastering pod deployment, advance to networking and service configuration to expose your applications to end users.
 </Callout>
 
-
-
 ---
-
 
 Yes 👍 — using a **Kind (Kubernetes-in-Docker) cluster** is actually a much clearer way to demonstrate **multi-container Pods** than the Docker example. Instead of manually linking containers, you can show how Kubernetes naturally runs **two containers in the same Pod sharing network and storage**.
 

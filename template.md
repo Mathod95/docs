@@ -1,7 +1,7 @@
 ---
 title:
 #date:
-status:
+status: draft
 categories:
   -
 tags:

@@ -89,3 +89,21 @@ Implement dynamic resource provisioning with Composition Functions
 ---
 !!! abstract "Links and References"
     - https://github.com/crossplane/crossplane
+
+
+---
+
+## What You'll Learn
+In this first lab, you will:
+
+1. Install Crossplane on a Kubernetes cluster using Helm
+2. Verify the installation and explore Crossplane components
+3. Understand core Crossplane concepts
+4. Install the Crossplane kubectl plugin
+
+## Prerequisites
+This course assumes you have:
+
+- Basic Kubernetes knowledge (pods, deployments, services)
+- Familiarity with kubectl commands
+- Understanding of YAML manifests

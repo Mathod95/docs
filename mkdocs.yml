@@ -189,27 +189,27 @@ nav:
     - Cilium: applications/cilium/index.md
     - Crossplane: 
       - applications/crossplane/index.md
+      - PENDING:
+        - MRAP: applications/crossplane/0X-mrap.md
+        - MRAPkeep: applications/crossplane/01-fundamentals/0x-managedResourceActivationPolicies.md
       - Fundamentals:
-        - Introduction: applications/crossplane/01-introduction.md
-        - Provider: applications/crossplane/provider.md
-        - ProviderConfig: applications/crossplane/providerConfig.md
-        - Install Crossplane: applications/crossplane/installCrossplane.md
-      - MRs Store: applications/crossplane/managedResources.md
-      - Crossplane Diff: applications/crossplane/11-crossplaneDiff.md
-      - Crossview: applications/crossplane/12-crossview.md
-      #- Fundamentals:
+        - Introduction: applications/crossplane/01-fundamentals/01-introduction.md
+        - Installa Crossplane: applications/crossplane/01-fundamentals/0x-installCrossplane.md
+      - Composition:
+        - applications/crossplane/02-composition/01-compositeResourcesDefinition-XRD.md
+        - applications/crossplane/02-composition/02-composition.md
+        - applications/crossplane/02-composition/03-compositeResources-XR.md
+      #- Example: applications/crossplane/03-examples/managedResources.md
+      #- CrossplaneDiff: applications/crossplane/04-addons/11-crossplaneDiff.md
+      #- Crossview: applications/crossplane/04-addons/12-crossview.md
+      #  - Provider: applications/crossplane/provider.md
+      #  - ProviderConfig: applications/crossplane/providerConfig.md
       #  - applications/crossplane/crossplane.md
       #  - applications/crossplane/01-Crossplane_Fundamentals.md
       #  - applications/crossplane/02-providers.md
       #  - applications/crossplane/0x-managedResources.md
       #  - applications/crossplane/03-Compositions.md
       #  - applications/crossplane/04-Composition_Functions:_Patch_and_Transform.md
-      #- Workshop:
-      #  - applications/crossplane/labs/lab01.md
-      #  - applications/crossplane/labs/lab02.md
-      #  - applications/crossplane/labs/lab03.md
-      #  - applications/crossplane/labs/lab04.md
-      #  - applications/crossplane/labs/managedResourceActivationPolicy.md
     - Headlamp: applications/headlamp/index.md
     - Karpenter: applications/karpenter/index.md
     - Keda: applications/keda/index.md
@@ -296,6 +296,14 @@ extra_css:
  - assets/stylesheets/extra.css
 
 markdown_extensions:
+  - material.extensions.preview:
+      configurations:
+        - sources:
+            include:
+              - "**"
+          targets:
+            include:
+              - "**"
   - abbr
   - admonition
   - attr_list

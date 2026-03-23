@@ -1,11 +1,12 @@
 ---
-title:
-#date:
+title: 
+date: 22-03-26
 status: draft
 categories:
-  -
+  - 
 tags:
-  -
+  - 
+  - 
 source:
   - 
 ---

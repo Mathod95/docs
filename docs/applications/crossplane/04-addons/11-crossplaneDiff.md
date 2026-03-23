@@ -1,5 +1,5 @@
 ---
-icon: lucide/package
+#icon: lucide/package
 title: Crossplane Diff
 status: draft
 hide:

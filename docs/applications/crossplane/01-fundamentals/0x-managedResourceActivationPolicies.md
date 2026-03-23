@@ -14,19 +14,10 @@ source:
 !!! warning
     This is an alpha feature introduced in v2. Crossplane may change or drop this feature at any time.
 
-[Abbreviations][abbr]{ data-preview }
-
-[abbr]: ../../../applications/crossplane/01-fundamentals/01-introduction.md#managed-resources
-
-[Abbreviations](../../../applications/crossplane/01-fundamentals/01-introduction.md#managed-resources){ data-preview }
 
 ---
 
-``` markdown
-[Attribute Lists](#){ data-preview }
-```
-
-See additional configuration options:
+[Attribute Lists](#pattern-matching){ data-preview }
 
 - [Abbreviations]
 - [Attribute Lists]
@@ -36,7 +27,6 @@ See additional configuration options:
   [Attribute Lists]: ../../../applications/crossplane/01-fundamentals/01-introduction.md#managed-resources
   [Snippets]: ../../../applications/crossplane/01-fundamentals/01-introduction.md#managed-resources
  
-
 ---
 
 {{<hint "important">}}

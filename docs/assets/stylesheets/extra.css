@@ -21,3 +21,73 @@
 .md-nav__list {
   gap: 20 !important;
 }
+
+/* Force le light mode à utiliser les mêmes couleurs de code blocks que le dark mode (slate) */
+[data-md-color-scheme="default"] {
+  /* Foreground / Background du code block */
+  --md-code-fg-color:                  hsla(0, 0%, 95%, 1);
+  --md-code-bg-color:                  hsla(200, 15%, 19%, 1);
+
+  /* Highlight de ligne */
+  --md-code-hl-color:                  hsla(218, 23%, 28%, 1);
+
+  /* Couleurs de syntax highlighting */
+  --md-code-hl-number-color:           hsla(6, 74%, 63%, 1);
+  --md-code-hl-special-color:          hsla(340, 83%, 66%, 1);
+  --md-code-hl-function-color:         hsla(291, 57%, 65%, 1);
+  --md-code-hl-constant-color:         hsla(250, 62%, 70%, 1);
+  --md-code-hl-keyword-color:          hsla(219, 66%, 64%, 1);
+  --md-code-hl-string-color:           hsla(150, 58%, 55%, 1);
+  --md-code-hl-name-color:             var(--md-code-fg-color);
+  --md-code-hl-operator-color:         var(--md-code-fg-color);
+  --md-code-hl-punctuation-color:      var(--md-code-fg-color);
+  --md-code-hl-comment-color:          hsla(0, 0%, 63%, 1);
+  --md-code-hl-generic-color:          hsla(0, 0%, 63%, 1);
+  --md-code-hl-variable-color:         var(--md-code-fg-color);
+}
+
+/* Correctif linenums et titles : texte blanc pour rester lisible sur fond sombre */
+[data-md-color-scheme="default"] .highlight .linenodiv pre,
+[data-md-color-scheme="default"] .highlight .filename {
+  color:  hsla(0, 0%, 100%, 1) !important;
+}
+
+/* Angles 90° sur tous les code blocks (les deux thèmes) */
+.highlight,
+.highlight pre,
+.highlight pre code,
+.highlight .filename,
+.highlight .highlighttable,
+.highlight .highlighttable td,
+.highlight .highlighttable td pre,
+.highlight .linenodiv,
+.highlight .linenodiv pre,
+.md-typeset pre,
+.md-typeset pre > code {
+  border-radius: 0 !important;
+}
+
+/* Inline code — style WordPress (les deux thèmes) */
+.md-typeset code:not(.highlight code) {
+  color:             #c0392b !important;
+  background-color:  #f5f5f5 !important;
+  border:            1px solid #d5d5d5 !important;
+  border-radius:     3px;
+  padding:           0.1em 0.4em;
+  font-size:         0.85em;
+}
+
+/* Couleur de fond des code blocks (les deux thèmes) */
+:root > * {
+  --md-code-bg-color: #212121;
+}
+
+/* Séparateur title / linenums (les deux thèmes) */
+.highlight .filename {
+  border-bottom:    1px solid red !important;
+  background-color: #2e2e2e !important;
+}
+
+.highlight .linenodiv {
+  border-right: 1px solid red !important;
+}

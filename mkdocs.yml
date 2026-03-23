@@ -273,7 +273,7 @@ theme:
     - navigation.sections
 #    - navigation.expand
 #    - navigation.path
-    - navigation.prune
+    #- navigation.prune
     - navigation.indexes
     - toc.follow
 #    - toc.integrate
@@ -296,7 +296,7 @@ extra_css:
  - assets/stylesheets/extra.css
 
 markdown_extensions:
-  - material.extensions.preview:
+  - zensical.extensions.preview:
       configurations:
         - sources:
             include:

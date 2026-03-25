@@ -87,3 +87,19 @@ s1 e1@-->|"API Calls"| s2
 style s1 stroke-width:1px
 e1@{ animation: fast }
 ```
+
+
+[Attribute Lists](#pattern-matching){ data-preview }
+
+- [Abbreviations]
+- [Attribute Lists]
+- [Snippets]
+
+  [Abbreviations]: ../../../applications/crossplane/01-fundamentals/01-introduction.md#managed-resources
+  [Attribute Lists]: ../../../applications/crossplane/01-fundamentals/01-introduction.md#managed-resources
+  [Snippets]: ../../../applications/crossplane/01-fundamentals/01-introduction.md#managed-resources
+ 
+
+ note → pour du contexte, historique, non essentiel ✅ (ton cas)
+info → pour une info utile dans le flow principal
+abstract → pour un résumé / introduction

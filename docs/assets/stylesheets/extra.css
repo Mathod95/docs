@@ -91,3 +91,41 @@
 .highlight .linenodiv {
   border-right: 1px solid red !important;
 }
+
+/* Scrollbar horizontale des code blocks — light mode */
+[data-md-color-scheme="default"] .highlight pre {
+  scrollbar-color: hsla(0, 0%, 60%, 1) transparent;
+  scrollbar-width: thin;
+}
+
+/* Scrollbar horizontale des code blocks — light mode */
+[data-md-color-scheme="default"] pre[id^="__code_"],
+[data-md-color-scheme="default"] pre[id^="__code_"] code {
+  scrollbar-color:  hsla(0, 0%, 60%, 1) transparent !important;
+  scrollbar-width:  thin !important;
+}
+
+[data-md-color-scheme="default"] pre[id^="__code_"]::-webkit-scrollbar,
+[data-md-color-scheme="default"] pre[id^="__code_"] code::-webkit-scrollbar {
+  height:           4px !important;
+}
+
+[data-md-color-scheme="default"] pre[id^="__code_"]::-webkit-scrollbar-thumb,
+[data-md-color-scheme="default"] pre[id^="__code_"] code::-webkit-scrollbar-thumb {
+  background-color: hsla(0, 0%, 60%, 1) !important;
+}
+
+[data-md-color-scheme="default"] pre[id^="__code_"]::-webkit-scrollbar-track,
+[data-md-color-scheme="default"] pre[id^="__code_"] code::-webkit-scrollbar-track {
+  background:       transparent !important;
+}
+
+/* Highlight hl_lines — les deux thèmes */
+:root > * {
+  --md-code-hl-color: hsla(0, 100%, 50%, 0.2);
+}
+
+/* Highlight hl_lines — les deux thèmes */
+.highlight .hll {
+  background-color: #4a4d4d !important;
+}

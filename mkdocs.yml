@@ -189,12 +189,10 @@ nav:
     - Cilium: applications/cilium/index.md
     - Crossplane: 
       - applications/crossplane/index.md
-      - PENDING:
-        - MRAP: applications/crossplane/0X-mrap.md
-        - MRAPkeep: applications/crossplane/01-fundamentals/0x-managedResourceActivationPolicies.md
       - Fundamentals:
         - Introduction: applications/crossplane/01-fundamentals/01-introduction.md
         - Installa Crossplane: applications/crossplane/01-fundamentals/0x-installCrossplane.md
+        - MRAP: applications/crossplane/01-fundamentals/0x-managedResourceActivationPolicies.md
       - Composition:
         - applications/crossplane/02-composition/01-compositeResourcesDefinition-XRD.md
         - applications/crossplane/02-composition/02-composition.md

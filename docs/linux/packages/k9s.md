@@ -1,5 +1,5 @@
 ---
-title: K9s
+title: K9S
 #status: draft
 hide:
   - toc

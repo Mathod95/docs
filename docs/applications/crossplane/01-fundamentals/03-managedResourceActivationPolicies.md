@@ -15,13 +15,14 @@ source:
 !!! warning
     Il s’agit d’une fonctionnalité alpha introduite dans la v2 de Crossplane.  
     Crossplane peut modifier ou supprimer cette fonctionnalité à tout moment.  
+    Les features en Alpha sont à activer lors de l'installation de Crossplane.
     [Feature Lifecycle](https://docs.crossplane.io/v2.2/learn/feature-lifecycle/){target=_blank}
 
 ## Introduction
 
 Il y a quelques années, utiliser le **provider AWS** dans Crossplane était lourd. Installer le `provider-aws` monolithique créait **des centaines de CRD**, même si vous n’aviez besoin que de quelques resources comme S3. Cela pouvait ralentir ou rendre le control plane non réactif, et la gestion des mises à jour était compliquée.
 
-Pour résoudre ce problème, la communauté Crossplane a introduit les **Provider Families**. Au lieu d’un gros provider unique, AWS est maintenant divisé en **sub-providers** plus petits comme `provider-aws-s3` et `provider-aws-ec2`. Tous les sub-providers partagent un **family provider** (`provider-family-aws`) pour la configuration commune, comme les credentials. Les avantages des Provider Families sont clairs :
+Pour résoudre ce problème, la communauté Crossplane a introduit les **Provider Families**. Au lieu d’un gros provider unique, AWS est maintenant divisé en **sub-providers** plus petits comme `provider-aws-s3` et `provider-aws-ec2`. Tous les sub-providers partagent un **family provider** (`provider-family-aws`) pour la configuration commune, comme les credentials. Les avantages des Provider Families sont clairs:
 
 - **Fewer CRDs:** Installer seulement ce dont vous avez besoin.
 - **Better performance:** Les controllers se concentrent sur moins de resources.
@@ -75,9 +76,249 @@ Quand tu appliques ce **MRAP**, Crossplane active:
 - **Status tracking:** Suivre quelles resources sont actives ou inactives pour toujours connaître l’état du cluster.
 - **Automatic activation:** Les nouvelles **MRD** correspondant aux patterns existants s’activent automatiquement.
 
+## Pattern matching
+
+### Correspondance exacte
+
+Spécifie les noms complets des **MRDs** pour un contrôle précis:
+
+```yaml
+spec:
+  activate:
+  - buckets.s3.aws.m.upbound.io
+  - databases.rds.aws.m.upbound.io
+  - clusters.eks.aws.m.upbound.io
+```
+
+!!! info
+    Utilise le nom **au pluriel** lorsque tu spécifies un nom complet de MRD, en cohérence avec la manière dont Kubernetes exprime les noms complets des CRDs.
+
+    Par exemple, utilise `buckets` plutôt que `bucket` dans `buckets.s3.aws.m.upbound.io`.
+
+### Wildcard patterns
+
+Utilise des wildcards `*` pour matcher plusieurs resources:
+
+```yaml
+spec:
+  activate:
+  - "*.s3.aws.m.upbound.io"      # Toutes les resources S3
+  - "*.ec2.aws.m.upbound.io"     # Toutes les resources EC2
+  - "*.rds.aws.m.upbound.io"     # Toutes les databases RDS
+```
+
+!!! info
+    Les MRAP utilisent uniquement des wildcards en préfixe, et non des expressions régulières complètes. Seul `*` au début d’un pattern fonctionne (par exemple, `*.s3.aws.m.crossplane.io`).  
+    Les patterns comme `s3.*.aws.m.upbound.io` ou `*.s3.*` ne sont pas valides.
+
+
+## Resources Modernes & Legacy
+
+Crossplane v2 supporte deux styles de managed resources:
+
+- **Moderne (Crossplane v2):** Utilise les domaines `*.m.upbound.io` pour des managed resources **namespaced** avec une meilleure isolation et sécurité
+- **Legacy (Crossplane v1):** Utilise les domaines `*.upbound.io` pour des managed resources **cluster-scoped** (maintenues pour la compatibilité)
+
+### Activer modernes
+
+```yaml
+spec:
+  activate:
+  - buckets.s3.aws.m.upbound.io         # S3 bucket (modern v2)
+  - "*.ec2.aws.m.upbound.io"            # Toutes les resources EC2 (modern v2)
+```
+
+### Activer legacy
+
+```yaml
+spec:
+  activate:
+  - buckets.s3.aws.upbound.io           # S3 bucket (legacy v1)
+  - "*.ec2.aws.upbound.io"              # Toutes les resources EC2 (legacy v1)
+```
+
+### Activation mixte
+
+```yaml
+spec:
+  activate:
+  - "*.aws.m.upbound.io"                # Toutes les resources AWS (modern v2)
+  - "*.aws.upbound.io"                  # Toutes les resources AWS (legacy v1)
+```
+
+## Stratégies d’activation
+
+### Défaut
+
+Le chart Helm Crossplane crée un **MRAP** par défaut qui active toutes les resources:
+
+```yaml linenums="1"
+apiVersion: apiextensions.crossplane.io/v1alpha1
+kind: ManagedResourceActivationPolicy
+metadata:
+  name: default
+spec:
+  activate:
+  - "*"  # Active toutes les MRDs
+```
+
+Vous pouvez personnaliser cela lors de l’installation:
+
+```bash title="Désactiver complètement les activations par défaut"
+helm install crossplane crossplane-stable/crossplane \
+  --set provider.defaultActivations={}
+```
+
+```bash title="Définir des activations par défaut personnalisées"
+helm install crossplane crossplane-stable/crossplane \
+  --set provider.defaultActivations={\
+    "*.s3.aws.m.upbound.io","*.ec2.aws.m.upbound.io"}
+```
+
+### Activation par provider
+
+Activer toutes les resources d’un provider spécifique:
+
+```yaml linenums="1"
+apiVersion: apiextensions.crossplane.io/v1alpha1
+kind: ManagedResourceActivationPolicy
+metadata:
+  name: aws-provider-resources
+spec:
+  activate:
+  - "*.aws.upbound.io"     # Toutes les resources AWS
+  - "*.aws.m.upbound.io"   # Toutes les managed resources AWS (style v2)
+```
+
+### Activation par service
+
+Activer les resources pour des services cloud spécifiques:
+
+```yaml linenums="1"
+apiVersion: apiextensions.upbound.io/v1alpha1
+kind: ManagedResourceActivationPolicy
+metadata:
+  name: storage-and-compute
+spec:
+  activate:
+  - "*.s3.aws.m.upbound.io"         # Resources AWS S3
+  - "*.ec2.aws.m.upbound.io"        # Resources AWS EC2
+  - "*.storage.gcp.m.upbound.io"    # Resources GCP Storage
+  - "*.compute.gcp.m.upbound.io"    # Resources GCP Compute
+```
+
+### Activation minimale
+
+Activer uniquement les resources nécessaires:
+
+```yaml linenums="1"
+apiVersion: apiextensions.crossplane.io/v1alpha1
+kind: ManagedResourceActivationPolicy
+metadata:
+  name: minimal-footprint
+spec:
+  activate:
+  - buckets.s3.aws.m.upbound.io       # Uniquement les S3 buckets
+  - instances.ec2.aws.m.upbound.io    # Uniquement les instances EC2
+  - databases.rds.aws.m.upbound.io    # Uniquement les databases RDS
+```
+
+## Multiples MRAP
+
+Vous pouvez avoir plusieurs **MRAP** dans votre cluster. Crossplane traite tous les **MRAP** ensemble et active toute **MRD** qui correspond à au moins un pattern.
+
+### Activation par équipe
+
+Différentes équipes peuvent gérer leurs propres policies d’activation:
+
+```yaml linenums="1"
+apiVersion: apiextensions.crossplane.io/v1alpha1
+kind: ManagedResourceActivationPolicy
+metadata:
+  name: storage-team
+spec:
+  activate:
+  - "*.s3.aws.m.upbound.io"
+  - "*.storage.gcp.m.upbound.io"
+---
+apiVersion: apiextensions.crossplane.io/v1alpha1
+kind: ManagedResourceActivationPolicy
+metadata:
+  name: database-team
+spec:
+  activate:
+  - "*.rds.aws.m.upbound.io"
+  - "*.sql.gcp.m.upbound.io"
+```
+
+### Activation via Repository Infrastructure Applicatif
+
+Vous pouvez ajouter une MRAP dans un dépot infrastucture d'une application pour déclarer leurs dépendances en resources:
+
+```yaml linenums="1"
+apiVersion: apiextensions.crossplane.io/v1alpha1
+kind: ManagedResourceActivationPolicy
+metadata:
+  name: web-platform-dependencies
+spec:
+  activate:
+  - buckets.s3.aws.m.crossplane.io       # Pour les assets statiques
+  - instances.ec2.aws.m.crossplane.io    # Pour les serveurs web
+  - databases.rds.aws.m.crossplane.io    # Pour les données applicatives
+  - certificates.acm.aws.m.crossplane.io # Pour HTTPS
+```
+
+## Status des MRAP
+
+Lister tous les **MRAP**:
+
+```bash
+kubectl get managedresourceactivationpolicies
+```
+
+Voir les détails et le status d’un **MRAP**:
+
+```bash
+kubectl describe mrap aws-core-resources
+```
+
+### Vérifier le status d’activation
+
+Les **MRAP** suivent quelles resources ils ont activées :
+
+```yaml
+status:
+  conditions:
+  - type: Healthy
+    status: "True"
+    reason: Running
+  activated:
+  - buckets.s3.aws.m.crossplane.io
+  - instances.ec2.aws.m.crossplane.io
+  - instances.rds.aws.m.crossplane.io
+  - securitygroups.ec2.aws.m.crossplane.io
+  - subnets.ec2.aws.m.crossplane.io
+  - vpcs.ec2.aws.m.crossplane.io
+```
+
+### Condition Healthy
+
+- **`Healthy: True, Reason: Running`** : le **MRAP** fonctionne correctement
+- **`Healthy: Unknown, Reason: EncounteredErrors`** : certaines **MRD** n’ont pas pu être activées
+
+## Best Practices
+
+Les **MRAP** sont additifs — plusieurs **MRAPs** peuvent activer la même resource sans conflit. Cela permet des stratégies d’activation par équipe ainsi que la gestion des dépendances dans les déploiements applicatifs.
+
+1. **Commencer spécifique, élargir si nécessaire** — Commencer par des noms de resources exacts (en utilisant le pluriel), puis ajoute des wildcards uniquement si cela améliore la maintenabilité
+2. **Anticiper l’évolution des providers** — conçois des patterns qui prennent en compte l’ajout de nouvelles resources (par exemple, `*.s3.aws.m.crossplane.io` couvrira les futures resources S3)
+3. **Regrouper les resources de manière logique** — crée des **MRAP** qui activent des resources utilisées ensemble par les équipes
+4. **Inclure les dépendances dans les Configuration packages** — les Configuration packages doivent déclarer les **MRD** nécessaires au lieu de supposer leur disponibilité
+5. **Utiliser des patterns conservateurs en environnement partagé** — évite les wildcards trop larges qui activeraient des resources inutiles lorsque plusieurs équipes partagent les providers
+
 ---
 
-## Workshop
+## 🏗️ Workshop
 
 Pour voir les **MRAP** en action, exécutons un test simple sur un cluster **Kind** local. Dans cet exemple, nous allons installer le `provider-aws-ec2` et observer comment **MRAP** influencent sur l’utilisation mémoire et le nombre de **CRDs**.
 
@@ -132,7 +373,7 @@ crossplane-rbac-manager-74494cb9bf-wmvj2   1/1     Running   0          36s
 
 ### 3. Installer Metrics Server
 
-Les clusters Kind n’incluent pas Metrics Server par défaut, ce qui est nécessaire pour utiliser `kubectl top`. Installe-le avec :
+Les clusters Kind n’incluent pas Metrics Server par défaut, ce qui est nécessaire pour utiliser `kubectl top`. Installe-le avec:
 
 ```bash hl_lines="1-3"
 wget -qO- https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml \
@@ -142,7 +383,7 @@ wget -qO- https://github.com/kubernetes-sigs/metrics-server/releases/latest/down
 
 ### 4. Installer le provider EC2
 
-Créer un fichier YAML pour le provider :
+Créer un fichier YAML pour le provider:
 
 ```yaml linenums="1" title="provider-aws-ec2.yaml"
 apiVersion: pkg.crossplane.io/v1
@@ -153,7 +394,7 @@ spec:
   package: xpkg.upbound.io/upbound/provider-aws-ec2:v2.5.0
 ```
 
-Appliquer le manifest :
+Appliquer le manifest:
 
 ```bash hl_lines="1"
 kubectl apply -f provider-aws-ec2.yaml
@@ -170,7 +411,7 @@ upbound-provider-family-aws   True        True      xpkg.upbound.io/upbound/prov
 
 ### 5. Observer les CRDs
 
-Après l’installation du `provider-aws-ec2`, vérifions **le nombre de CRDs installés** et **l’utilisation mémoire** de l’API server Kubernetes :
+Après l’installation du `provider-aws-ec2`, vérifions **le nombre de CRDs installés** et **l’utilisation mémoire** de l’API server Kubernetes:
 
 ```bash hl_lines="1"
 kubectl get mrds | grep ec2 | wc -l

@@ -101,8 +101,29 @@ nav:
         - argo/argocd/01-fundamentals/09-createApplicationusingCLI.md
         - argo/argocd/01-fundamentals/10-createArgoCDProject.md
     - Argo Rollouts: index.md
-    - Argo Workflows: index.md
-    - Argo Events: index.md
+    - Argo Workflows: 
+      - argo/argoWorkflows/index.md
+      - argo/argoWorkflows/01.md
+      - argo/argoWorkflows/02.md
+      - argo/argoWorkflows/03.md
+      - argo/argoWorkflows/04.md
+      - argo/argoWorkflows/05.md
+      - argo/argoWorkflows/06.md
+      - argo/argoWorkflows/07.md
+      - argo/argoWorkflows/08.md
+      - argo/argoWorkflows/09.md
+      - argo/argoWorkflows/&à.md
+    - Argo Events: 
+      - argo/argoEvents/index.md
+      - argo/argoEvents/01.md
+      - argo/argoEvents/02.md
+      - argo/argoEvents/03.md
+      - argo/argoEvents/04.md
+      - argo/argoEvents/05.md
+      - argo/argoEvents/06.md
+      - argo/argoEvents/07.md
+      - argo/argoEvents/08.md
+      - argo/argoEvents/09.md
   - AWS SERVICES:
     - IAM:
       - cloudProviders/aws/services/iam/index.md
@@ -192,7 +213,9 @@ nav:
       - Fundamentals:
         - Introduction: applications/crossplane/01-fundamentals/01-introduction.md
         - Installa Crossplane: applications/crossplane/01-fundamentals/0x-installCrossplane.md
-        - MRAP: applications/crossplane/01-fundamentals/0x-managedResourceActivationPolicies.md
+        - MRD: applications/crossplane/01-fundamentals/02-managedResourceDefinitions.md
+        - MRAP: applications/crossplane/01-fundamentals/03-managedResourceActivationPolicies.md
+        - Usage: applications/crossplane/01-fundamentals/0x-usage.md
       - Composition:
         - applications/crossplane/02-composition/01-compositeResourcesDefinition-XRD.md
         - applications/crossplane/02-composition/02-composition.md
@@ -223,12 +246,15 @@ nav:
       - linux/packages/index.md
       - linux/packages/k9s.md
       - linux/packages/zsh.md
+      - linux/packages/sops.md
     - Abbreviations: linux/abbreviations.md
   - DEVOPS:
     - CostOptimization: index.md
     - NamingConvention: devops/namingConventions.md
   - PROXMOX:
     - index.md
+  - INFRASTRUCTURE:
+    - infra/index.md
   - OTHERS:
     - AWESOME: others/awesome.md
     - GLOSSAIRE: others/glossaire.md
@@ -281,6 +307,7 @@ theme:
 #    - navigation.footer
     - content.tooltips
     - content.code.annotate
+    - content.code.copy
 
 extra:
   generator: false

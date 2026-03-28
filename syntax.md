@@ -100,6 +100,6 @@ e1@{ animation: fast }
   [Snippets]: ../../../applications/crossplane/01-fundamentals/01-introduction.md#managed-resources
  
 
- note → pour du contexte, historique, non essentiel ✅ (ton cas)
-info → pour une info utile dans le flow principal
-abstract → pour un résumé / introduction
+
+
+`text` je barticks tous les termes qu'on peut retrouver dans un fichier de configuration

@@ -58,7 +58,7 @@ Utilisé pour tirer une conclusion finale, souvent après une réflexion ou une 
 
 !!! abstract ""
 
-    ## Links and References
+    ## Liens et références
 
     - []()
 

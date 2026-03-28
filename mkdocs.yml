@@ -257,6 +257,7 @@ nav:
     - infra/index.md
   - OTHERS:
     - AWESOME: others/awesome.md
+    - CONVENTION: others/convention.md
     - GLOSSAIRE: others/glossaire.md
     - CONTACT: others/contact.md
 

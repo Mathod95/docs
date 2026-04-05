@@ -7,6 +7,7 @@
 *[W3C]: World Wide Web Consortium
 *[VPC]: Virtual Private Cloud
 *[K8S]: Shortened Kubernetes 
+*[DAG]: Directed Acyclic Graph
 *[CNI]: Cotainer Network Interface
 *[CLI]: Command Line Interface
 *[CRD]: Custom Resource Definition

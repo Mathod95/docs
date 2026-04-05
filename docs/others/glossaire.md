@@ -58,6 +58,9 @@ title: GLOSSAIRE
 ### `DaemonSet`
 : Un DaemonSet assure qu’un pod spécifique est exécuté sur chaque nœud du cluster. Il est utilisé pour déployer des agents système, des collecteurs de logs ou des plugins réseau sur tous les nœuds.
 
+### `DAG`
+: Un DAG (Directed Acyclic Graph) est un graphe orienté sans cycles, utilisé dans Argo Workflows et d’autres systèmes d’orchestration pour représenter les dépendances entre tâches. Chaque nœud correspond à une étape ou un template, et les arêtes définissent l’ordre d’exécution. Les DAG permettent d’exécuter certaines tâches en parallèle tout en respectant les dépendances définies entre elles.
+
 ### `Deployment`
 : Un Deployment gère le cycle de vie des pods en orchestrant les ReplicaSets et en permettant les mises à jour progressives. Il facilite les déploiements, les rollbacks et le maintien de l’état souhaité d’une application.
 

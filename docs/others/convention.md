@@ -104,13 +104,24 @@ La navigation est segmenter en catégories:
 
 ## Authoring
 
+### IA
+
+J’utilise l’IA pour des **raisons éditoriales**, principalement pour **reformuler des phrases**, améliorer la clarté, la lisibilité et la concision, ainsi que pour corriger les fautes d’orthographe. Elle peut également m’aider à **vérifier la véracité de mes propos** et la précision de ce que je transcris.
+
+L’IA m’aide aussi à **structurer automatiquement mes documents**, en ajoutant des `barticks` sur les divers `champs`/`values` et en mettant en **gras** tout ce qui semble important, ce qui facilite la lecture et l’organisation des contenus.
+
+Cependant, tous les cours, documentations, études de cas, workshops, etc., **ne sont en aucun cas générés par l’IA**. Les recherches sont effectuées au préalable par mes soins, en me basant sur des **documentations officielles** et des sources fiables.
+
+L’IA me sert uniquement comme **outil d’aide à la rédaction**, et non en tant que source primaire de connaissances.
+
 ### Barticks
 
-Tous ce qui fields/values dans du texte est sous `barticks`
+Tous les **champs et valeurs (`fields`/`values`)** présents dans le texte sont encadrés avec des `barticks`. Cela permet de **mettre en évidence les éléments techniques**, de faciliter la lecture et de distinguer clairement les variables, options ou valeurs spécifiques dans la documentation.
 
 ### Bold
 
-Tous ce qui est nom d'application, acronyme
+Tous les **noms d’applications, outils, acronymes ou termes importants** sont mis en **gras**. Cela aide à **repérer rapidement les concepts clés** et à structurer le contenu pour qu’il soit plus lisible et compréhensible.
+
 
 ### Admonition
 
@@ -184,19 +195,15 @@ The following admonition types are available in Zensical. The default is `note`.
 
 ### Code blocks
 
-
-Les blocs de code
-Les commandes à taper sont dans des blocs gris. Le langage est indiqué en haut (bash, yaml, python…).
-
-Fenêtre de terminal
-
-systemctl is-active --quiet nginx && echo "OK" || echo "Service arrêté"
-
-Important : ne copiez pas les commandes sans lire ce qui est écrit autour. Le texte explique pourquoi on tape cette commande et comment vérifier qu’elle a marché.
-
-2 types de code blocks
+J'utilise deux types de codeBlocks **Terminal** et **Files**.
 
 #### Terminal
+
+Généralement ils incluent une commande ainsi que sont output vous donnant une sensation réel de ce qui se passerait dans votre terminal.
+
+- Les commandes à éxecuter sont highlighté.
+- Le langage est indiqué en haut (bash, yaml...).
+
 ```bash hl_lines="1"
 kind create cluster
 Creating cluster "kind" ...
@@ -214,7 +221,21 @@ kubectl cluster-info --context kind-kind
 Have a question, bug, or feature request? Let us know! https://kind.sigs.k8s.io/#community 🙂
 ```
 
-#### Fichier
+#### Files
+
+- Possède un titre.
+- Le langage est indiqué en haut (bash, yaml...).
+- Peut contenir des annotation.
+- Les commandes highlighté attire votre attention.
+- Peuvent contenir des placeholders pour une simplification de création de resources. ***(En attente de Zensical)***
+- Les code blocks peuvent inclure des annotations pour apporter d'amples informations à certaines lignes
+
+``` yaml
+# (1)!
+```
+
+1.  Look ma, less line noise!
+
 ```yaml linenums="1" title="pod.yaml"
 apiVersion: v1
 kind: Pod

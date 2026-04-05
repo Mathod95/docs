@@ -1,3 +1,23 @@
-# Glossaire:
-  [ ] DAG
+# Global:
   [ ] Corriger le bug des listes example TOC sur cette page https://docs.mathod.fr/argo/argoWorkflows/
+  [ ] Aborder les outputs, results dans argo workflow https://trainingportal.linuxfoundation.org/learn/course/devops-and-workflow-management-with-argo-lfs256/argo-workflows/argo-workflows-core-concepts?page=3
+  [ ] Finir docs/argo/argoWorkflows/05.md
+
+# Glossaire:
+  [x] DAG
+
+# Prompt
+
+- Traduit
+- Garde les termes techniques
+- Ajoute des barticks et des bold la ou tu pense qu'il faut en ajouter
+- Ajoute des commentaire si besoin après ta réponse sa m'éviteras de devoir effacer tes commentaires
+- N'invente rien !
+- Fait une recherche pour valider que ces OK avec les documentation latest !
+- N'ajoute pas de bold dans les titres H1 H2 etc c'est inutile
+
+# Prompt vérification de page:
+
+Verifie en effectuant une recherche sur les documentation officielle que ce qui est dit est cohérent et correcte !
+Verifie qu'il n'y à pas de phrase qui sont non traduite !
+Vérifie qu'il n'y ai pas de phrase générer par IA

@@ -64,7 +64,8 @@ Argo Workflows vous permet de définir et de gérer des workflows complexes sous
 
 ---
 !!! abstract "Liens et références"
-    - [Argo Workflow Official Repository](https://github.com/argoproj/argo-workflows)
-    - [Argo Workflow Official Documentation](https://argoproj.github.io/argo-workflows/)
+    - [Argo Workflow Repository](https://github.com/argoproj/argo-workflows)
+    - [Argo Workflow Documentation](https://argoproj.github.io/argo-workflows/)
     - [Sécurité et RBAC](https://argoproj.github.io/argo-workflows/security/)
     - [Argo CLI Documentaiton](https://argo-workflows.readthedocs.io/en/latest/cli/argo/)
+    - [Executor Plugins](https://argo-workflows.readthedocs.io/en/release-4.0/plugins/)

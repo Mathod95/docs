@@ -207,7 +207,17 @@ nav:
         - applications/backstage/fundamentals/02-conceptPhilosophy.md
         - applications/backstage/fundamentals/0X-gettingStarted.md
     - Cert-Manager: applications/cert-manager/index.md
-    - Cilium: applications/cilium/index.md
+    - Cilium: 
+      - applications/cilium/index.md
+      - applications/cilium/01.md
+      - applications/cilium/02.md
+      - applications/cilium/03.md
+      - applications/cilium/04.md
+      - applications/cilium/05.md
+      - applications/cilium/06.md
+      - applications/cilium/07.md
+      - applications/cilium/08.md
+      - applications/cilium/09.md
     - Crossplane: 
       - applications/crossplane/index.md
       - Fundamentals:
@@ -242,6 +252,7 @@ nav:
     - Telepresence: applications/telepresence/index.md
   - LINUX:
     - index.md
+    - SaltBox: linux/saltbox.md
     - Packages:
       - linux/packages/index.md
       - linux/packages/k9s.md
@@ -263,6 +274,7 @@ nav:
 
 theme:
   variant: modern
+  custom_dir: overrides
   #font:
   #  text: Fira Sans
   #  code: Fira Code

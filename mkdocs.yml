@@ -10,8 +10,8 @@ repo_url: https://github.com/Mathod95/docs
 docs_dir: docs
 site_dir: site
 
-nav:
-  - HOME: index.md
+#nav:
+#  - HOME: index.md
 
 theme:
   variant: modern

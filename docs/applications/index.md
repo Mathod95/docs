@@ -1,4 +1,0 @@
----
-title: Applications
-status: draft
----

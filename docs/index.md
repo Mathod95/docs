@@ -1,9 +1,22 @@
 ---
 title: HOME
-#icon: lucide/house
+icon: lucide/house
 hide:
   - toc
 ---
+
+
+<div class="grid cards" markdown>
+
+-   :material-license:{ .lg .middle } __My certifications__
+
+    ---
+
+    ![](https://images.credly.com/size/110x110/images/12624f9e-6b4a-43f0-b7a2-afb2c6cf8059/image.png){ width="110" }
+    ![](https://images.credly.com/size/110x110/images/dec28796-b4df-40e3-87f7-bdbcf02c3d2c/blob){ width="110" }
+    ![](https://images.credly.com/size/110x110/images/4b5a8636-c554-482d-bbdc-7925fb3624c3/blob){ width="110" }
+
+</div>
 
 <div class="grid cards" markdown>
 
@@ -17,7 +30,11 @@ hide:
 
     [:octicons-chevron-right-24: Learning Path](../kubernetes/index.md)
 
--   :material-apps:{ .lg .middle } __Argo__
+</div>
+
+<div class="grid cards" markdown>
+
+-   :material-check:{ .lg .middle } [__Certified Argo Project Associate (CAPA)__](https://training.linuxfoundation.org/certification/certified-argo-project-associate-capa/)
 
     ---
 
@@ -27,27 +44,8 @@ hide:
 
     [:octicons-chevron-right-24: Learning Path](#)
 
--   :material-apps:{ .lg .middle } __Crossplane__
 
-    ---
-
-    ![](https://github.com/cncf/artwork/raw/main/projects/crossplane/icon/color/crossplane-icon-color.svg){ align=left width="50" }
-
-    Lorem ipsum dolor sit amet, consectetur adipiscing
-
-    [:octicons-chevron-right-24: Learning Path](#)
-
--   :material-apps:{ .lg .middle } __AWS__
-
-    ---
-
-    ![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/3840px-Amazon_Web_Services_Logo.svg.png){ align=left width="50" }
-
-    Lorem ipsum dolor sit amet, consectetur adipiscing
-
-    [:octicons-chevron-right-24: Learning Path](#)
-
--   :material-apps:{ .lg .middle } __Cilium__
+-   :material-apps:{ .lg .middle } [__Cilium Certified Associate (CCA)__](https://training.linuxfoundation.org/certification/cilium-certified-associate-cca/)
 
     ---
 
@@ -57,41 +55,11 @@ hide:
 
     [:octicons-chevron-right-24: Learning Path](#)
 
--   :material-apps:{ .lg .middle } __Karpenter__
-
-    ---
-
-    ![](https://d3g9o9u8re44ak.cloudfront.net/logo/5fa2d79a-dd9f-4a71-a87f-5c45c8d80a6b/51cf5a76-32fe-48b1-a550-d0a97e6e36ed.png){ align=left width="50" }
-
-    Lorem ipsum dolor sit amet, consectetur adipiscing
-
-    [:octicons-chevron-right-24: Learning Path](#)
-
--   :material-apps:{ .lg .middle } __Keda__
-
-    ---
-
-    ![](https://github.com/cncf/artwork/raw/main/projects/keda/icon/color/keda-icon-color.svg){ align=left width="50" }
-
-    Lorem ipsum dolor sit amet, consectetur adipiscing
-
-    [:octicons-chevron-right-24: Learning Path](#)
-
--   :material-apps:{ .lg .middle } __OpenTelemetry__
+-   :material-apps:{ .lg .middle } [__OpenTelemetry Certified Associate (OTCA)__](https://training.linuxfoundation.org/certification/opentelemetry-certified-associate-otca/)
 
     ---
 
     ![](https://github.com/cncf/artwork/blob/main/projects/opentelemetry/icon/color/opentelemetry-icon-color.png?raw=true){ align=left width="50" }
-
-    Lorem ipsum dolor sit amet, consectetur adipiscing
-
-    [:octicons-chevron-right-24: Learning Path](#)
-
--   :material-apps:{ .lg .middle } __Helm__
-
-    ---
-
-    ![](https://github.com/cncf/artwork/blob/main/projects/helm/icon/color/helm-icon-color.png?raw=true){ align=left width="50" }
 
     Lorem ipsum dolor sit amet, consectetur adipiscing
 
@@ -107,17 +75,7 @@ hide:
 
     [:octicons-chevron-right-24: Learning Path](#)
 
--   :material-apps:{ .lg .middle } __KubeScape__
-
-    ---
-
-    ![](https://github.com/cncf/artwork/blob/main/projects/kubescape/icon/color/kubescape-icon-color.png?raw=true){ align=left width="60" }
-
-    Lorem ipsum dolor sit amet, consectetur adipiscing
-
-    [:octicons-chevron-right-24: Learning Path](#)
-
--   :material-apps:{ .lg .middle } __Kyverno__
+-   :material-apps:{ .lg .middle } [__Kyverno Certified Associate (KCA)__](https://training.linuxfoundation.org/certification/kyverno-certified-associate-kca/)
 
     ---
 
@@ -148,10 +106,69 @@ hide:
     [:octicons-chevron-right-24: Learning Path](#)
 </div>
 
-## Todo
+<!-- https://www.credly.com/organizations/the-linux-foundation/badges?sort=most_popular&page=1&name=kubernetes -->
 
-- [ ] Chaos Mesh
+---
 
+<div class="grid cards" markdown>
 
+-   :material-apps:{ .lg .middle } __Crossplane__
 
+    ---
 
+    ![](https://github.com/cncf/artwork/raw/main/projects/crossplane/icon/color/crossplane-icon-color.svg){ align=left width="50" }
+
+    Lorem ipsum dolor sit amet, consectetur adipiscing
+
+    [:octicons-chevron-right-24: Learning Path](#)
+
+-   :material-apps:{ .lg .middle } __AWS__
+
+    ---
+
+    ![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Amazon_Web_Services_Logo.svg/3840px-Amazon_Web_Services_Logo.svg.png){ align=left width="50" }
+
+    Lorem ipsum dolor sit amet, consectetur adipiscing
+
+    [:octicons-chevron-right-24: Learning Path](#)
+
+-   :material-apps:{ .lg .middle } __Karpenter__
+
+    ---
+
+    ![](https://d3g9o9u8re44ak.cloudfront.net/logo/5fa2d79a-dd9f-4a71-a87f-5c45c8d80a6b/51cf5a76-32fe-48b1-a550-d0a97e6e36ed.png){ align=left width="50" }
+
+    Lorem ipsum dolor sit amet, consectetur adipiscing
+
+    [:octicons-chevron-right-24: Learning Path](#)
+
+-   :material-apps:{ .lg .middle } __Keda__
+
+    ---
+
+    ![](https://github.com/cncf/artwork/raw/main/projects/keda/icon/color/keda-icon-color.svg){ align=left width="50" }
+
+    Lorem ipsum dolor sit amet, consectetur adipiscing
+
+    [:octicons-chevron-right-24: Learning Path](#)
+
+-   :material-apps:{ .lg .middle } __Helm__
+
+    ---
+
+    ![](https://github.com/cncf/artwork/blob/main/projects/helm/icon/color/helm-icon-color.png?raw=true){ align=left width="50" }
+
+    Lorem ipsum dolor sit amet, consectetur adipiscing
+
+    [:octicons-chevron-right-24: Learning Path](#)
+
+-   :material-apps:{ .lg .middle } __KubeScape__
+
+    ---
+
+    ![](https://github.com/cncf/artwork/blob/main/projects/kubescape/icon/color/kubescape-icon-color.png?raw=true){ align=left width="60" }
+
+    Lorem ipsum dolor sit amet, consectetur adipiscing
+
+    [:octicons-chevron-right-24: Learning Path](#)
+</div>

@@ -32,15 +32,15 @@ sources:
 
 Kubernetes déploie des workloads en encapsulant un ou des containers dans un pod, qui représente une instance d'exécution. Le pod est le plus petit objet déployable de Kubernetes et est conçu pour exécuter des containers sur des worker nodes.
 
-## The Role of Pods
-## Pods multi-conteneurs
+### The Role of Pods
+### Pods multi-conteneurs
 
 
-## Deploying Pods with Docker and Kubernetes
+### Deploying Pods with Docker and Kubernetes
 
 ---
 
-## Déployer un Pod avec kubectl
+### Déployer un Pod avec kubectl
 
 La commande `kubectl run` est l'un des moyens les plus simples de démarrer un pod. Par exemple, pour déployer une instance de l'image Docker podinfo:
 
@@ -71,7 +71,7 @@ podinfo   1/1     Running   0          3s
 
 ---
 
-## Benefits of Pods Over Direct Docker Commands
+### Benefits of Pods Over Direct Docker Commands
 
 ---
 
@@ -362,9 +362,7 @@ Events:
 
 ## Conclusion
 
-Les pods sont fondamentaux dans Kubernetes, ils encapsulent les conteneurs et simplifient la mise à l'échelle, le déploiement et la gestion des applications. Qu'il s'agisse d'un conteneur unique ou d'une configuration multi-conteneurs, l'abstraction du pod fournit une base robuste pour construire des applications scalables et résilientes sur votre cluster Kubernetes.
-
-In this lesson, you learned how to structure a Kubernetes YAML file for a Pod, create it using kubectl, and verify its status. This hands-on approach equips you to manage and troubleshoot your Kubernetes resources effectively.
+Les Pods sont les unités fondamentales de Kubernetes. Ils encapsulent un ou plusieurs containers et simplifient le scaling, le déploiement et la gestion des applications. Qu'il s'agisse d'exécuter un seul container ou une architecture multi-container, l'abstraction des Pods constitue une base robuste pour concevoir des applications scalables et résilientes sur votre cluster Kubernetes. Vous avez également appris à structurer un fichier YAML Kubernetes pour définir un Pod, à le créer avec kubectl et à vérifier son état.
 
 For more information, refer to the following resources:
 

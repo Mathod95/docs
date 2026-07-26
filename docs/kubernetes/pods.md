@@ -8,6 +8,8 @@ sources:
   - https://thekubeguy.com/understanding-pods-a9e6d4b6e1c8
 ---
 
+![](../assets/images/kubernetes/pods/pods-01.excalidraw.svg)
+
 !!! TODO
 
     - [ ] Ajouter un contexte enfantin !
@@ -24,13 +26,15 @@ sources:
     - [ ] Ce qu'il faut retenir
     - [ ] Conclusion
 
+---
+
 > La première partie de cet article présente les Pods Kubernetes: leur rôle dans le déploiement, le scaling et la gestion des applications au sein d'un cluster Kubernetes. 
 
 > La seconde partie explique comment créer un Pod Kubernetes à l’aide d’un fichier de configuration YAML. Vous y apprendrez à structurer le fichier YAML, à créer un Pod avec kubectl, puis à vérifier son statut afin de vous assurer qu’il fonctionne correctement.
 
 ## Qu'est-ce qu'un Pod ?
 
-Kubernetes déploie des workloads en encapsulant un ou des containers dans un pod, qui représente une instance d'exécution. Le pod est le plus petit objet déployable de Kubernetes et est conçu pour exécuter des containers sur des worker nodes.
+![](https://raw.githubusercontent.com/kubernetes/community/refs/heads/main/icons/svg/resources/labeled/pod.svg){ align=right } Kubernetes déploie des workloads en encapsulant un ou des containers dans un pod, qui représente une instance d'exécution. Le pod est le plus petit objet déployable de Kubernetes et est conçu pour exécuter des containers sur des worker nodes.
 
 ### The Role of Pods
 ### Pods multi-conteneurs
